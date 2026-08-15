@@ -36,6 +36,22 @@
   --accent-2-hover: #0284c7;
 }
 
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-subtle: #fafafa;
+  --bg-card: #ffffff;
+  --bg-hover: #f5f5f5;
+  --bg-elevated: #f0f0f0;
+  --fg: #171717;
+  --fg-muted: #666666;
+  --fg-subtle: #888888;
+  --fg-faint: #a3a3a3;
+  --border: #eaeaea;
+  --border-strong: #e5e5e5;
+  --border-hover: #d4d4d8;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -145,4 +161,67 @@ a {
 }
 .border-accent-2 {
   border-color: var(--accent-2);
+}
+
+/* light theme overrides — dual ready, uses 2 accents + black/white */
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--fg);
+}
+[data-theme="light"] ::selection {
+  background: #000;
+  color: #fff;
+}
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #e5e5e5;
+}
+[data-theme="light"] .bg-black {
+  background-color: #fff !important;
+}
+[data-theme="light"] .bg-\[\#0a0a0a\] {
+  background-color: #fafafa !important;
+}
+[data-theme="light"] .bg-\[\#111\] {
+  background-color: #f5f5f5 !important;
+}
+[data-theme="light"] .bg-white {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+[data-theme="light"] .bg-white.keep-white {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+[data-theme="light"] .text-white {
+  color: #000 !important;
+}
+[data-theme="light"] .text-black {
+  color: #fff !important;
+}
+[data-theme="light"] .text-\[\#ededed\] {
+  color: #171717 !important;
+}
+[data-theme="light"] .text-\[\#888\] {
+  color: #666 !important;
+}
+[data-theme="light"] .text-\[\#666\] {
+  color: #888 !important;
+}
+[data-theme="light"] .text-\[\#525252\] {
+  color: #a3a3a3 !important;
+}
+[data-theme="light"] .border-\[\#1a1a1a\] {
+  border-color: #eaeaea !important;
+}
+[data-theme="light"] .border-\[\#262626\] {
+  border-color: #e5e5e5 !important;
+}
+[data-theme="light"] .bg-\[\#1a1a1a\] {
+  background-color: #f5f5f5 !important;
+}
+[data-theme="light"] :focus-visible {
+  outline-color: #000;
 }

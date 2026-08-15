@@ -1,0 +1,141 @@
+import { useEffect, useMemo, useState } from "octane"
+
+module
+  interface Result { id: string; title: string; excerpt: string; score: number; cached: boolean }
+
+props {}: {}
+
+setup
+  const [query, setQuery] = useState("octane")
+  const [results, setResults] = useState<Result[]>([])
+  const [streaming, setStreaming] = useState(false)
+  const [cacheHits, setCacheHits] = useState(0)
+  const [edgeMs, setEdgeMs] = useState(0)
+  const [hydrated, setHydrated] = useState(0)
+  const cache = useMemo(() => new Map<string, Result[]>(), [])
+  const all = useMemo(() => [
+    { id: "r1", title: "Octane — granular reactivity without VDOM", excerpt: "Fine-grained signals, delta sync, 0.8ms diff. No virtual DOM.", score: 0.98, cached: false },
+    { id: "r2", title: "Timeline — time as dimension", excerpt: "Every signal gets .timeline() with structural sharing and branching.", score: 0.96, cached: false },
+    { id: "r3", title: "Worker — SharedArrayBuffer auto-proxy", excerpt: "Signals live in worker, reactive in main. No postMessage.", score: 0.94, cached: false },
+    { id: "r4", title: "Motion — interruptible springs", excerpt: "Separate animation loop, gesture velocity preserved, mode: interrupt.", score: 0.92, cached: false },
+    { id: "r5", title: "Streaming — edge HTML chunks", excerpt: "Cloudflare/Deno Deploy streams <result-card> as it arrives.", score: 0.9, cached: false },
+    { id: "r6", title: "Canvas — 60fps delta sync", excerpt: "Only current.points invalidates, not 60 prior strokes.", score: 0.88, cached: false },
+  ], [])
+  const onQueryInput = (e: Event) => setQuery((e.target as HTMLInputElement).value)
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return []
+    return all.filter((r) => r.title.toLowerCase().includes(q) || r.excerpt.toLowerCase().includes(q))
+  }, [query, all])
+  const startStream = () => {
+    const q = query.trim()
+    if (!q) return
+    const key = q.toLowerCase()
+    const hit = cache.get(key)
+    if (hit) {
+      setResults(hit)
+      setCacheHits((c) => c + 1)
+      setEdgeMs(8)
+      setHydrated(hit.length)
+      return
+    }
+    setStreaming(true)
+    setResults([])
+    setHydrated(0)
+    const start = performance.now()
+    let idx = 0
+    const src = filtered.length ? filtered : all.slice(0, 3)
+    const t = window.setInterval(() => {
+      if (idx < src.length) {
+        const r = { ...src[idx]!, cached: false }
+        setResults((prev) => [...prev, r])
+        setHydrated((n) => n + 1)
+        idx++
+      } else {
+        window.clearInterval(t)
+        setStreaming(false)
+        const ms = Math.round(performance.now() - start)
+        setEdgeMs(ms)
+        cache.set(key, [...src].map((r) => ({ ...r, cached: false })))
+      }
+    }, 280)
+  }
+  useEffect(() => {
+    startStream()
+  }, [])
+  useEffect(() => {
+    const t = window.setTimeout(() => startStream(), 320)
+    return () => window.clearTimeout(t)
+  }, [query])
+
+div.bg-black
+  div(className="w-full px-6 py-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
+      div
+        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 08 — STREAMING — EDGE AT CDN
+        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Edge-Streaming Search
+        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Server components that <span class="text-white">stream progressively from edge</span> — <span class="text-white">yield &lt;skeleton&gt;</span> then each <span class="text-white">&lt;result-card&gt;</span> hydrates as it arrives. Keyed cache at CDN.
+      div(className="flex flex-wrap gap-2")
+        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
+        button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] border border-accent-1" onClick={startStream}) Stream
+        span(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{streaming ? "streaming…" : "idle"} · #{results.length}/#{filtered.length || all.length}
+    div(className="grid grid-cols-12 gap-4 mt-6")
+      div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+            div(className="flex items-center gap-2")
+              div(className={"w-1.5 h-1.5 rounded-xs " + (streaming ? "bg-accent-1 animate-pulse" : "bg-[#525252]")})
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") stream({`{ ssr:'streaming', key: query }`})
+            span(className="text-[11px] font-mono text-[#525252]") edge #{edgeMs}ms · cache #{cacheHits}
+          div(className="p-4")
+            div(className="relative")
+              input(className="w-full bg-black border border-[#262626] rounded-xs pl-9 pr-3 py-3 text-[13px] font-mono text-white placeholder:text-[#525252] focus:outline-none focus:border-accent-1" value={query} placeholder="Search — try octane, timeline, worker" onInput={onQueryInput})
+              div(className="absolute left-3 top-1/2 -translate-y-1/2 text-[#525252] text-[13px]") ⌕
+            div(className="mt-3 flex gap-1.5 flex-wrap")
+              each t in ["octane", "timeline", "worker", "motion", "canvas"] key t
+                button(className={"px-2.5 py-1 rounded-xs border text-[11px] font-mono " + (query === t ? "bg-accent-1 text-white border-accent-1" : "bg-black border-[#1a1a1a] text-[#666] hover:text-white hover:border-[#262626]")} onClick={() => setQuery(t)}) #{t}
+            div(className="mt-4 space-y-2 min-h-[320px]")
+              if streaming && results.length === 0
+                each n in [1,2,3,4,5] key n
+                  div(className="h-16 bg-black border border-[#1a1a1a] rounded-xs animate-pulse")
+              each r in results key r.id
+                div(className="p-3 bg-black border border-[#1a1a1a] rounded-xs hover:border-[#262626] transition")
+                  div(className="flex items-start justify-between gap-2")
+                    div(className="text-[13px] font-medium text-white") #{r.title}
+                    span(className={"px-1.5 py-0.5 rounded-xs text-[10px] font-mono border " + (r.cached ? "bg-accent-2 text-white border-accent-2" : "bg-[#0a0a0a] text-[#666] border-[#1a1a1a]")}) #{r.score.toFixed(2)} #{r.cached ? "· cached" : ""}
+                  p(className="text-[12px] font-mono text-[#666] mt-1 leading-relaxed") #{r.excerpt}
+                  div(className="mt-2 text-[11px] font-mono text-[#525252]") Hydrated ✓ · streamed as HTML chunk — no JSON boundary
+              if !streaming && results.length === 0
+                div(className="p-8 text-center border border-dashed border-[#1a1a1a] rounded-xs bg-black")
+                  div(className="text-[13px] font-mono text-[#666]") No results — try <span class="text-white">octane</span>
+              if streaming
+                div(className="h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                  div(className="h-1 bg-accent-1 transition-all" style={"width:" + Math.round((results.length / (filtered.length || 3)) * 100) + "%"})
+            div(className="mt-3 text-[11px] font-mono text-[#525252]") Yield <span class="text-white">&lt;skeleton&gt;</span> instantly, then each <span class="text-white">&lt;result-card&gt;</span> streams → client hydrates before full response ends.
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
+          div(className="text-accent-2 text-[12px]") ●
+          div(className="text-[12px] leading-relaxed font-mono")
+            div(className="font-medium text-white") Why Octane wins
+            div(className="text-[#666] mt-1") Next.js Server Components need Vercel infra + poor partial streaming. Octane <span class="text-white">runs in Cloudflare/Deno Deploy</span>, streams <span class="text-white">actual HTML chunks</span> that hydrate incrementally.
+      div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") EDGE METRICS
+          div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-white") #{edgeMs}ms
+              div(className="text-[11px] font-mono text-[#525252]") EDGE
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-accent-1") #{cacheHits}
+              div(className="text-[11px] font-mono text-[#525252]") HITS
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-accent-2") #{hydrated}/#{results.length}
+              div(className="text-[11px] font-mono text-[#525252]") HYDRATED
+          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-3 text-[#888] whitespace-pre-wrap break-words")
+            code stream(async function*(){"{"}&#10;  yield &lt;skeleton&gt;&#10;  for(const i of hits) yield &lt;card&gt;&#10;{"}"}, {"{"}key:query, ssr:'streaming'{"}"})
+          div(className="text-[11px] font-mono text-[#525252] mt-2") Keyed cache at edge, HTTP streaming, incremental hydration.
+        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-white") TIP
+          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1")
+            li Type <span class="text-white">worker</span> → streams 1 chunk/280ms
+            li Second search same query → <span class="text-white">cached 8ms</span>
+            li Skeleton shows instantly before DB

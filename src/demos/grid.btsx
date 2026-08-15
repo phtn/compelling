@@ -111,7 +111,7 @@ div.bg-black
       div.flex.flex-wrap.gap-2
         a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/")
           Icon(name="home-back")
-        button(className="px-3 py-1 rounded-none bg-mist-400 text-mist-800 font-medium text-[12px] transition border border-mist-400" onClick={clearFilters}) Clear filters
+        button(className="px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400" onClick={clearFilters}) Clear filters
         div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{filtered.length.toLocaleString()} / 10,000
     div.grid.grid-cols-12.gap-4.mt-6
       div(className="col-span-12 lg:col-span-3 bg-[#0a0a0a] rounded-xs h-fit sticky top-[72px]")
@@ -145,7 +145,7 @@ div.bg-black
           div
             label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") OVERSCAN — #{overscan}
             input.w-full.accent-white(type="range" min="0" max="8" value={overscan} onInput={(e) => setOverscan(parseInt((e.target as HTMLInputElement).value, 10))})
-        div(className="bg-mist-950/60 rounded-xs mt-6 space-y-2 text-[11px] font-mono")
+        div(className="rounded-xs mt-6 space-y-2 text-xs font-mono")
           div.flex.justify-between
             span(className="text-[#525252]") Total
             span.font-medium.text-white #{filtered.length.toLocaleString()}
@@ -166,7 +166,7 @@ div.bg-black
           div.flex.justify-between
             span(className="text-[#525252]") Viewport
             span.text-white #{viewportH}px · top #{Math.round(scrollTop)}px
-        div(className="bg-mist-950/60 rounded-xs mt-6 text-[11px] leading-relaxed font-mono")
+        div(className="rounded-xs mt-6 text-xs leading-relaxed font-mono")
           div.font-medium.text-white Why Octane wins
             div(className="text-[#666] mt-1") React-Window needs fixed.
       div(className="col-span-12 lg:col-span-9")
@@ -194,7 +194,7 @@ div.bg-black
                         div.flex.items-center.gap-2.mt-2
                           div(className="flex items-center gap-1 text-[11px] font-mono")
                             span.text-white ★
-                            span.font-medium.text-white #{(item.likes % 100).toString().padStart(2,"0")}
+                            span.fon
                             span (className="text-[#525252]" #{item.likes})
                           div(className="ml-auto px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{item.height}px
                         div.flex.gap-1.mt-2

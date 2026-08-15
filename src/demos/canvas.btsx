@@ -170,13 +170,13 @@ div.bg-black
         div(className="inline-flex items-center gap-2 mt-1 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-xs font-mono tracking-wide") CANVAS — GRANULAR REACTIVITY
         p(className={cn('text-[#888] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono', showInfo ? '' : 'hidden')}) Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture.
       div(className="flex items-end shrink-0 border border-[#262626]")
-        a(className="h-8 w-9 bg-mist-500/80 border-r border-mist-500 flex items-center justify-center" href="/" aria-label="Back")
+        a(className="h-8 w-9 bg-mist-400 border-r border-mist-500 flex items-center justify-center" href="/" aria-label="Back")
           Icon(name="home-back" size={16})
-        button(className="h-8 w-9 bg-mist-600 flex items-center justify-center border-r border-mist-700" onClick={clearAll})
+        button(className="h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700" onClick={clearAll})
           Icon(name="eraser" size={16})
-        button(className="h-8 w-9 flex items-center justify-center bg-mist-500 border-r border-mist-700" onClick={undo})
+        button(className="h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700" onClick={undo})
           Icon(name="undo" size={16})
-        button(onClick={() => setShowPeers(!showPeers)} class={"h-8 w-9 bg-mist-950 flex items-center justify-center border-mist-500 font-mono " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")})
+        button(onClick={() => setShowPeers(!showPeers)} class={"h-8 w-9 bg-mist-400 flex items-center justify-center border-mist-500 font-mono " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")})
           Icon(name="users" size={14})
 
 
@@ -197,8 +197,8 @@ div.bg-black
               span.font-mono #{deltaKb} KB
 
 
-          div(className="relative bg-white w-full h-[560px] overflow-hidden" ref={containerRef})
-            canvas(className="block w-full h-full touch-none bg-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
+          div(className="relative bg-white keep-white w-full h-[560px] overflow-hidden" ref={containerRef} style="background:#fff")
+            canvas(className="block w-full h-full touch-none bg-white keep-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair;background:#fff" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
             if showPeers
               fragment
                 each peer in peers key peer.id

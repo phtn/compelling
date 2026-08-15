@@ -1,0 +1,156 @@
+import { useEffect, useMemo, useState } from "octane"
+
+module
+  interface HistoryEntry { value: string; ts: number; branch: number }
+
+props {}: {}
+
+setup
+  const [content, setContent] = useState("Hello Octane — built-in temporal reactivity")
+  const [history, setHistory] = useState<HistoryEntry[]>([{ value: "Hello Octane — built-in temporal reactivity", ts: Date.now(), branch: 0 }])
+  const [pos, setPos] = useState(0)
+  const [branches, setBranches] = useState(1)
+  const [compress, setCompress] = useState(true)
+  const [maxBranches] = useState(50)
+  const canUndo = useMemo(() => pos > 0, [pos])
+  const canRedo = useMemo(() => pos < history.length - 1, [pos, history])
+  const branchDepth = useMemo(() => history[pos]?.branch ?? 0, [history, pos])
+  const undo = () => {
+    if (!canUndo) return
+    const next = pos - 1
+    setPos(next)
+    setContent(history[next]!.value)
+  }
+  const redo = () => {
+    if (!canRedo) return
+    const next = pos + 1
+    setPos(next)
+    setContent(history[next]!.value)
+  }
+  const fork = () => {
+    const b = branches
+    setBranches((n) => n + 1)
+    const entry: HistoryEntry = { value: content + " ⟋ fork " + b, ts: Date.now(), branch: b }
+    const nextHist = [...history.slice(0, pos + 1), entry]
+    setHistory(nextHist.slice(-maxBranches))
+    setPos(nextHist.length - 1)
+    setContent(entry.value)
+  }
+  const scrubTo = (v: number) => {
+    const idx = Math.max(0, Math.min(history.length - 1, Math.round(v)))
+    setPos(idx)
+    setContent(history[idx]!.value)
+  }
+  const handleInput = (e: Event) => {
+    const val = (e.target as HTMLTextAreaElement).value
+    setContent(val)
+    // compress rapid keystrokes
+    const last = history[pos]
+    const now = Date.now()
+    const isRapid = compress && last && now - last.ts < 400 && history.length > 1
+    const entry: HistoryEntry = { value: val, ts: now, branch: last?.branch ?? 0 }
+    if (isRapid && pos === history.length - 1) {
+      const next = [...history]
+      next[pos] = entry
+      setHistory(next)
+    } else {
+      const nextHist = [...history.slice(0, pos + 1), entry]
+      const trimmed = nextHist.slice(-maxBranches)
+      setHistory(trimmed)
+      setPos(trimmed.length - 1)
+    }
+  }
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
+        e.preventDefault()
+        if (e.shiftKey) redo()
+        else undo()
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [pos, history])
+
+div.bg-black
+  div(className="w-full px-6 py-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
+      div
+        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 05 — TIMELINE — TEMPORAL REACTIVITY
+        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Time-Travel State Debugger
+        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Immutable snapshots, bidirectional travel, branching — no Redux DevTools. <span class="text-white">timeline(content, {compress:true})</span> gives <span class="text-white">undo/redo/fork/scrub</span> with structural sharing.
+      div(className="flex flex-wrap gap-2")
+        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
+        button(className={"px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (compress ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} onClick={() => setCompress(!compress)}) #{compress ? "Compress on" : "Compress off"}
+        button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition" onClick={fork}) Fork Branch
+
+    div(className="grid grid-cols-12 gap-4 mt-6")
+      div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+            div(className="flex items-center gap-2")
+              div(className="w-1.5 h-1.5 rounded-xs bg-accent-1")
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") toolbar — timeline(content)
+            div(className="flex items-center gap-1.5 text-[11px] font-mono")
+              button(className={"px-2.5 py-1 rounded-xs border text-[11px] font-mono " + (canUndo ? "bg-white text-black border-white hover:bg-[#ededed]" : "bg-[#111] border-[#1a1a1a] text-[#525252] cursor-not-allowed")} onClick={undo} disabled={!canUndo}) ↩ Undo (#{pos})
+              button(className={"px-2.5 py-1 rounded-xs border text-[11px] font-mono " + (canRedo ? "bg-white text-black border-white" : "bg-[#111] border-[#1a1a1a] text-[#525252] cursor-not-allowed")} onClick={redo} disabled={!canRedo}) ↪ Redo
+              span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[#888]") branch #{branchDepth} · #{branches} branches
+          div(className="p-4")
+            textarea(className="w-full min-h-[140px] bg-black border border-[#262626] rounded-xs p-3 text-[13px] font-mono text-white placeholder:text-[#525252] focus:outline-none focus:border-accent-1" value={content} placeholder="Type to create history..." onInput={handleInput})
+            div(className="mt-3 flex items-center gap-3")
+              input(className="flex-1 accent-white" type="range" min="0" max={Math.max(0, history.length - 1)} value={pos} onInput={(e) => scrubTo(parseInt((e.target as HTMLInputElement).value, 10))})
+              span(className="text-[11px] font-mono text-[#666]") #{pos} / #{history.length - 1}
+            div(className="mt-2 flex gap-1.5")
+              button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[11px] font-mono border border-accent-1 hover:bg-[var(--accent-1-hover)]" onClick={undo} disabled={!canUndo}) Undo
+              button(className="px-3 py-1.5 rounded-xs bg-[#111] border border-[#262626] text-[#888] text-[11px] font-mono hover:text-white" onClick={redo} disabled={!canRedo}) Redo
+              button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono" onClick={() => { setHistory([{ value: "Hello Octane — built-in temporal reactivity", ts: Date.now(), branch: 0 }]); setPos(0); setContent("Hello Octane — built-in temporal reactivity") }}) Reset
+            p(className="text-[11px] font-mono text-[#525252] mt-2") ⌘Z / ⇧⌘Z to undo/redo. Fork creates branch #{branches}. Compress dedupes &lt;400ms.
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") HISTORY — #{history.length} snapshots (max #{maxBranches})
+          div(className="mt-3 grid grid-cols-1 gap-1.5 max-h-[220px] overflow-auto pr-1")
+            each h, i in history.slice().reverse() key i
+              div(className={"flex items-center gap-2 p-2 rounded-xs border text-[11px] font-mono " + (history.length - 1 - i === pos ? "bg-white text-black border-white" : "bg-black border-[#1a1a1a] text-[#666] hover:border-[#262626]") } onClick={() => scrubTo(history.length - 1 - i)})
+                span(className="w-6 h-6 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px]") #{history.length - 1 - i}
+                span(className="flex-1 truncate") #{h.value.slice(0, 64)}#{h.value.length > 64 ? "…" : ""}
+                span(className="text-[10px] px-1.5 py-0.5 rounded-xs bg-[#111] border border-[#1a1a1a]") b#{h.branch}
+        div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
+          div(className="text-accent-1 text-[12px]") ●
+          div(className="text-[12px] leading-relaxed font-mono")
+            div(className="font-medium text-white") Why Octane wins
+            div(className="text-[#666] mt-1") Redux needs DevTools + manual replay. Octane treats <span class="text-white">time as dimension</span> — <span class="text-white">timeline(signal)</span> gives structural-shared snapshots, <span class="text-white">fork()</span> branches instantly.
+
+      div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") METRICS
+          div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-white") #{history.length}
+              div(className="text-[11px] font-mono text-[#525252]") SNAPSHOTS
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-accent-1") #{pos}
+              div(className="text-[11px] font-mono text-[#525252]") POSITION
+            div(className="bg-black p-3 text-center")
+              div(className="text-[16px] font-medium text-accent-2") #{branches}
+              div(className="text-[11px] font-mono text-[#525252]") BRANCHES
+          div(className="mt-3 space-y-1.5 text-[11px] font-mono")
+            div(className="flex justify-between")
+              span(className="text-[#525252]") canUndo
+              span(className={canUndo ? "text-white" : "text-[#525252]"}) #{canUndo ? "true" : "false"}
+            div(className="flex justify-between")
+              span(className="text-[#525252]") canRedo
+              span(className={canRedo ? "text-white" : "text-[#525252]"}) #{canRedo ? "true" : "false"}
+            div(className="flex justify-between")
+              span(className="text-[#525252]") compress
+              span(className="text-white") #{compress ? "on" : "off"}
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") CODE SHAPE
+          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888] whitespace-pre-wrap break-words")
+            code const history = timeline(content, {"{ compress:true }"})&#10;history.undo() // ← branchDepth&#10;history.scrubTo(4)
+          div(className="text-[11px] font-mono text-[#525252] mt-2") No store, no actions — signal *is* history.
+        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-white") TIP
+          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1")
+            li Type in textarea → new snapshot
+            li Drag slider to scrub time
+            li `Fork` duplicates branch #{branches} → edit diverges
+            li `⌘Z` / `⇧⌘Z` works globally
