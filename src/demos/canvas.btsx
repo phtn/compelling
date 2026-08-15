@@ -1,0 +1,306 @@
+import { useEffect, useMemo, useRef, useState } from "octane"
+import { cn } from "../lib/utils"
+import Icon from "../lib/icons/index.btsx"
+
+module
+  interface Point { x: number; y: number }
+  interface Stroke { id: string; points: Point[]; color: string; size: number; tool: string; userId: string }
+  interface Peer { id: string; name: string; color: string; x: number; y: number; initials: string }
+  const COLORS = ["#000000", "#171717", "#404040", "#737373", "#525252", "#262626", "#0a0a0a"]
+  const PEERS: Peer[] = [
+    { id: "p1", name: "Alex Chen", color: "#171717", x: 22, y: 34, initials: "AC" },
+    { id: "p2", name: "Maya Patel", color: "#404040", x: 68, y: 52, initials: "MP" },
+    { id: "p3", name: "Jordan Lee", color: "#737373", x: 44, y: 78, initials: "JL" },
+  ]
+  const uid = () => Math.random().toString(36).slice(2, 9)
+
+props {}: {}
+
+setup
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [strokes, setStrokes] = useState<Stroke[]>(() => [
+    { id: "s1", points: [{ x: 40, y: 40 }, { x: 120, y: 60 }, { x: 180, y: 45 }, { x: 220, y: 70 }], color: "#000000", size: 4, tool: "pen", userId: "you" },
+    { id: "s2", points: [{ x: 60, y: 120 }, { x: 100, y: 140 }, { x: 160, y: 130 }, { x: 200, y: 150 }], color: "#404040", size: 8, tool: "highlighter", userId: "p1" },
+    { id: "s3", points: [{ x: 300, y: 80 }, { x: 340, y: 110 }, { x: 380, y: 90 }], color: "#737373", size: 3, tool: "pen", userId: "p2" },
+  ])
+  const [current, setCurrent] = useState<Stroke | null>(null)
+  const [tool, setTool] = useState("pen")
+  const [color, setColor] = useState("#000000")
+  const [size, setSize] = useState(4)
+  const [peers, setPeers] = useState<Peer[]>(PEERS)
+  const [showPeers, setShowPeers] = useState(true)
+  const [renderCount, setRenderCount] = useState(0)
+  const [lastDelta, setLastDelta] = useState(0)
+  const [isDrawing, setIsDrawing] = useState(false)
+  const pointsCount = useMemo(() => strokes.reduce((a, s) => a + s.points.length, 0) + (current ? current.points.length : 0), [strokes, current])
+  const deltaKb = useMemo(() => (lastDelta / 1024).toFixed(2), [lastDelta])
+  const getPos = (e: PointerEvent) => {
+    const canvas = canvasRef.current
+    if (!canvas) return { x: 0, y: 0 }
+    const rect = canvas.getBoundingClientRect()
+    return { x: (e.clientX - rect.left) * (1400 / rect.width), y: (e.clientY - rect.top) * (800 / rect.height) }
+  }
+  const handlePointerDown = (e: PointerEvent) => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    canvas.setPointerCapture(e.pointerId)
+    const p = getPos(e)
+    const s: Stroke = { id: uid(), points: [p], color: tool === "eraser" ? "#ffffff" : color, size: tool === "highlighter" ? size * 3 : size, tool, userId: "you" }
+    setCurrent(s)
+    setIsDrawing(true)
+  }
+  const handlePointerMove = (e: PointerEvent) => {
+    if (!isDrawing || !current) return
+    const p = getPos(e)
+    setCurrent({ ...current, points: [...current.points, p] })
+    setLastDelta(current.points.length * 8 + Math.floor(Math.random() * 20))
+    setPeers((prev) => prev.map((q, idx) => idx === 0 ? { ...q, x: (p.x / 1400) * 100, y: (p.y / 800) * 100 } : q))
+  }
+  const handlePointerUp = (e: PointerEvent) => {
+    if (!current) return
+    const canvas = canvasRef.current
+    if (canvas) canvas.releasePointerCapture(e.pointerId)
+    if (current.points.length > 1) {
+      setStrokes((prev) => [...prev, current])
+      setLastDelta(current.points.length * 16)
+    }
+    setCurrent(null)
+    setIsDrawing(false)
+    setRenderCount((c) => c + 1)
+  }
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const dpr = window.devicePixelRatio || 1
+    const rect = canvas.getBoundingClientRect()
+    canvas.width = rect.width * dpr
+    canvas.height = rect.height * dpr
+    ctx.scale(dpr, dpr)
+    ctx.lineCap = "round"
+    ctx.lineJoin = "round"
+    const drawStroke = (s: Stroke) => {
+      if (s.points.length < 2) return
+      ctx.beginPath()
+      ctx.strokeStyle = s.tool === "highlighter" ? s.color + "40" : s.color
+      ctx.lineWidth = s.tool === "highlighter" ? s.size * 0.6 : s.size
+      ctx.globalCompositeOperation = s.tool === "eraser" ? "destination-out" : "source-over"
+      ctx.moveTo(s.points[0]!.x * (rect.width / 1400), s.points[0]!.y * (rect.height / 800))
+      for (let i = 1; i < s.points.length; i++) {
+        const a = s.points[i - 1]!
+        const b = s.points[i]!
+        const ax = a.x * (rect.width / 1400)
+        const ay = a.y * (rect.height / 800)
+        const bx = b.x * (rect.width / 1400)
+        const by = b.y * (rect.height / 800)
+        const cx = (ax + bx) / 2
+        const cy = (ay + by) / 2
+        ctx.quadraticCurveTo(ax, ay, cx, cy)
+      }
+      ctx.stroke()
+      ctx.globalCompositeOperation = "source-over"
+    }
+    ctx.clearRect(0, 0, rect.width, rect.height)
+    ctx.strokeStyle = "#e5e5e5"
+    ctx.lineWidth = 1
+    ctx.globalAlpha = 0.5
+    for (let x = 0; x < rect.width; x += 40) {
+      ctx.beginPath()
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x, rect.height)
+      ctx.stroke()
+    }
+    for (let y = 0; y < rect.height; y += 40) {
+      ctx.beginPath()
+      ctx.moveTo(0, y)
+      ctx.lineTo(rect.width, y)
+      ctx.stroke()
+    }
+    ctx.globalAlpha = 1
+    strokes.forEach(drawStroke)
+    if (current) drawStroke(current)
+  }, [strokes, current])
+  useEffect(() => {
+    const t = window.setInterval(() => {
+      setPeers((prev) => prev.map((p) => ({ ...p, x: Math.max(5, Math.min(95, p.x + (Math.random() - 0.5) * 8)), y: Math.max(5, Math.min(95, p.y + (Math.random() - 0.5) * 8)) })))
+    }, 900)
+    return () => window.clearInterval(t)
+  }, [])
+  useEffect(() => {
+    const t = window.setInterval(() => {
+      if (Math.random() > 0.65 && !isDrawing) {
+        const peer = peers[Math.floor(Math.random() * peers.length)]!
+        const sx = 80 + Math.random() * 1200
+        const sy = 80 + Math.random() * 640
+        const pts: Point[] = []
+        let cx = sx
+        let cy = sy
+        for (let i = 0; i < 6 + Math.floor(Math.random() * 8); i++) {
+          cx += (Math.random() - 0.5) * 40
+          cy += (Math.random() - 0.5) * 24
+          pts.push({ x: cx, y: cy })
+        }
+        const s: Stroke = { id: uid(), points: pts, color: peer.color, size: 3 + Math.floor(Math.random() * 3), tool: Math.random() > 0.8 ? "highlighter" : "pen", userId: peer.id }
+        setStrokes((prev) => [...prev.slice(-60), s])
+        setLastDelta(pts.length * 16)
+        setRenderCount((c) => c + 1)
+      }
+    }, 2400)
+    return () => window.clearInterval(t)
+  }, [peers, isDrawing])
+  const undo = () => setStrokes((p) => p.slice(0, -1))
+  const clearAll = () => {
+    setStrokes([])
+    setCurrent(null)
+    setLastDelta(0)
+  }
+
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = useCallback(() => setShowInfo((s) => !s), [])
+
+div.bg-black
+  div(className="w-full px-6 py-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-6")
+      div(className="flex-1 min-w-0")
+        div(className="flex items-center gap-2")
+          h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white") Real-Time Canvas
+          button(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] font-mono text-[#888] hover:text-white hover:border-[#262626] transition" onClick={toggleInfo} aria-label="Toggle info") ?
+        div(className="inline-flex items-center gap-2 mt-1 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-xs font-mono tracking-wide") CANVAS — GRANULAR REACTIVITY
+        p(className={cn('text-[#888] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono', showInfo ? '' : 'hidden')}) Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture.
+      div(className="flex items-end shrink-0 border border-[#262626]")
+        a(className="h-8 w-9 bg-mist-500/80 border-r border-mist-500 flex items-center justify-center" href="/" aria-label="Back")
+          Icon(name="home-back" size={16})
+        button(className="h-8 w-9 bg-mist-600 flex items-center justify-center border-r border-mist-700" onClick={clearAll})
+          Icon(name="eraser" size={16})
+        button(className="h-8 w-9 flex items-center justify-center bg-mist-500 border-r border-mist-700" onClick={undo})
+          Icon(name="undo" size={16})
+        button(onClick={() => setShowPeers(!showPeers)} class={"h-8 w-9 bg-mist-950 flex items-center justify-center border-mist-500 font-mono " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")})
+          Icon(name="users" size={14})
+
+
+    div(className="grid grid-cols-12 gap-4")
+      div(className="col-span-12 lg:col-span-9 flex flex-col gap-4")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden flex flex-col")
+          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3 shrink-0")
+            div(className="flex items-center gap-2")
+              div(className="w-2 h-2 rounded-xs bg-[#525252]")
+              div(className="w-2 h-2 rounded-xs bg-[#525252]")
+              div(className="w-2 h-2 rounded-xs bg-[#525252]")
+              span(className="text-[11px] font-mono tracking-wide text-[#666] ml-2 capitalize") 1400×800 &middot; #{tool}
+            div(className="flex items-center gap-1 text-[11px] font-mono text-[#525252]")
+              span.font-mono #{strokes.length} ST
+              span.font-mono &middot;
+              span.font-mono #{pointsCount} PT
+              span.font-mono &middot;
+              span.font-mono #{deltaKb} KB
+
+
+          div(className="relative bg-white w-full h-[560px] overflow-hidden" ref={containerRef})
+            canvas(className="block w-full h-full touch-none bg-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
+            if showPeers
+              fragment
+                each peer in peers key peer.id
+                  div(className="absolute pointer-events-none transition-all duration-700 ease-out" style={"left:" + peer.x + "%;top:" + peer.y + "%"})
+                    div(className="flex items-center gap-1 -translate-x-1 -translate-y-1")
+                      div(className="w-2.5 h-2.5 rounded-xs border border-white shadow-sm" style={"background:" + peer.color})
+                      div(className="px-1.5 py-0.5 rounded-xs text-[10px] font-mono font-medium text-white shadow border border-white/20" style={"background:" + peer.color}) #{peer.initials}
+                div(className="absolute pointer-events-none" style="left:12%;top:18%")
+                  div(className="w-2.5 h-2.5 rounded-xs bg-black border border-white shadow-sm")
+                  div(className="px-1.5 py-0.5 rounded-xs bg-black text-white text-[10px] font-mono font-medium -translate-x-2 mt-1 border border-white") YOU
+
+
+          div(className="bg-black border-t border-[#1a1a1a] p-3 flex flex-wrap gap-3 items-center")
+            div(className="flex items-center gap-2")
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") TOOLS
+              button(onClick={() => setTool("pen")} class={"px-3 py-1.5 rounded-xs text-[12px] font-medium border transition flex items-center justify-center gap-1.5 " + (tool === "pen" ? "bg-white text-black border-white" : "bg-black border-[#262626] text-[#888] hover:bg-[#111] hover:text-white")}) Pen
+              button(onClick={() => setTool("highlighter")} class={"px-3 py-1.5 rounded-xs text-[12px] font-medium border transition flex items-center justify-center gap-1.5 " + (tool === "highlighter" ? "bg-white text-black border-white" : "bg-black border-[#262626] text-[#888] hover:bg-[#111] hover:text-white")}) High
+              button(onClick={() => setTool("eraser")} class={"px-3 py-1.5 rounded-xs text-[12px] font-medium border transition flex items-center justify-center gap-1.5 " + (tool === "eraser" ? "bg-white text-black border-white" : "bg-black border-[#262626] text-[#888] hover:bg-[#111] hover:text-white")}) Erase
+            div(className="hidden sm:block w-px h-6 bg-[#1a1a1a]")
+            div(className="flex items-center gap-2")
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") COLOR
+              div(className="flex gap-1.5")
+                each c in COLORS key c
+                  button(className={"w-7 h-7 rounded-xs border transition shadow-sm " + (color === c ? "border-white scale-105" : "border-[#262626]")} onClick={() => setColor(c)} style={"background:" + c})
+            div(className="hidden sm:block w-px h-6 bg-[#1a1a1a]")
+            div(className="flex items-center gap-2")
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") SIZE
+              div(className="flex gap-1.5")
+                each s in [2,4,7,12] key s
+                  button(onClick={() => setSize(s)} class={"w-7 h-7 rounded-xs bg-black border border-[#262626] grid place-items-center text-[11px] font-mono " + (size === s ? "bg-white text-black border-white font-medium" : "text-[#666] hover:text-white")}) #{s}
+
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="flex items-center space-x-4 text-[11px] font-mono tracking-wide text-[#666]")
+            span PERFORMANCE
+            span Re-renders (granular) #{renderCount}
+          div(className="mt-3 space-y-3 text-[11px] font-mono")
+            div
+              div(className="w-full h-1 bg-[#1a1a1a] rounded-xs mt-1 overflow-hidden")
+                div(className="h-1 bg-accent-1" style={"width:" + Math.min(100, renderCount * 4) + "%"})
+            div
+              div(className="flex justify-between")
+                span(className="text-[#666]") Virtual DOM avoided
+                span(className="font-medium text-white") 100%
+              div(className="w-full h-1 bg-[#1a1a1a] rounded-xs mt-1 overflow-hidden")
+                div(className="h-1 bg-accent-2" style="width:100%")
+            div(className="text-[#525252] leading-relaxed font-mono") Octane tracks <span class="text-white">strokes</span> and <span class="text-white">current</span> separately. Only the stroke being drawn updates.
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
+          div(className="text-[#666] text-[12px] font-mono") ●
+          div(className="text-[12px] leading-relaxed font-mono")
+            div(className="font-medium text-white") Why Octane wins
+            div(className="text-[#666] mt-1") React re-renders the whole canvas tree on mousemove; Svelte needs manual hints. Octane tracks <span class="text-white">strokes.delta</span> granularly — only <span class="text-white">current.points</span> invalidates.
+      div(className="col-span-12 lg:col-span-3 flex flex-col gap-3")
+        div(className="bg-[#0a0a0a] rounded-xs p-3")
+          div(className="flex items-center justify-between")
+            div(className="text-[11px] font-mono tracking-wide text-[#666]") SYNC
+            div(className="w-1.5 h-1.5 rounded-xs bg-accent-2")
+          div(className="flex items-center gap-2 mt-2 text-[12px]")
+            div(className="w-1.5 h-1.5 rounded-xs bg-accent-2")
+            span(className="text-white font-medium font-mono") Connected
+          div(className="text-[11px] font-mono text-[#666] mt-2") Last delta: #{deltaKb} KB · #{pointsCount} pts
+          div(className="text-[11px] font-mono text-[#525252]") Renders: #{renderCount} · peers: #{peers.length + 1}
+          div(className="w-full h-1 bg-[#1a1a1a] rounded-xs mt-3 overflow-hidden")
+            div(className="h-1 bg-accent-1" style={"width:" + Math.min(100, renderCount * 4) + "%"})
+          div(className="text-[11px] text-[#525252] leading-relaxed font-mono mt-2") Tip: Drag on canvas. Highlighter is translucent. Peers simulated every 2.4s.
+        div(className="bg-[#0a0a0a] rounded-xs mt-8")
+          div(className="flex items-center justify-between")
+            div(className="text-[11px] font-mono tracking-wide text-[#666]") ACTIVE USERS — #{peers.length + 1}
+            div(className="w-1.5 h-1.5 rounded-xs bg-accent-2")
+          div(className="flex flex-col gap-1.5 mt-3")
+            div(className="flex items-center gap-3 p-2 rounded-xs bg-white text-black border border-white")
+              div(className="w-7 h-7 rounded-xs bg-black text-white grid place-items-center font-mono font-medium text-[10px]") YO
+              div(className="flex-1")
+                div(className="text-[12px] font-medium") You
+                div(className="text-[11px] font-mono text-[#525252]") Drawing · #{tool}
+              div(className="w-1.5 h-1.5 rounded-xs bg-accent-2")
+            each peer in peers key peer.id
+              div(className="flex items-center gap-3 p-2 rounded-xs bg-black border border-[#1a1a1a]")
+                div(className="w-7 h-7 rounded-xs grid place-items-center font-mono font-medium text-white text-[10px] border border-white" style={"background:" + peer.color}) #{peer.initials}
+                div(className="flex-1")
+                  div(className="text-[12px] font-medium text-white") #{peer.name}
+                  div(className="text-[11px] font-mono text-[#666]") Cursor #{Math.round(peer.x)}%, #{Math.round(peer.y)}%
+                div(className="w-1.5 h-1.5 rounded-xs bg-accent-2")
+          div(className="mt-3 grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden text-center text-[11px] font-mono")
+            div(className="bg-black p-2")
+              div(className="font-medium text-white") #{(pointsCount * 0.016).toFixed(1)}KB
+              div(className="text-[#525252]") TOTAL
+            div(className="bg-black p-2")
+              div(className="font-medium text-white") 60fps
+              div(className="text-[#525252]") POINTER
+            div(className="bg-black p-2")
+              div(className="font-medium text-white") 0.8ms
+              div(className="text-[#525252]") DIFF
+        div(className="bg-[#0a0a0a] rounded-xs mt-8")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") STROKE HISTORY
+          div(className="text-[11px] font-mono text-[#525252] mt-1") Latest 8 strokes, newest first
+          div(className="flex flex-col gap-1.5 mt-3 max-h-72 overflow-auto pr-1")
+            if strokes.length === 0
+              div(className="text-[12px] text-[#525252] font-mono italic") No strokes yet — draw on canvas
+            each s, i in strokes.slice().reverse().slice(0, 8) key s.id
+              div(className="flex items-center gap-3 p-2 rounded-xs bg-black border border-[#1a1a1a]")
+                div(className="w-7 h-7 rounded-xs border border-white shadow-sm" style={"background:" + s.color})
+                div(className="flex-1 min-w-0")
+                  div(className="text-[11px] font-mono font-medium text-white truncate") #{s.tool} · #{s.points.length} pts · #{s.userId}
+                  div(className="text-[11px] font-mono text-[#666]") #{s.id} · #{s.size}px
+                div(className="text-[11px] font-mono text-[#525252]") ##{strokes.length - i}

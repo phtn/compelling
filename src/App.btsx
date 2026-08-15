@@ -1,0 +1,302 @@
+import Home from "./pages/home.btsx"
+import CanvasDemo from "./demos/canvas.btsx"
+import FormDemo from "./demos/form.btsx"
+import GridDemo from "./demos/grid.btsx"
+import ShellDemo from "./demos/shell.btsx"
+import { useEffect, useState } from "octane"
+
+props {}: {}
+
+setup
+  const [path, setPath] = useState(typeof window !== "undefined" ? window.location.pathname : "/")
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarSide, setSidebarSide] = useState<"left" | "right">("left")
+  const navigate = (to: string) => {
+    if (to !== window.location.pathname) {
+      window.history.pushState(null, "", to)
+      setPath(to)
+      window.scrollTo(0, 0)
+    }
+  }
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname)
+    window.addEventListener("popstate", onPop)
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const anchor = target.closest("a")
+      if (anchor instanceof HTMLAnchorElement && anchor.href.startsWith(window.location.origin) && anchor.target !== "_blank" && anchor.hasAttribute("href")) {
+        const url = new URL(anchor.href)
+        if (url.pathname !== window.location.pathname) {
+          e.preventDefault()
+          window.history.pushState(null, "", url.pathname + url.search + url.hash)
+          setPath(url.pathname)
+          window.scrollTo(0, 0)
+        }
+      }
+    }
+    document.addEventListener("click", onClick)
+    return () => {
+      window.removeEventListener("popstate", onPop)
+      document.removeEventListener("click", onClick)
+    }
+  }, [])
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)")
+    const apply = () => setSidebarOpen(!mq.matches)
+    apply()
+    const handler = () => apply()
+    mq.addEventListener("change", handler)
+    return () => mq.removeEventListener("change", handler)
+  }, [])
+
+div(className="min-h-screen bg-black text-[#ededed] selection:bg-white selection:text-black antialiased")
+  header(className="sticky top-0 z-40 bg-black/80 backdrop-blur-[12px] border-b border-[#1a1a1a] w-full")
+    div(className="w-full px-4 sm:px-6 flex items-center justify-between h-[64px] gap-4")
+      div(className="flex items-center gap-3")
+        button(className="w-7 h-7 rounded-xs bg-[#111] border border-[#262626] grid place-items-center text-[#888] hover:text-white hover:bg-[#1a1a1a] hover:border-[#2e2e2e] transition" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label="Toggle sidebar")
+          span(className="text-[14px] leading-none") #{sidebarOpen ? "‹" : "›"}
+        a(href="/" className="flex items-center gap-3 cursor-pointer group" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }})
+          div(className="flex items-center gap-2")
+            div(className="font-medium tracking-[-0.02em] leading-none text-[14px] text-white") compelling
+            div(className="hidden sm:block h-3 w-px bg-[#262626] mx-1")
+            div(className="hidden lg:block text-[12px] font-mono text-[#888] tracking-[-0.01em]") beast · tsrx · octane
+      nav(className="hidden md:flex items-center gap-0 text-sm font-medium")
+        a(href="/" className={path === "/" ? "px-3 py-1 rounded-xs transition cursor-pointer bg-mist-400 text-mist-800" : "px-3 py-1 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }}) Overview
+        a(href="/canvas" className={path === "/canvas" ? "px-3 py-1 rounded-xs transition cursor-pointer bg-mist-300 text-mist-800 border-mist-300" : "px-3 py-1 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+        a(href="/form" className={path === "/form" ? "px-3 py-1 rounded-xs transition cursor-pointer bg-mist-300 text-mist-800 border-mist-300" : "px-3 py-1 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+        a(href="/grid" className={path === "/grid" ? "px-3 py-1 rounded-xs transition cursor-pointer bg-mist-300 text-mist-800 border-mist-300" : "px-3 py-1 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+        a(href="/shell" className={path === "/shell" ? "px-3 py-1 rounded-xs transition cursor-pointer bg-mist-300 text-mist-800 border-mist-300" : "px-3 py-1 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+      div(className="flex items-center gap-2")
+        a(className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-none bg-mist-400 text-mist-800 text-[13px] font-medium hover:bg-[var(--accent-1-hover)] transition" href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer")
+          span Docs
+  div(className="flex w-full min-h-[calc(100vh-64px)]")
+    if sidebarSide === "left" && sidebarOpen
+      aside(className="hidden md:flex w-[256px] shrink-0 bg-black border-r border-[#1a1a1a] flex-col sticky top-[64px] h-[calc(100vh-64px)] overflow-hidden")
+        div(className="flex items-center justify-between h-[44px] px-3 border-b border-[#1a1a1a] shrink-0")
+          div(className="text-[11px] font-mono tracking-wide text-[#525252]") NAVIGATION
+          div(className="flex items-center gap-1")
+            button(className="w-6 h-6 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] text-[#666] hover:text-white hover:border-[#262626] transition" onClick={() => setSidebarSide("right")} aria-label="Move to right") →
+            button(className="w-6 h-6 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] text-[#666] hover:text-white hover:border-[#262626] transition" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar") ×
+        div(className="flex-1 overflow-y-auto p-3 space-y-6")
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") GENERAL
+            nav(className="space-y-1")
+              a(href="/" className={path === "/" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ○
+                span Overview
+              a(href="/canvas" className={path === "/canvas" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ◼
+                span Canvas
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 01
+              a(href="/form" className={path === "/form" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ✓
+                span Form
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 02
+              a(href="/grid" className={path === "/grid" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ⊞
+                span Grid
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 03
+              a(href="/shell" className={path === "/shell" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ◈
+                span Shell
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 04
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") RESOURCES
+            nav(className="space-y-1")
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span beast-tsrx
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://octanejs.dev" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span octane
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://tsrx.dev" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span tsrx
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3")
+            div(className="text-[11px] font-mono tracking-wide text-[#888]") SIDEBAR
+            div(className="text-[12px] text-[#666] leading-relaxed mt-1") Toggle with header button. Move left ↔ right. Full-width layout.
+            div(className="flex gap-1.5 mt-3")
+              button(className="flex-1 px-2.5 py-1.5 rounded-xs bg-white text-black text-[11px] font-mono font-medium hover:bg-[#ededed] transition" onClick={() => setSidebarSide(sidebarSide === "left" ? "right" : "left")}) #{sidebarSide === "left" ? "→ Right" : "← Left"}
+              button(className="px-2.5 py-1.5 rounded-xs bg-black border border-[#262626] text-[#888] hover:text-white text-[11px] font-mono" onClick={() => setSidebarOpen(false)}) Hide
+        div(className="p-3 border-t border-[#1a1a1a] shrink-0")
+          div(className="flex items-center gap-2 px-2 py-2 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a]")
+            div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[10px]") ◼
+            div(className="flex-1 min-w-0")
+              div(className="text-[12px] font-medium text-white leading-none") compelling
+              div(className="text-[11px] font-mono text-[#666]") v0.0.0 · open
+            div(className="w-1.5 h-1.5 rounded-xs bg-white")
+    div(className="flex-1 min-w-0 flex flex-col w-full")
+      if sidebarOpen
+        fragment
+          div(className="md:hidden sticky top-[64px] z-30 bg-black border-b border-[#1a1a1a] flex items-center gap-2 px-4 py-2 overflow-x-auto")
+            a(href="/" className={path === "/" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }}) Overview
+            a(href="/canvas" className={path === "/canvas" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+            a(href="/form" className={path === "/form" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+            a(href="/grid" className={path === "/grid" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+            a(href="/shell" className={path === "/shell" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+          main(className="flex-1 w-full min-w-0")
+          if path === "/"
+            Home()
+          elseif path === "/canvas"
+            CanvasDemo()
+          elseif path === "/form"
+            FormDemo()
+          elseif path === "/grid"
+            GridDemo()
+          elseif path === "/shell"
+            ShellDemo()
+          else
+            div(className="w-full px-6 py-24")
+              div(className="max-w-[640px]")
+                div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono tracking-wide text-[#888]") 404 — NOT_FOUND
+                h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page <span class="font-mono text-[#888] text-[20px]">#{path}</span> does not exist.
+                p(className="text-[14px] text-[#888] mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
+                div(className="flex flex-wrap gap-2 mt-6")
+                  a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] cursor-pointer hover:bg-[var(--accent-1-hover)] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+                  a(href="/form" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+                  a(href="/grid" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+                  a(href="/shell" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+          footer(className="border-t border-[#1a1a1a] mt-auto w-full")
+            div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
+              div(className="flex items-center gap-3")
+                div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[10px]") ◼
+                div
+                  div(className="text-[13px] font-medium tracking-[-0.01em] text-white") Compelling — Beast · TSRX · Octane
+                  div(className="text-[12px] font-mono text-[#666]") © 2025 Sound Rack. Vite SPA routing. Deployed on Vercel.
+              div(className="flex items-center gap-4 text-[12px] font-mono text-[#666]")
+                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-white transition") beast-tsrx
+                span(className="text-[#262626]") /
+                a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-white transition") octane
+                span(className="text-[#262626]") /
+                a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-white transition") tsrx
+                span(className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-[#1a1a1a]")
+                  span(className="w-1.5 h-1.5 rounded-xs bg-accent-2 inline-block")
+                  span(className="text-[#888]") All systems operational
+      else
+        fragment
+          div(className="md:hidden sticky top-[64px] z-30 bg-black border-b border-[#1a1a1a] flex items-center gap-2 px-4 py-2 overflow-x-auto")
+            a(href="/" className={path === "/" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }}) Overview
+            a(href="/canvas" className={path === "/canvas" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+            a(href="/form" className={path === "/form" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+            a(href="/grid" className={path === "/grid" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+            a(href="/shell" className={path === "/shell" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-white text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#888] text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+          main(className="flex-1 w-full min-w-0")
+          if path === "/"
+            Home()
+          elseif path === "/canvas"
+            CanvasDemo()
+          elseif path === "/form"
+            FormDemo()
+          elseif path === "/grid"
+            GridDemo()
+          elseif path === "/shell"
+            ShellDemo()
+          else
+            div(className="w-full px-6 py-24")
+              div(className="max-w-[640px]")
+                div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono tracking-wide text-[#888]") 404 — NOT_FOUND
+                h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page <span class="font-mono text-[#888] text-[20px]">#{path}</span> does not exist.
+                p(className="text-[14px] text-[#888] mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
+                div(className="flex flex-wrap gap-2 mt-6")
+                  a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] cursor-pointer hover:bg-[var(--accent-1-hover)] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+                  a(href="/form" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+                  a(href="/grid" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+                  a(href="/shell" className="px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] cursor-pointer hover:bg-[#111] transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+          footer(className="border-t border-[#1a1a1a] mt-auto w-full")
+            div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
+              div(className="flex items-center gap-3")
+                div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[10px]") ◼
+                div
+                  div(className="text-[13px] font-medium tracking-[-0.01em] text-white") Compelling — Beast · TSRX · Octane
+                  div(className="text-[12px] font-mono text-[#666]") © 2025 Sound Rack. Vite SPA routing. Deployed on Vercel.
+              div(className="flex items-center gap-4 text-[12px] font-mono text-[#666]")
+                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-white transition") beast-tsrx
+                span(className="text-[#262626]") /
+                a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-white transition") octane
+                span(className="text-[#262626]") /
+                a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-white transition") tsrx
+                span(className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-[#1a1a1a]")
+                  span(className="w-1.5 h-1.5 rounded-xs bg-accent-2 inline-block")
+                  span(className="text-[#888]") All systems operational
+    if sidebarSide === "right" && sidebarOpen
+      aside(className="hidden md:flex w-[256px] shrink-0 bg-black border-l border-[#1a1a1a] flex-col sticky top-[64px] h-[calc(100vh-64px)] overflow-hidden")
+        div(className="flex items-center justify-between h-[44px] px-3 border-b border-[#1a1a1a] shrink-0")
+          div(className="flex items-center gap-1")
+            button(className="w-6 h-6 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] text-[#666] hover:text-white hover:border-[#262626] transition" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar") ×
+            button(className="w-6 h-6 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] text-[#666] hover:text-white hover:border-[#262626] transition" onClick={() => setSidebarSide("left")} aria-label="Move to left") ←
+          div(className="text-[11px] font-mono tracking-wide text-[#525252]") NAVIGATION
+        div(className="flex-1 overflow-y-auto p-3 space-y-6")
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") GENERAL
+            nav(className="space-y-1")
+              a(href="/" className={path === "/" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ○
+                span Overview
+              a(href="/canvas" className={path === "/canvas" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ◼
+                span Canvas
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 01
+              a(href="/form" className={path === "/form" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ✓
+                span Form
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 02
+              a(href="/grid" className={path === "/grid" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ⊞
+                span Grid
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 03
+              a(href="/shell" className={path === "/shell" ? "flex items-center gap-2 px-2 py-1.5 rounded-xs bg-accent-1 text-white text-[13px] font-medium border border-accent-1" : "flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium transition"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }})
+                span(className="w-5 h-5 rounded-xs bg-[#111] border border-[#1a1a1a] grid place-items-center text-[10px] font-mono") ◈
+                span Shell
+                span(className="ml-auto text-[11px] font-mono text-[#525252]") 04
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") RESOURCES
+            nav(className="space-y-1")
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span beast-tsrx
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://octanejs.dev" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span octane
+              a(className="flex items-center gap-2 px-2 py-1.5 rounded-xs text-[#666] hover:text-white hover:bg-[#111] text-[13px] font-mono transition" href="https://tsrx.dev" target="_blank" rel="noreferrer")
+                span(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[10px]") ↗
+                span tsrx
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3")
+            div(className="text-[11px] font-mono tracking-wide text-[#888]") SIDEBAR
+            div(className="text-[12px] text-[#666] leading-relaxed mt-1") Toggle with header button. Move left ↔ right. Full-width layout.
+            div(className="flex gap-1.5 mt-3")
+              button(className="flex-1 px-2.5 py-1.5 rounded-xs bg-white text-black text-[11px] font-mono font-medium hover:bg-[#ededed] transition" onClick={() => setSidebarSide(sidebarSide === "left" ? "right" : "left")}) #{sidebarSide === "left" ? "→ Right" : "← Left"}
+              button(className="px-2.5 py-1.5 rounded-xs bg-black border border-[#262626] text-[#888] hover:text-white text-[11px] font-mono" onClick={() => setSidebarOpen(false)}) Hide
+        div(className="p-3 border-t border-[#1a1a1a] shrink-0")
+          div(className="flex items-center gap-2 px-2 py-2 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a]")
+            div(className="hidden w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[10px]") ◼
+            div(className="flex-1 min-w-0")
+              div(className="text-[12px] font-medium text-white leading-none") compelling
+              div(className="text-[11px] font-mono text-[#666]") v0.0.0 · open
+            div(className="w-1.5 h-1.5 rounded-xs bg-white")
+  if sidebarOpen
+    div(className="md:hidden fixed inset-0 z-40 flex")
+      div(className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)})
+      aside(className={"w-[280px] bg-black border-[#1a1a1a] flex flex-col h-full overflow-hidden " + (sidebarSide === "left" ? "border-r order-first" : "border-l order-last")})
+        div(className="flex items-center justify-between h-[64px] px-4 border-b border-[#1a1a1a] shrink-0")
+          div(className="flex items-center gap-2")
+            div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[10px]") ◼
+            div(className="text-[13px] font-medium text-white") compelling
+          button(className="w-7 h-7 rounded-xs bg-[#111] border border-[#262626] grid place-items-center text-[#888]" onClick={() => setSidebarOpen(false)}) ×
+        div(className="flex items-center gap-1 p-2 border-b border-[#1a1a1a]")
+          button(className={sidebarSide === "left" ? "flex-1 px-3 py-1.5 rounded-xs bg-white text-black text-[12px] font-mono font-medium" : "flex-1 px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[12px] font-mono"} onClick={() => setSidebarSide("left")}) Left
+          button(className={sidebarSide === "right" ? "flex-1 px-3 py-1.5 rounded-xs bg-white text-black text-[12px] font-mono font-medium" : "flex-1 px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[12px] font-mono"} onClick={() => setSidebarSide("right")}) Right
+        div(className="flex-1 overflow-y-auto p-3 space-y-6")
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") GENERAL
+            nav(className="space-y-1")
+              a(href="/" className={path === "/" ? "flex items-center gap-2 px-2 py-2 rounded-xs bg-white text-black text-[13px] font-medium" : "flex items-center gap-2 px-2 py-2 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium"} onClick={(e: MouseEvent) => { e.preventDefault(); setSidebarOpen(false); navigate("/"); }}) Overview
+              a(href="/canvas" className={path === "/canvas" ? "flex items-center gap-2 px-2 py-2 rounded-xs bg-white text-black text-[13px] font-medium" : "flex items-center gap-2 px-2 py-2 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium"} onClick={(e: MouseEvent) => { e.preventDefault(); setSidebarOpen(false); navigate("/canvas"); }}) Canvas — 01
+              a(href="/form" className={path === "/form" ? "flex items-center gap-2 px-2 py-2 rounded-xs bg-white text-black text-[13px] font-medium" : "flex items-center gap-2 px-2 py-2 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium"} onClick={(e: MouseEvent) => { e.preventDefault(); setSidebarOpen(false); navigate("/form"); }}) Form — 02
+              a(href="/grid" className={path === "/grid" ? "flex items-center gap-2 px-2 py-2 rounded-xs bg-white text-black text-[13px] font-medium" : "flex items-center gap-2 px-2 py-2 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium"} onClick={(e: MouseEvent) => { e.preventDefault(); setSidebarOpen(false); navigate("/grid"); }}) Grid — 03
+              a(href="/shell" className={path === "/shell" ? "flex items-center gap-2 px-2 py-2 rounded-xs bg-white text-black text-[13px] font-medium" : "flex items-center gap-2 px-2 py-2 rounded-xs text-[#888] hover:text-white hover:bg-[#111] text-[13px] font-medium"} onClick={(e: MouseEvent) => { e.preventDefault(); setSidebarOpen(false); navigate("/shell"); }}) Shell — 04
+          div
+            div(className="text-[11px] font-mono tracking-wide text-[#525252] px-2 mb-2") RESOURCES
+            nav(className="space-y-1")
+              a(className="flex items-center gap-2 px-2 py-2 rounded-xs text-[#666] hover:text-white text-[13px] font-mono" href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer") beast-tsrx ↗
+              a(className="flex items-center gap-2 px-2 py-2 rounded-xs text-[#666] hover:text-white text-[13px] font-mono" href="https://octanejs.dev" target="_blank" rel="noreferrer") octane ↗
+              a(className="flex items-center gap-2 px-2 py-2 rounded-xs text-[#666] hover:text-white text-[13px] font-mono" href="https://tsrx.dev" target="_blank" rel="noreferrer") tsrx ↗

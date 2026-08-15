@@ -1,0 +1,325 @@
+import { Activity, ErrorBoundary, Hydrate, Suspense, use } from "octane"
+import { idle, initializeHydrationEventCapture, interaction, load, media, never, visible } from "octane/hydration"
+import { useEffect, useMemo, useState } from "octane"
+
+module
+  interface Review { id: string; author: string; rating: number; text: string; date: string; verified: boolean }
+  interface Related { id: string; title: string; price: number; image: string; rating: number }
+  interface QA { q: string; a: string; helpful: number }
+  const REVIEWS: Review[] = [
+    { id: "r1", author: "Alex R.", rating: 5, text: "Reference-grade clarity. Dirac Live tamed my room in one pass. Atmos is holographic.", date: "2 days ago", verified: true },
+    { id: "r2", author: "Maya P.", rating: 5, text: "HDAM warmth without mud. 11.4 channels actually feel discrete. Worth every dollar.", date: "1 week ago", verified: true },
+    { id: "r3", author: "Jordan L.", rating: 4, text: "Setup took 30 minutes. HEOS is surprisingly solid. Would buy again.", date: "2 weeks ago", verified: false },
+    { id: "r4", author: "Riley K.", rating: 5, text: "A/B tested against Denon X6800 — Marantz wins on music, ties on movies.", date: "3 weeks ago", verified: true },
+  ]
+  const RELATED: Related[] = [
+    { id: "rel1", title: "Denon AVC-X6800H", price: 3299, image: "https://picsum.photos/seed/denon6800/400/300", rating: 4.9 },
+    { id: "rel2", title: "Yamaha RX-A8A", price: 2799, image: "https://picsum.photos/seed/yamaha8a/400/300", rating: 4.8 },
+    { id: "rel3", title: "Anthem MRX 1140", price: 3999, image: "https://picsum.photos/seed/anthem/400/300", rating: 4.9 },
+  ]
+  const QAS: QA[] = [
+    { q: "Does this support 8K/120Hz passthrough?", a: "Yes — 7x HDMI 2.1 (40Gbps) with 8K60 and 4K120, plus eARC. VRR/ALLM pass through untouched.", helpful: 42 },
+    { q: "Can I use Dirac Live without extra hardware?", a: "Included mic + app. Full-room correction in ~10 min. Optional Dirac Live Bass Control upgrade.", helpful: 31 },
+    { q: "How does it compare to separates?", a: "For < 300W peaks, this matches separates. Above that, pair front L/R pre-outs to an external amp.", helpful: 18 },
+  ]
+  function fetchReviews(): Promise<Review[]> {
+    return new Promise((res) => setTimeout(() => res(REVIEWS), 1800))
+  }
+  function fetchRelated(): Promise<Related[]> {
+    return new Promise((res) => setTimeout(() => res(RELATED), 1400))
+  }
+  function fetchQA(): Promise<QA[]> {
+    return new Promise((res) => setTimeout(() => res(QAS), 1100))
+  }
+
+component ReviewList
+  props { data }: { data: Promise<Review[]> }
+  setup const reviews = use(data)
+  div.space-y-3
+    each r in reviews key r.id
+      div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
+        div.flex.items-center.justify-between
+          div.flex.items-center.gap-2
+            div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[11px]") #{r.author.slice(0,1)}
+            div
+              div(className="text-[13px] font-medium text-white") #{r.author} #{r.verified ? "· ✓ Verified" : ""}
+              div(className="text-[11px] font-mono text-[#666]") #{r.date}
+          div(className="flex text-white text-[11px]")
+            each _ in Array(r.rating).fill(0) key _
+              span ★
+        p(className="text-[13px] text-[#888] mt-2 leading-relaxed font-mono") #{r.text}
+
+component RelatedGrid
+  props { data }: { data: Promise<Related[]> }
+  setup const items = use(data)
+  div(className="grid sm:grid-cols-3 gap-2")
+    each rel in items key rel.id
+      div(className="bg-black border border-[#1a1a1a] rounded-xs overflow-hidden")
+        img.w-full.h-28.object-cover.grayscale.opacity-80(src={rel.image} alt={rel.title})
+        div.p-3
+          div(className="text-[13px] font-medium text-white truncate") #{rel.title}
+          div.flex.items-center.justify-between.mt-1
+            span(className="text-[13px] font-mono font-medium text-white") $#{rel.price.toLocaleString()}
+            span(className="text-[11px] font-mono text-[#666]") ★ #{rel.rating}
+
+component QAList
+  props { data }: { data: Promise<QA[]> }
+  setup const qas = use(data)
+  div.space-y-2
+    each qa in qas key qa.q
+      details(className="bg-black border border-[#1a1a1a] rounded-xs p-4 group")
+        summary.cursor-pointer.list-none.flex.items-center.justify-between
+          span(className="text-[13px] font-medium text-white") #{qa.q}
+          span(className="text-[#525252] group-open:rotate-90 transition font-mono text-[11px]") →
+        p(className="text-[13px] text-[#888] mt-2 leading-relaxed font-mono") #{qa.a}
+        div(className="text-[11px] font-mono text-[#525252] mt-2") #{qa.helpful} found helpful · Helpful?
+
+props {}: {}
+
+setup
+  const [hydrated, setHydrated] = useState({ load: false, idle: false, visible: false, interaction: false, media: false })
+  const [showDetail, setShowDetail] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
+  const [activeQA, setActiveQA] = useState(0)
+  const [reviewsPromise] = useState(() => fetchReviews())
+  const [relatedPromise] = useState(() => fetchRelated())
+  const [qaPromise] = useState(() => fetchQA())
+  const [serverTime] = useState(() => Date.now())
+  const [showToast, setShowToast] = useState(false)
+  const [toastMsg, setToastMsg] = useState("")
+  const elapsed = useMemo(() => Math.round((Date.now() - serverTime) / 100) / 10, [hydrated])
+  useEffect(() => {
+    initializeHydrationEventCapture(document)
+    const t1 = window.setTimeout(() => setHydrated((h) => ({ ...h, load: true })), 100)
+    return () => window.clearTimeout(t1)
+  }, [])
+  const addToCart = () => {
+    setCartCount((c) => c + 1)
+    setToastMsg("Added to cart · " + (cartCount + 1) + " items")
+    setShowToast(true)
+    window.setTimeout(() => setShowToast(false), 2400)
+  }
+  const forceHydrateAll = () => setHydrated({ load: true, idle: true, visible: true, interaction: true, media: true })
+
+div.bg-black
+  div(className="w-full px-6 py-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
+      div
+        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 04 — SHELL — PROGRESSIVE HYDRATION
+        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Isomorphic Shell with Progressive Hydration
+        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Same component on server & client. Suspend on the server, resume on the client with scheduled hydration — <span class="text-white">idle</span>, <span class="text-white">visible</span>, <span class="text-white">interaction</span>, <span class="text-white">media</span>.
+      div.flex.flex-wrap.gap-2
+        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
+        button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] transition border border-accent-1" onClick={addToCart}) Cart (#{cartCount})
+        button(className="px-3 py-1.5 rounded-xs bg-black border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition" onClick={forceHydrateAll}) Force hydrate all
+        div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{elapsed}s since shell
+    if showToast
+      div(className="fixed bottom-6 right-6 z-50 bg-white text-black px-4 py-3 rounded-xs shadow-2xl border border-[#e5e5e5] flex items-center gap-2")
+        div(className="w-6 h-6 rounded-xs bg-black text-white grid place-items-center text-[11px] font-mono") ✓
+        span(className="font-medium text-[13px]") #{toastMsg}
+
+    div.grid.grid-cols-12.gap-4.mt-6
+      div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
+        Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+            div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+              div.flex.items-center.gap-2
+                div.w-1.5.h-1.5.rounded-xs.bg-white(class={hydrated.load ? "" : "animate-pulse"})
+                span(className="text-[11px] font-mono tracking-wide text-[#666]") Hydrate: load() — immediate
+              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.load ? "bg-white text-black" : "bg-[#1a1a1a] text-[#666]")}) #{hydrated.load ? "hydrated ✓" : "hydrating…"}
+            div(className="p-6 sm:p-8 flex flex-col lg:flex-row gap-6")
+              div.flex-1
+                div(className="inline-flex items-center gap-2 text-[11px] font-mono tracking-wide text-[#666]")
+                  span.px-1.5.py-1.rounded-xs.bg-white.text-black.font-medium FLAGSHIP
+                  span 11.4CH · 140W · HDMI 2.1
+                h2(className="text-[24px] font-semibold tracking-[-0.02em] leading-none mt-3 text-white") Marantz Cinema 30
+                p(className="text-[#666] text-[13px] leading-relaxed mt-2 font-mono") The reference powerhouse with HDAM, Dirac Live, 8K passthrough. Server-rendered shell — same code, no mismatch.
+                div.flex.flex-wrap.gap-1.5.mt-4
+                  each f in ["Dolby Atmos", "IMAX Enhanced", "Dirac Live", "HEOS"] key f
+                    span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#888]") #{f}
+                div.flex.items-end.gap-4.mt-5
+                  div
+                    div(className="text-[11px] font-mono line-through text-[#525252]") $4,999
+                    div(className="text-[20px] font-semibold tracking-tight text-white") $4,499
+                  button(className="flex-1 sm:flex-none bg-accent-1 text-white hover:bg-[var(--accent-1-hover)] font-medium px-5 py-2.5 rounded-xs text-[13px] transition flex items-center justify-center gap-2 border border-accent-1" onClick={addToCart})
+                    span Add to Cart
+                    span.font-mono → 
+                  button(className="px-4 py-2.5 rounded-xs border border-[#262626] text-[#888] hover:bg-[#111] hover:text-white transition font-medium text-[13px]" onClick={() => setShowDetail(!showDetail)}) #{showDetail ? "Hide" : "Details"}
+                div(className="flex items-center gap-3 text-[11px] font-mono text-[#525252] mt-3")
+                  span.flex.items-center.gap-1
+                    span.w-1.h-1.rounded-xs.bg-white
+                    span In stock · Ships today
+                  span(className="text-[#262626]") ·
+                  span Free 2-day delivery
+              div(className="w-full lg:w-72 h-56 lg:h-64 bg-black rounded-xs overflow-hidden relative border border-[#1a1a1a]")
+                img.w-full.h-full.object-cover.opacity-80.grayscale(src="https://picsum.photos/seed/marantz30/600/400" alt="Marantz")
+                div.absolute.inset-0.bg-gradient-to-t.from-black.via-transparent.to-transparent
+                div(className="absolute bottom-3 left-3 right-3 bg-black/80 backdrop-blur border border-[#262626] rounded-xs p-3 flex items-center justify-between")
+                  div
+                    div(className="text-[11px] font-mono tracking-wide text-[#666]") TODAY'S DEAL
+                    div(className="text-[13px] font-medium text-white") Save $500 — ends midnight
+                  div(className="text-[11px] font-mono text-white") 04:21:33
+            if showDetail
+              div(className="px-6 pb-6 grid sm:grid-cols-3 gap-px bg-[#1a1a1a] border-t border-[#1a1a1a] rounded-xs overflow-hidden mt-4")
+                div.bg-black.p-3
+                  div(className="font-medium text-white text-[12px]") Power
+                  div(className="text-[#666] text-[11px] font-mono") 140W × 11.4, HDAM discrete
+                div.bg-black.p-3
+                  div(className="font-medium text-white text-[12px]") HDMI
+                  div(className="text-[#666] text-[11px] font-mono") 7× 8K, eARC, VRR passthrough
+                div.bg-black.p-3
+                  div(className="font-medium text-white text-[12px]") Room EQ
+                  div(className="text-[#666] text-[11px] font-mono") Dirac Live included
+
+        Hydrate(when={idle({ timeout: 1500 })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, idle: true }))})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+            div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+              div.flex.items-center.gap-2
+                div.w-1.5.h-1.5.rounded-xs.bg-white(class={hydrated.idle ? "" : "animate-pulse"})
+                span(className="text-[11px] font-mono tracking-wide text-[#666]") Hydrate: idle({"{"} timeout: 1500 {"}"}) — reviews
+              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.idle ? "bg-white text-black" : "bg-[#1a1a1a] text-[#666]")}) #{hydrated.idle ? "hydrated ✓" : "waiting for idle…"}
+            div.p-6
+              div.flex.items-center.justify-between
+                div
+                  h3(className="text-[14px] font-medium tracking-[-0.01em] text-white") Reviews
+                  p(className="text-[11px] font-mono text-[#525252]") Suspends server render, resumes on client
+                div(className="flex items-center gap-1 text-white text-[11px]") ★★★★★
+                  span(className="text-[11px] font-mono text-[#525252] ml-1") 4.9 (189)
+              ErrorBoundary(fallback="Reviews failed to load.")
+                Suspense(fallback="Loading reviews… (suspended 1.8s)")
+                  ReviewList(data={reviewsPromise})
+              div(className="mt-3 text-[11px] font-mono text-[#525252]") Hydrate when idle → server sends seeded HTML, client hydrates without blocking main thread.
+
+        Hydrate(when={visible({ rootMargin: "200px" })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, visible: true }))})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+            div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+              div.flex.items-center.gap-2
+                div.w-1.5.h-1.5.rounded-xs.bg-white(class={hydrated.visible ? "" : "animate-pulse"})
+                span(className="text-[11px] font-mono tracking-wide text-[#666]") Hydrate: visible({"{"} rootMargin: "200px" {"}"}) — related
+              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.visible ? "bg-white text-black" : "bg-[#1a1a1a] text-[#666]")}) #{hydrated.visible ? "hydrated ✓" : "waiting for visible…"}
+            div.p-6
+              h3(className="text-[14px] font-medium tracking-[-0.01em] text-white") You may also like
+              p(className="text-[11px] font-mono text-[#525252] mt-1") Hydrates only when scrolled into view — saves JS until needed.
+              ErrorBoundary(fallback="Related failed.")
+                Suspense(fallback="Loading related…")
+                  RelatedGrid(data={relatedPromise})
+              div(className="mt-3 text-[11px] font-mono text-[#525252]") Scrolled into viewport → hydration gate resolves.
+
+        Hydrate(when={interaction({ events: ["click", "focusin"] })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, interaction: true }))})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+            div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+              div.flex.items-center.gap-2
+                div.w-1.5.h-1.5.rounded-xs.bg-white(class={hydrated.interaction ? "" : "animate-pulse"})
+                span(className="text-[11px] font-mono tracking-wide text-[#666]") Hydrate: interaction(["click","focusin"]) — Q&A
+              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.interaction ? "bg-white text-black" : "bg-[#1a1a1a] text-[#666]")}) #{hydrated.interaction ? "hydrated ✓" : "waiting for click…"}
+            div.p-6
+              h3(className="text-[14px] font-medium tracking-[-0.01em] text-white") Q&A
+              p(className="text-[11px] font-mono text-[#525252]") Click to hydrate — captures early events before JS loads.
+              ErrorBoundary(fallback="Q&A failed.")
+                Suspense(fallback="Loading...")
+                  QAList(data={qaPromise})
+              div.mt-3.flex.gap-1.5
+                each idx in [0,1,2] key idx
+                  button(onClick={() => setActiveQA(idx)} class={"px-3 py-1 rounded-xs text-[11px] font-mono font-medium border " + (activeQA === idx ? "bg-white text-black border-white" : "bg-black border-[#1a1a1a] text-[#666] hover:text-white")}) Q#{idx+1}
+              div(className="mt-3 p-3 bg-black border border-[#1a1a1a] rounded-xs")
+                div(className="text-[13px] font-medium text-white") #{["Does this support 8K/120Hz passthrough?", "Can I use Dirac Live without extra hardware?", "How does it compare to separates?"][activeQA]}
+                div(className="text-[13px] text-[#888] mt-1 leading-relaxed font-mono") #{["Yes — 7x HDMI 2.1 (40Gbps) with 8K60 and 4K120, plus eARC. VRR/ALLM pass through untouched.", "Included mic + app. Full-room correction in ~10 min. Optional Dirac Live Bass Control upgrade.", "For < 300W peaks, this matches separates. Above that, pair front L/R pre-outs to an external amp."][activeQA]}
+                div(className="text-[11px] font-mono text-[#525252] mt-2") Active Q#{activeQA + 1} — click buttons to switch
+              div(className="mt-2 text-[11px] font-mono text-[#525252]") Event capture via initializeHydrationEventCapture(document) — no lost clicks.
+
+      div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 sticky top-[72px] h-fit")
+        Hydrate(when={media("(min-width: 1024px)")} split={false} onHydrated={() => setHydrated((h) => ({ ...h, media: true }))})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+            div.flex.items-center.justify-between
+              div(className="text-[11px] font-mono tracking-wide text-[#666]") SIDEBAR — media("(min-width: 1024px)")
+              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.media ? "bg-white text-black" : "bg-[#1a1a1a] text-[#525252]")}) #{hydrated.media ? "hydrated" : "not hydrated"}
+            div(className="mt-3 space-y-2 text-[11px] font-mono")
+              div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 flex items-center justify-between")
+                span(className="text-[#525252]") Specs hydration
+                span.text-white #{hydrated.media ? "visible" : "hidden on mobile"}
+              div(className="bg-black border border-[#1a1a1a] rounded-xs p-3")
+                div.font-medium.text-white Technical specs
+                div(className="text-[#525252] mt-1") Only hydrates on ≥1024px. Saves JS on mobile.
+                table(className="w-full mt-2 text-[11px]")
+                  tr(className="border-b border-[#1a1a1a]")
+                    td(className="py-1 text-[#525252]") Power
+                    td.py-1.text-white.text-right 140W/ch
+                  tr(className="border-b border-[#1a1a1a]")
+                    td(className="py-1 text-[#525252]") Channels
+                    td.py-1.text-white.text-right 11.4
+                  tr
+                    td(className="py-1 text-[#525252]") HDMI
+                    td.py-1.text-white.text-right 7× 8K
+            div(className="text-[11px] font-mono text-[#525252] mt-2") media query gate.
+
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") HYDRATION TIMELINE
+          div.mt-3.space-y-2
+            div.flex.items-center.gap-3
+              div.w-1.5.h-1.5.rounded-xs(class={hydrated.load ? "bg-white" : "bg-[#262626]"})
+              div(className="flex-1 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                div.h-1.bg-white.transition-all(style={"width:" + (hydrated.load ? "100%" : "20%")})
+              span(className="text-[11px] font-mono text-white") load
+            div.flex.items-center.gap-3
+              div.w-1.5.h-1.5.rounded-xs(class={hydrated.idle ? "bg-white" : "bg-[#525252] animate-pulse"})
+              div(className="flex-1 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                div.h-1.bg-white.transition-all(style={"width:" + (hydrated.idle ? "100%" : "15%")})
+              span(className="text-[11px] font-mono text-white") idle 1.5s
+            div.flex.items-center.gap-3
+              div.w-1.5.h-1.5.rounded-xs(class={hydrated.visible ? "bg-white" : "bg-[#525252] animate-pulse"})
+              div(className="flex-1 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                div.h-1.bg-white.transition-all(style={"width:" + (hydrated.visible ? "100%" : "10%")})
+              span(className="text-[11px] font-mono text-white") visible
+            div.flex.items-center.gap-3
+              div.w-1.5.h-1.5.rounded-xs(class={hydrated.interaction ? "bg-white" : "bg-[#525252] animate-pulse"})
+              div(className="flex-1 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                div.h-1.bg-white.transition-all(style={"width:" + (hydrated.interaction ? "100%" : "5%")})
+              span(className="text-[11px] font-mono text-white") interaction
+            div.flex.items-center.gap-3
+              div.w-1.5.h-1.5.rounded-xs(class={hydrated.media ? "bg-white" : "bg-[#262626]"})
+              div(className="flex-1 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+                div.h-1.bg-white.transition-all(style={"width:" + (hydrated.media ? "100%" : "30%")})
+              span(className="text-[11px] font-mono text-white") media
+          div(className="mt-3 text-[11px] font-mono text-[#525252] leading-relaxed") Scroll to trigger visible, idle fires after main thread idle, click Q&A to trigger interaction. All gates use the same component code.
+
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") CODE — UNIVERSAL
+          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888]")
+            code const reviews = await suspend(fetchReviews)
+          div(className="text-[11px] font-mono text-[#525252] mt-2") In Octane, <span class="text-white">Hydrate(when={"{"}idle(){"}"})</span> + <span class="text-white">Suspense</span> + <span class="text-white">use(promise)</span> replace Next.js <span class="font-mono">getServerProps</span> boundaries.
+
+        Hydrate(when={never()} split={false})
+          div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4 opacity-60")
+            div(className="text-[11px] font-mono tracking-wide text-[#666]") NEVER — static
+            div(className="text-[13px] text-[#888] mt-2 font-mono") Footer is static, never hydrates. Zero JS shipped.
+            div(className="mt-2 text-[11px] font-mono text-[#525252]") Hydrate(when={"{"}never(){"}"})
+
+        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-white") WHY IT WINS
+          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1 leading-relaxed")
+            li Next.js requires <span class="text-white">getServerProps</span> per route — framework boundary.
+            li Octane's <span class="text-white">suspend/resume</span> is universal: same component suspends server, resumes client.
+            li Partial hydration via <span class="text-white">Hydrate</span> strategies, not whole-page.
+
+    div(className="w-full px-6")
+      div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-6 mt-4")
+        div(className="flex flex-wrap items-center gap-2 text-[11px] font-mono tracking-wide text-[#525252]")
+          span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a]") ACTIVITY & ERROR
+          span Demo of Octane's other shell primitives
+        div(className="grid sm:grid-cols-3 gap-2 mt-3")
+          Activity(mode="visible")
+            div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono")
+              div.font-medium.text-white Activity visible
+              div(className="text-[#666] mt-1") Hydrated and visible — fully interactive.
+          Activity(mode="hidden")
+            div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono")
+              div.font-medium.text-white Activity hidden
+              div(className="text-[#666] mt-1") Hidden but preserved — not unmounted.
+          ErrorBoundary(fallback="Error captured")
+            div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono")
+              div.font-medium.text-white Error captured
+              div(className="text-[#666] mt-1") Fallback rendered without crashing shell.
+          Suspense(fallback="Loading...")
+            div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono")
+              div.font-medium.text-white Suspense works
+              div(className="text-[#666] mt-1") Content suspended correctly.

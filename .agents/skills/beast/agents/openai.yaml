@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beast"
+  short_description: "Build, debug, and ship Beast BTSX → TSRX → Octane apps"
+  default_prompt: "Use $beast to scaffold a new app, compile BTSX to TSRX, fix diagnostics, or build a Beast + Vite project."

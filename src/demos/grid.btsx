@@ -1,0 +1,224 @@
+import { useEffect, useMemo, useRef, useState } from "octane"
+import { cn } from "../lib/utils"
+import Icon from "../lib/icons/index.btsx"
+
+module
+  interface Item { id: string; title: string; category: string; height: number; likes: number; price: number; seed: number; color: string; author: string }
+  const CATS = ["All", "Nature", "Architecture", "People", "Tech", "Food"] as const
+  const COLORS: Record<string, string> = { Nature: "#171717", Architecture: "#262626", People: "#404040", Tech: "#525252", Food: "#737373" }
+  function makeItems(n: number): Item[] {
+    const out: Item[] = []
+    const cats = ["Nature", "Architecture", "People", "Tech", "Food"] as const
+    const titles = ["Alpine Ridge", "Neon Grid", "Harbor Light", "Desert Bloom", "Urban Canopy", "Silent Echo", "Solar Flare", "Midnight Olive", "Concrete Wave", "Velvet Dusk"]
+    for (let i = 0; i < n; i++) {
+      const cat = cats[i % cats.length]!
+      const h = 180 + (i % 7) * 34 + Math.floor((Math.sin(i * 1.7) + 1) * 30)
+      out.push({
+        id: "item-" + i,
+        title: titles[i % titles.length]! + " #" + i,
+        category: cat,
+        height: h,
+        likes: 40 + (i * 13) % 500,
+        price: 12 + (i % 50) * 3,
+        seed: i,
+        color: COLORS[cat]!,
+        author: ["Alex", "Maya", "Jordan", "Riley", "Casey"][i % 5]!,
+      })
+    }
+    return out
+  }
+
+props {}: {}
+
+setup
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [query, setQuery] = useState("")
+  const [category, setCategory] = useState("All")
+  const [sort, setSort] = useState("featured")
+  const [columns, setColumns] = useState(3)
+  const [gap, setGap] = useState(16)
+  const [overscan, setOverscan] = useState(3)
+  const [scrollTop, setScrollTop] = useState(0)
+  const [viewportH, setViewportH] = useState(640)
+  const [remeasures, setRemeasures] = useState(0)
+  const allItems = useMemo(() => makeItems(10000), [])
+  const filtered = useMemo(() => {
+    let out = allItems
+    if (category !== "All") out = out.filter((i) => i.category === category)
+    if (query) {
+      const q = query.toLowerCase()
+      out = out.filter((i) => i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q) || i.author.toLowerCase().includes(q))
+    }
+    if (sort === "likes") out = [...out].sort((a, b) => b.likes - a.likes)
+    if (sort === "price-asc") out = [...out].sort((a, b) => a.price - b.price)
+    if (sort === "price-desc") out = [...out].sort((a, b) => b.price - a.price)
+    if (sort === "newest") out = [...out].sort((a, b) => b.seed - a.seed)
+    return out
+  }, [allItems, query, category, sort])
+  const avgH = 280
+  const rowH = avgH + gap
+  const totalRows = useMemo(() => Math.ceil(filtered.length / columns), [filtered.length, columns])
+  const totalHeight = totalRows * rowH
+  const startRow = useMemo(() => Math.max(0, Math.floor(scrollTop / rowH) - overscan), [scrollTop, rowH, overscan])
+  const endRow = useMemo(() => Math.min(totalRows, Math.ceil((scrollTop + viewportH) / rowH) + overscan), [scrollTop, viewportH, rowH, totalRows, overscan])
+  const startIdx = startRow * columns
+  const endIdx = Math.min(filtered.length, endRow * columns)
+  const visible = useMemo(() => filtered.slice(startIdx, endIdx), [filtered, startIdx, endIdx])
+  const visibleCount = visible.length
+  const ratio = useMemo(() => filtered.length ? Math.round((visibleCount / filtered.length) * 1000) / 10 : 0, [visibleCount, filtered.length])
+  const topOffset = startRow * rowH
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const onScroll = () => setScrollTop(el.scrollTop)
+    const onResize = () => setViewportH(el.clientHeight)
+    el.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onResize)
+    onResize()
+    const ro = new ResizeObserver(() => {
+      setRemeasures((c) => c + 1)
+    })
+    ro.observe(el)
+    return () => {
+      el.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onResize)
+      ro.disconnect()
+    }
+  }, [])
+  useEffect(() => {
+    const el = containerRef.current
+    if (el) setViewportH(el.clientHeight)
+  }, [columns, gap])
+  const clearFilters = () => {
+    setQuery("")
+    setCategory("All")
+    setSort("featured")
+  }
+
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
+
+div.bg-black
+  div(className="w-full px-6 py-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-0")
+      div
+        h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white flex items-center space-x-4")
+          span Virtualized Masonry Grid
+          button(onClick={toggleInfo} className='text-sm text-accent-2') ?
+        div(className="inline-flex items-center gap-2 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-[11px] font-mono tracking-wide") 03 — GRID — VIRTUALIZATION
+        p(className={cn("text-[#888] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono hidden", {'flex': showInfo})}) 10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions.
+      div.flex.flex-wrap.gap-2
+        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/")
+          Icon(name="home-back")
+        button(className="px-3 py-1 rounded-none bg-mist-400 text-mist-800 font-medium text-[12px] transition border border-mist-400" onClick={clearFilters}) Clear filters
+        div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{filtered.length.toLocaleString()} / 10,000
+    div.grid.grid-cols-12.gap-4.mt-6
+      div(className="col-span-12 lg:col-span-3 bg-[#0a0a0a] rounded-xs h-fit sticky top-[72px]")
+        div
+          label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") SEARCH
+          div.relative
+            input(className="w-full bg-black border border-[#262626] rounded-xs pl-8 pr-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono" value={query} placeholder="Search title, category, author" onInput={(e) => setQuery((e.target as HTMLInputElement).value)})
+            div(className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#525252] text-[12px]") ⌕
+          div(className="text-[11px] font-mono text-[#525252] mt-1") #{filtered.length.toLocaleString()} matches
+        div.mt-4
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") CATEGORY
+          div.flex.flex-wrap.gap-1.mt-2
+            each cat in CATS key cat
+              button(onClick={() => setCategory(cat)} class={"px-2.5 py-1 rounded-xs text-[11px] font-mono font-medium border transition " + (category === cat ? "bg-white text-black border-white" : "bg-black border-[#1a1a1a] text-[#666] hover:bg-[#111] hover:text-white")}) #{cat}
+        div.mt-4.grid.grid-cols-2.gap-3
+          div
+            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") SORT
+            select(className="w-full bg-black border border-[#262626] rounded-xs px-2 py-2 text-[12px] font-mono" value={sort} onChange={(e) => setSort((e.target as HTMLSelectElement).value)})
+              option(value="featured") Featured
+              option(value="likes") Most liked
+              option(value="price-asc") Price low→high
+              option(value="price-desc") Price high→low
+              option(value="newest") Newest
+          div
+            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") COLUMNS — #{columns}
+            input.w-full.accent-white(type="range" min="1" max="5" value={columns} onInput={(e) => setColumns(parseInt((e.target as HTMLInputElement).value, 10))})
+        div.mt-3.grid.grid-cols-2.gap-3
+          div
+            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") GAP — #{gap}px
+            input.w-full.accent-white(type="range" min="8" max="32" value={gap} onInput={(e) => setGap(parseInt((e.target as HTMLInputElement).value, 10))})
+          div
+            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") OVERSCAN — #{overscan}
+            input.w-full.accent-white(type="range" min="0" max="8" value={overscan} onInput={(e) => setOverscan(parseInt((e.target as HTMLInputElement).value, 10))})
+        div(className="bg-mist-950/60 rounded-xs mt-6 space-y-2 text-[11px] font-mono")
+          div.flex.justify-between
+            span(className="text-[#525252]") Total
+            span.font-medium.text-white #{filtered.length.toLocaleString()}
+          div.flex.justify-between
+            span(className="text-[#525252]") Rendered
+            span.font-medium.text-white #{visibleCount.toLocaleString()} (#{ratio}%)
+          div.flex.justify-between
+            span(className="text-[#525252]") Saved renders
+            span.font-medium.text-white #{(filtered.length - visibleCount).toLocaleString()}
+          div(className="w-full h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+            div.h-1.bg-white(style={"width:" + ratio + "%"})
+          div.flex.justify-between
+            span(className="text-[#525252]") Remeasures
+            span.text-white #{remeasures}
+          div.flex.justify-between
+            span(className="text-[#525252]") Row height (est.)
+            span.text-white #{rowH}px
+          div.flex.justify-between
+            span(className="text-[#525252]") Viewport
+            span.text-white #{viewportH}px · top #{Math.round(scrollTop)}px
+        div(className="bg-mist-950/60 rounded-xs mt-6 text-[11px] leading-relaxed font-mono")
+          div.font-medium.text-white Why Octane wins
+            div(className="text-[#666] mt-1") React-Window needs fixed.
+      div(className="col-span-12 lg:col-span-9")
+        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
+          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+            div.flex.items-center.gap-2
+              div.w-1.5.h-1.5.rounded-xs.bg-white.animate-pulse
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") VIRTUALIZED — #{columns} cols — gap #{gap}px — overscan #{overscan}
+            div(className="text-[11px] font-mono") #{visibleCount} rendered — est. #{totalHeight.toLocaleString()}px
+          div(ref={containerRef} className="relative h-[640px] overflow-auto bg-black p-2")
+            div(style={"column-count:" + columns + ";column-gap:" + gap + "px"})
+                  each item in visible key item.id
+                    div(className="break-inside-avoid mb-4 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden hover:border-[#262626] transition group")
+                      div.relative.overflow-hidden(style={"height:" + item.height + "px;background:" + item.color})
+                        img(className="w-full h-full object-cover opacity-80 group-hover:opacity-90 transition duration-500 grayscale group-hover:grayscale-0" src={"https://picsum.photos/seed/" + item.seed + "/400/" + item.height} alt={item.title})
+                        div(className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent")
+                        div(className="absolute top-2 left-2 px-1.5 py-1 rounded-xs text-[10px] font-mono font-medium tracking-wide text-white border border-white/20" style={"background:" + item.color}) #{item.category.toUpperCase()}
+                        div(className="absolute bottom-2 right-2 px-2 py-1 rounded-xs bg-black/80 backdrop-blur border border-[#262626] text-[11px] font-mono font-medium text-white") $#{item.price}
+                      div.p-3
+                        div.flex.items-start.justify-between.gap-2
+                          div.flex-1.min-w-0
+                            div(className="text-[13px] font-medium text-white leading-tight truncate") #{item.title}
+                            div(className="text-[11px] font-mono text-[#666]") by #{item.author} · seed #{item.seed}
+                          div(className="w-7 h-7 rounded-xs grid place-items-center text-white text-[10px] font-mono font-medium border border-white" style={"background:" + item.color}) #{item.author.slice(0,1)}
+                        div.flex.items-center.gap-2.mt-2
+                          div(className="flex items-center gap-1 text-[11px] font-mono")
+                            span.text-white ★
+                            span.font-medium.text-white #{(item.likes % 100).toString().padStart(2,"0")}
+                            span (className="text-[#525252]" #{item.likes})
+                          div(className="ml-auto px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{item.height}px
+                        div.flex.gap-1.mt-2
+                          span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#525252]") #{Math.round(item.height/10)*10}h
+                          span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#525252]") ##{item.id}
+          div(className="grid grid-cols-3 divide-x divide-[#1a1a1a] bg-black text-center text-[11px] font-mono")
+            div.p-3
+              div(className="font-medium text-white text-[13px]") #{filtered.length.toLocaleString()}
+              div(className="tracking-wide text-[#525252]") FILTERED
+            div.p-3
+              div(className="font-medium text-white text-[13px]") #{visibleCount}
+              div(className="tracking-wide text-[#525252]") IN DOM
+            div.p-3
+              div(className="font-medium text-white text-[13px]") -#{(100 - ratio).toFixed(1)}%
+              div(className="tracking-wide text-[#525252]") COST SAVED
+        div(className="mt-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-[#666]") PERFORMANCE NOTES
+          div(className="grid sm:grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
+            div.bg-black.p-3
+              div(className="font-medium text-white text-[12px]") ResizeObserver
+              div(className="text-[#666] mt-1 text-[11px] font-mono") Remeasures on column/gap change. Count #{remeasures}.
+            div.bg-black.p-3
+              div(className="font-medium text-white text-[12px]") Overscan #{overscan}
+              div(className="text-[#666] mt-1 text-[11px] font-mono") Extra rows above/below viewport to avoid blank scroll.
+            div.bg-black.p-3
+              div(className="font-medium text-white text-[12px]") 10k → #{visibleCount}
+              div(className="text-[#666] mt-1 text-[11px] font-mono") No fixed size assumptions. Dynamic heights.
