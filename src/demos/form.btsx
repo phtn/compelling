@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState } from "octane"
+import { cn } from "../lib/utils"
+import Icon from "../lib/icons/index.btsx"
+
 
 module
   type Status = { checking: boolean; valid: boolean | null; message: string; cancelled: number; gen: number }
@@ -153,15 +156,19 @@ setup
     }, 900)
   }
 
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
+
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
+    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-0")
       div
-        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 02 — FORM — VALIDATION STREAMS
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Adaptive Form with Validation Streams
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions.
+        h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white") Adaptive Form with Validation Streams
+        div(className="inline-flex items-center gap-2 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-[11px] font-mono tracking-wide") VALIDATION STREAMS
+        p(className={cn("text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono hidden", {'flex': showInfo})}) Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions.
       div.flex.flex-wrap.gap-2
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
+        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/")
+          Icon(name="home-back")
         div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2")
           div.w-1.5.h-1.5.rounded-xs(class={saving ? "bg-white animate-pulse" : "bg-white"})
           span #{saving ? "Saving draft…" : "All changes saved"}
@@ -286,7 +293,7 @@ div.bg-black
             div RxJS needs manual unsubscribe + switchMap + debounce. Octane's <span class="text-white">derive(async () => validate(), {"{ debounce: 300, cancelOnUpdate: true }"})</span> cancels prior fetch automatically.
 
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 min-w-0")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+        div(className="rounded-xs")
           div(className="text-[11px] font-mono tracking-wide text-[#666]") LIVE STREAM METRICS
           div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3 text-center")
             div.bg-black.p-3
@@ -310,7 +317,7 @@ div.bg-black
               span.text-white #{latencies.length ? latencies.join(", ") : "—"}
           div(className="mt-3 p-2 bg-black border border-[#1a1a1a] rounded-xs text-[12px] font-mono text-[#525252] leading-relaxed") Type fast in <span class="text-white">email</span> to see cancellations spike. Prior validation is aborted before network resolves.
 
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
+        div(className="mt-8")
           div(className="text-[11px] font-mono tracking-wide text-[#666]") VALIDATION DEPENDENCIES
           div.mt-3.space-y-2
             div(className="flex items-center justify-between p-2 rounded-xs bg-black border border-[#1a1a1a]")
@@ -334,12 +341,12 @@ div.bg-black
                 div(className="text-[#525252] font-mono text-[11px]") 160 max
               div(class={"text-[11px] font-mono " + (bioCount > 160 ? "text-white" : "text-[#525252]")}) #{bioCount}/160
 
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4 min-w-0 overflow-hidden")
+        div(className="mt-8 min-w-0 overflow-hidden")
           div(className="text-[11px] font-mono tracking-wide text-[#666]") CODE SHAPE
           pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888] max-w-full whitespace-pre-wrap break-words")
             code const email = stream("")&#10;const validation = derive(async () => &#123;&#10;  return await validate(email())&#10;&#125;, &#123; debounce: 300, cancelOnUpdate: true &#125;)
           div(className="text-[11px] font-mono text-[#525252] mt-2") In Octane, the stream is the source of truth. No useEffect cleanup discipline, no switchMap.
-        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
+        div(className="mt-8")
           div(className="text-[11px] font-mono tracking-wide text-white") TIP — TRY THESE
           ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1 leading-relaxed")
             li Type <span class="text-white">taken@taken.com</span> → shows ✗
