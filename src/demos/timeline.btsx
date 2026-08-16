@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "octane"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface HistoryEntry { value: string; ts: number; branch: number }
@@ -71,18 +72,12 @@ setup
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [pos, history])
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
-      div
-        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 05 — TIMELINE — TEMPORAL REACTIVITY
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Time-Travel State Debugger
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Immutable snapshots, bidirectional travel, branching — no Redux DevTools. <span class="text-white">timeline(content, {compress:true})</span> gives <span class="text-white">undo/redo/fork/scrub</span> with structural sharing.
-      div(className="flex flex-wrap gap-2")
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
-        button(className={"px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (compress ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} onClick={() => setCompress(!compress)}) #{compress ? "Compress on" : "Compress off"}
-        button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition" onClick={fork}) Fork Branch
+    Header(title="Time-Travel State Debugger" subtitle="05 — TIMELINE — TEMPORAL REACTIVITY" description="Immutable snapshots, bidirectional travel, branching — no Redux DevTools. timeline(content, {compress:true}) gives undo/redo/fork/scrub with structural sharing." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "compress", label: compress ? "Compress on" : "Compress off", onClick: () => setCompress(!compress), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (compress ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")}, {id: "fork", label: "Fork Branch", onClick: fork, className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition"}]})
 
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")

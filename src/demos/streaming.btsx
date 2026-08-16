@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "octane"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface Result { id: string; title: string; excerpt: string; score: number; cached: boolean }
@@ -63,6 +64,8 @@ setup
   useEffect(() => {
     startStream()
   }, [])
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
   useEffect(() => {
     const t = window.setTimeout(() => startStream(), 320)
     return () => window.clearTimeout(t)
@@ -70,15 +73,7 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
-      div
-        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 08 — STREAMING — EDGE AT CDN
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Edge-Streaming Search
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Server components that <span class="text-white">stream progressively from edge</span> — <span class="text-white">yield &lt;skeleton&gt;</span> then each <span class="text-white">&lt;result-card&gt;</span> hydrates as it arrives. Keyed cache at CDN.
-      div(className="flex flex-wrap gap-2")
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
-        button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] border border-accent-1" onClick={startStream}) Stream
-        span(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{streaming ? "streaming…" : "idle"} · #{results.length}/#{filtered.length || all.length}
+    Header(title="Edge-Streaming Search" subtitle="STREAMING EDGE AT CDN" icon='mechanics' description="Server components that stream progressively from edge — yield <skeleton> then each <result-card> hydrates as it arrives. Keyed cache at CDN." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "stream", label: "Stream", onClick: startStream, className: "px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] border border-accent-1"}, {id: "status", label: (streaming ? "streaming… " : "idle ") + results.length + "/" + (filtered.length || all.length), className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")

@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "octane"
+import { cn } from "@/lib/utils"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface Particle { x: number; y: number; vx: number; vy: number; life: number }
@@ -18,6 +20,8 @@ setup
   })
   const [frame, setFrame] = useState(0)
   const [shared, setShared] = useState(true)
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
   const workerMetrics = useMemo(() => ({ fps, gravity, shared: shared ? "SharedArrayBuffer" : "structuredClone", particles: particles.length }), [fps, gravity, shared, particles.length])
   const onGravityInput = (e: Event) => setGravity(parseFloat((e.target as HTMLInputElement).value))
   const onCountInput = (e: Event) => setCount(parseInt((e.target as HTMLInputElement).value, 10))
@@ -107,15 +111,7 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
-      div
-        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 06 — WORKER — ZERO-COST THREADING
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Web Worker Reactivity
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Signals auto-proxied to worker via <span class="text-white">SharedArrayBuffer + Atomics</span> — no <span class="text-white">postMessage</span> boilerplate. Slider updates worker instantly at 120fps.
-      div(className="flex flex-wrap gap-2")
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
-        button(className={"px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (running ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} onClick={() => setRunning(!running)}) #{running ? "Running" : "Paused"}
-        button(className={"px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (shared ? "bg-accent-2 text-white border-accent-2" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} onClick={() => setShared(!shared)}) #{shared ? "SharedArrayBuffer" : "Clone"}
+    Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (running ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")}, {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (shared ? "bg-accent-2 text-white border-accent-2" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} ]})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
@@ -144,7 +140,7 @@ div.bg-black
           div(className="text-accent-2 text-[12px]") ●
           div(className="text-[12px] leading-relaxed font-mono")
             div(className="font-medium text-white") Why Octane wins
-            div(className="text-[#666] mt-1") React needs <span class="text-white">useWorker + Comlink</span> + serialization. Octane <span class="text-white">worker.bind({particles,gravity})</span> auto-proxies signals — <span class="text-white">gravity.set()</span> hits worker without copy.
+            div(className="text-[#666] mt-1") React needs useWorker + Comlink + serialization. Octane worker.bind({particles,gravity}) auto-proxies signals — gravity.set() hits worker without copy.
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
           div(className="text-[11px] font-mono tracking-wide text-[#666]") METRICS

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "octane"
-import { cn } from "../lib/utils"
-import Icon from "../lib/icons/index.btsx"
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface Item { id: string; title: string; category: string; height: number; likes: number; price: number; seed: number; color: string; author: string }
@@ -101,18 +102,7 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-0")
-      div
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white flex items-center space-x-4")
-          span Virtualized Masonry Grid
-          button(onClick={toggleInfo} className='text-sm text-accent-2') ?
-        div(className="inline-flex items-center gap-2 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-[11px] font-mono tracking-wide") 03 — GRID — VIRTUALIZATION
-        p(className={cn("text-[#888] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono hidden", {'flex': showInfo})}) 10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions.
-      div.flex.flex-wrap.gap-2
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/")
-          Icon(name="home-back")
-        button(className="px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400" onClick={clearFilters}) Clear filters
-        div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{filtered.length.toLocaleString()} / 10,000
+    Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "clear", label: "Clear filters", onClick: clearFilters, className: "px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400"}, {id: "count", label: filtered.length.toLocaleString() + " / 10,000", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
     div.grid.grid-cols-12.gap-4.mt-6
       div(className="col-span-12 lg:col-span-3 bg-[#0a0a0a] rounded-xs h-fit sticky top-[72px]")
         div

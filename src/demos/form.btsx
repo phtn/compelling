@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "octane"
-import { cn } from "../lib/utils"
-import Icon from "../lib/icons/index.btsx"
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import Header from "@/components/ui/header.btsx"
 
 
 module
@@ -161,17 +162,8 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-0")
-      div
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white") Adaptive Form with Validation Streams
-        div(className="inline-flex items-center gap-2 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-[11px] font-mono tracking-wide") VALIDATION STREAMS
-        p(className={cn("text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono hidden", {'flex': showInfo})}) Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions.
-      div.flex.flex-wrap.gap-2
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/")
-          Icon(name="home-back")
-        div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2")
-          div.w-1.5.h-1.5.rounded-xs(class={saving ? "bg-white animate-pulse" : "bg-white"})
-          span #{saving ? "Saving draft…" : "All changes saved"}
+    Header(title="Adaptive Form" subtitle="with validation streams" icon='mechanics' description="Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions." isVisible={showInfo} toggleFn={toggleInfo} pending={saving} actions={[]})
+    //
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden min-w-0")
         div(className="h-14 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-6")

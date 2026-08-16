@@ -12,6 +12,7 @@ export interface IconProps {
   color?: string
   solid?: boolean
   onClick?: VoidFunction
+  svgStyle?: ClassName
 }
 
 export interface IconData {

@@ -1,0 +1,14 @@
+module
+  interface BrandProps {
+    imageUrl: string;
+  }
+
+props { imageUrl }: BrandProps
+div(className="flex items-center gap-3")
+  div(className="flex items-center gap-5")
+    img(src={imageUrl} className="size-16")
+    div
+      div(className="font-medium text-white text-base tracking-normal leading-none opacity-50") Compelling
+      div(className="font-semibold text-white text-base md:text-lg tracking-tight leading-none") Demos & Guides
+    div(className="hidden sm:block h-3 w-px bg-mist-300 mx-px")
+    div(className="hidden lg:block text-[12px] font-mono text-[#888] tracking-[-0.01em]") Beast

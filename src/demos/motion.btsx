@@ -1,4 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "octane"
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import Header from "@/components/ui/header.btsx"
+
+
 
 props {}: {}
 
@@ -56,6 +61,8 @@ setup
   }
   const onStiffnessInput = (e: Event) => setStiffness(parseFloat((e.target as HTMLInputElement).value))
   const onDampingInput = (e: Event) => setDamping(parseFloat((e.target as HTMLInputElement).value))
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
   const toggleOpenDrag = () => { if (!isDragging) setIsOpen((v) => !v) }
   useEffect(() => {
     // animation loop not blocking reactive graph
@@ -65,15 +72,7 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between border-b border-[#1a1a1a] pb-6")
-      div
-        div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono tracking-wide") 07 — MOTION — ANIMATION ORCHESTRATOR
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] mt-2 text-white") Declarative Animation Orchestrator
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono") Springs that <span class="text-white">interrupt and preserve velocity</span>. <span class="text-white">mode:'interrupt'</span> cancels old targets — no <span class="text-white">AnimatePresence</span>, no 40kb Framer.
-      div(className="flex flex-wrap gap-2")
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
-        button(className={"px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-white border-accent-1" : "bg-white text-black border-white")} onClick={() => setIsOpen(!isOpen)}) #{isOpen ? "Close" : "Open"}
-        span(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") rest #{restCount}
+    Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-white border-accent-1" : "bg-white text-black border-white")}, {id: "rest", label: "rest " + restCount, className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "octane"
-import { cn } from "../lib/utils"
-import Icon from "../lib/icons/index.btsx"
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface Point { x: number; y: number }
@@ -162,25 +163,10 @@ setup
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-6")
-      div(className="flex-1 min-w-0")
-        div(className="flex items-center gap-2")
-          h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white") Real-Time Canvas
-          button(className="w-5 h-5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] grid place-items-center text-[11px] font-mono text-[#888] hover:text-white hover:border-[#262626] transition" onClick={toggleInfo} aria-label="Toggle info") ?
-        div(className="inline-flex items-center gap-2 mt-1 py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-xs font-mono tracking-wide") CANVAS — GRANULAR REACTIVITY
-        p(className={cn('text-[#888] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono', showInfo ? '' : 'hidden')}) Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture.
-      div(className="flex items-end shrink-0 border border-[#262626]")
-        a(className="h-8 w-9 bg-mist-400 border-r border-mist-500 flex items-center justify-center" href="/" aria-label="Back")
-          Icon(name="home-back" size={16})
-        button(className="h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700" onClick={clearAll})
-          Icon(name="eraser" size={16})
-        button(className="h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700" onClick={undo})
-          Icon(name="undo" size={16})
-        button(onClick={() => setShowPeers(!showPeers)} class={"h-8 w-9 bg-mist-400 flex items-center justify-center border-mist-500 font-mono " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")})
-          Icon(name="users" size={14})
+    Header(title="Real-Time Canvas" subtitle="GRANULAR REACTIVITY" icon='mechanics' description="Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "h-8 w-9 bg-mist-400 border-r border-mist-500 flex items-center justify-center"}, {id: "eraser", icon: "eraser", onClick: clearAll, className: "h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700"}, {id: "undo", icon: "undo", onClick: undo, className: "h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700"}, {id: "users", icon: "users", onClick: () => setShowPeers(!showPeers), className: "h-8 w-9 flex items-center justify-center " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")} ]})
 
 
-    div(className="grid grid-cols-12 gap-4")
+    div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-9 flex flex-col gap-4")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden flex flex-col")
           div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3 shrink-0")
@@ -197,7 +183,7 @@ div.bg-black
               span.font-mono #{deltaKb} KB
 
 
-          div(className="relative bg-white keep-white w-full h-[560px] overflow-hidden" ref={containerRef} style="background:#fff")
+          div(className="relative bg-white keep-white w-full h-[500px] overflow-hidden" ref={containerRef} style="background:#fff")
             canvas(className="block w-full h-full touch-none bg-white keep-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair;background:#fff" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
             if showPeers
               fragment

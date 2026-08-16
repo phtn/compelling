@@ -17,10 +17,11 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.8",
     "@tsrx/typescript-plugin": "0.3.118",
-    "typescript": "^5.9.3",
-    "vite": "^8.0.16",
+    "@types/node": "^26.2.0",
     "tailwindcss": "^4.1.8",
-    "@tailwindcss/vite": "^4.1.8"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.16"
   }
 }

@@ -1,0 +1,56 @@
+import Icon from "@/lib/icons/index.btsx"
+import { cn } from "@/lib/utils"
+import type { IconName } from "@/lib/icons/types"
+
+module
+  interface HeaderProps {
+    title: string;
+    subtitle?: string;
+    description?: string;
+    icon?: IconName;
+    isVisible?: boolean;
+    toggleFn?: VoidFunction;
+    pending?: boolean;
+    pendingLabel?: string;
+    actions?: {id: string; label?: string; icon?: IconName; href?: string; className?: string; onClick?: VoidFunction}[]
+  }
+
+props {title, subtitle, description, icon, isVisible, toggleFn, pending, pendingLabel, actions}: HeaderProps
+
+setup
+  const handleIconClick = () => {
+    if (toggleFn) toggleFn()
+  }
+
+div(className="flex flex-col lg:flex-row gap-4 items-start justify-between")
+  div(className="flex flex-col gap-3")
+    h1(className="font-semibold text-4xl tracking-tighter") #{title}
+    div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-50 hover:opacity-100 tracking-widest uppercase")
+      span(className="group-hover:opacity-50") #{subtitle}
+      if toggleFn
+        Icon(name={icon ?? "overview"} size={16} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out cursor-pointer" onClick={handleIconClick})
+    p(className={cn("text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono", isVisible ? "flex" : "hidden")}) #{description}
+  div(className="flex flex-wrap gap-2")
+    if pending !== undefined
+      div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2")
+        div(className={"w-1.5 h-1.5 rounded-xs " + (pending ? "bg-white animate-pulse" : "bg-white")})
+        span #{pending ? (pendingLabel ?? "Saving...") : "Saved"}
+    each action in (actions ?? []) key action.id
+      if action.href
+        a(href={action.href} className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition flex items-center gap-2"} target={action.href.startsWith("http") ? "_blank" : undefined} rel={action.href.startsWith("http") ? "noreferrer" : undefined} onClick={action.onClick})
+          if action.icon
+            Icon(name={action.icon} size={14})
+          if action.label
+            span #{action.label}
+      elseif action.onClick
+        button(onClick={action.onClick} className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition flex items-center gap-2"})
+          if action.icon
+            Icon(name={action.icon} size={14})
+          if action.label
+            span #{action.label}
+      else
+        div(className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2"})
+          if action.icon
+            Icon(name={action.icon} size={14})
+          if action.label
+            span #{action.label}

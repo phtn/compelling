@@ -1,6 +1,7 @@
 import { Activity, ErrorBoundary, Hydrate, Suspense, use } from "octane"
 import { idle, initializeHydrationEventCapture, interaction, load, media, never, visible } from "octane/hydration"
 import { useEffect, useMemo, useState } from "octane"
+import Header from "@/components/ui/header.btsx"
 
 module
   interface Review { id: string; author: string; rating: number; text: string; date: string; verified: boolean }
@@ -99,20 +100,13 @@ setup
     setShowToast(true)
     window.setTimeout(() => setShowToast(false), 2400)
   }
+  const [showInfo, setShowInfo] = useState(false)
+  const toggleInfo = () => setShowInfo(!showInfo)
   const forceHydrateAll = () => setHydrated({ load: true, idle: true, visible: true, interaction: true, media: true })
 
 div.bg-black
   div(className="w-full px-6 py-6")
-    div(className="flex flex-col lg:flex-row gap-4 items-start justify-between")
-      div
-        h1(className="text-[24px] font-semibold tracking-[-0.02em] text-white") Isomorphic Shell with Progressive Hydration
-        div(className="inline-flex items-center gap-2  py-1 rounded-xs bg-[#0a0a0a] text-[#666] text-[11px] font-mono tracking-wide") PROGRESSIVE HYDRATION
-        p(className="text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono")
-      div.flex.flex-wrap.gap-2
-        a(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition" href="/") ← Home
-        button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] transition border border-accent-1" onClick={addToCart}) Cart (#{cartCount})
-        button(className="px-3 py-1.5 rounded-xs bg-black border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition" onClick={forceHydrateAll}) Force hydrate all
-        div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{elapsed}s since shell
+    Header(title="Isomorphic Shell with Progressive Hydration" subtitle="PROGRESSIVE HYDRATION" description="Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "cart", label: "Cart (" + cartCount + ")", onClick: addToCart, className: "px-3 py-1.5 rounded-xs bg-accent-1 text-white font-medium text-[12px] hover:bg-[var(--accent-1-hover)] transition border border-accent-1"}, {id: "force", label: "Force hydrate all", onClick: forceHydrateAll, className: "px-3 py-1.5 rounded-xs bg-black border border-[#262626] text-white font-medium text-[12px] hover:bg-[#111] transition"}, {id: "elapsed", label: elapsed + "s since shell", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
     if showToast
       div(className="fixed bottom-6 right-6 z-50 bg-white text-black px-4 py-3 rounded-xs shadow-2xl border border-[#e5e5e5] flex items-center gap-2")
         div(className="w-6 h-6 rounded-xs bg-black text-white grid place-items-center text-[11px] font-mono") ✓
