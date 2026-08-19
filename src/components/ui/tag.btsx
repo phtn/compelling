@@ -1,0 +1,36 @@
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import type { IconName } from "@/lib/icons/types"
+
+module
+  interface TagProps {
+    href?: string;
+    target?: '_blank' | '_self' | '_parent' | '_top';
+    rel?: string;
+    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
+    size?: "sm" | "md" | "lg";
+    className?: string;
+    icon?: IconName;
+    iconPosition?: "left" | "right";
+    label?: string;
+    onClick?: VoidFunction;
+    onRemove?: VoidFunction;
+  }
+
+props {href='#', target='_blank', rel='noreferrer', variant, size, className, icon, iconPosition, label, onClick, onRemove}: TagProps
+
+setup
+  const base = "inline-flex items-center justify-center rounded-lg font-display font-medium tracking-tighter transition shrink-0 border"
+  const variantClass = variant === "primary" ? "bg-accent-1 text-white border-accent-1" : variant === "secondary" ? "bg-[#ECECEC] text-[#18181b] border border-[#ECECEC]" : variant === "outline" ? "bg-transparent border-[#262626] text-[#888]" : variant === "ghost" ? "bg-transparent border-transparent text-[#666]" : variant === "mist" ? "bg-mist-400 border-mist-500 text-mist-800" : "bg-[#0a0a0a] border-[#1a1a1a] text-[#666]"
+  const sizeClass = size === "sm" ? "px-2 py-0.5 text-[10px] gap-1" : size === "lg" ? "px-3 py-1 text-[12px] gap-1.5" : "px-2.5 h-8 text-sm gap-1.5"
+
+a(href={href} target="_blank" rel="noopener noreferrer" className={cn(base, variantClass, sizeClass, onClick && "cursor-pointer hover:bg-[#111] hover:text-white hover:border-[#262626]", className)} onClick={onClick})
+  if icon && iconPosition !== "right"
+    Icon(name={icon} size={12})
+  if label
+    span #{label}
+  slot
+  if icon && iconPosition === "right"
+    Icon(name={icon} size={12})
+  if onRemove
+    button(className="ml-1 -mr-1 h-4 w-4 rounded-xs inline-flex items-center justify-center hover:bg-black/10 transition text-[10px]" onClick={onRemove} aria-label="Remove tag") ×

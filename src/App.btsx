@@ -8,20 +8,21 @@ import WorkerDemo from "./demos/worker.btsx"
 import MotionDemo from "./demos/motion.btsx"
 import StreamingDemo from "./demos/streaming.btsx"
 import Brand from "./components/ui/brand.btsx"
+import Button from "./components/ui/button.btsx"
+import Tag from "./components/ui/tag.btsx"
 import SidebarItem from "./components/ui/sidebar/sidebar-item.btsx"
 import { navGroups } from "./components/ui/sidebar/navs"
 import Icon from "./lib/icons/index.btsx"
 import { cn } from "./lib/utils"
 import { useEffect, useState } from "octane"
 
-props {}: {}
-
 setup
   const [path, setPath] = useState(typeof window !== "undefined" ? window.location.pathname : "/")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [sidebarSide, setSidebarSide] = useState<"left" | "right">("left")
   const [theme, setTheme] = useState<"dark" | "light">("dark")
-  const navigate = (to: string) => {
+  const navigate = (to: string) => (e: MouseEvent) => {
+    e.preventDefault()
     if (to !== window.location.pathname) {
       window.history.pushState(null, "", to)
       setPath(to)
@@ -71,21 +72,19 @@ setup
   }, [theme])
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
 
+  const navs = navGroups[0].items
+
 div(className="min-h-screen text-[#ededed] selection:bg-white selection:text-black antialiased")
   header(className="sticky top-0 z-40 backdrop-blur-3xl border-b border-[#1a1a1a] w-full")
     div(className="w-full px-4 flex items-center justify-between h-[64px] gap-4")
       Brand(imageUrl="https://res.cloudinary.com/dx0heqhhe/image/upload/v1786873658/compel-up_tao32q.svg")
       nav(className="hidden md:flex items-center gap-0 text-[13px] font-medium")
-        a(href="/" className={path === "/" ? "px-3 py-1.5 rounded-xs transition cursor-pointer bg-accent-1 text-white border-accent-1" : "px-3 py-1.5 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }}) Overview
-        a(href="/canvas" className={path === "/canvas" ? "px-3 py-1.5 rounded-xs transition cursor-pointer bg-mist-200/80 text-white border-mist-200/80" : "px-3 py-1.5 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
-        a(href="/form" className={path === "/form" ? "px-3 py-1.5 rounded-xs transition cursor-pointer bg-mist-200/80 text-white border-mist-200/80" : "px-3 py-1.5 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
-        a(href="/grid" className={path === "/grid" ? "px-3 py-1.5 rounded-xs transition cursor-pointer bg-mist-200/80 text-white border-mist-200/80" : "px-3 py-1.5 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
-        a(href="/shell" className={path === "/shell" ? "px-3 py-1.5 rounded-xs transition cursor-pointer bg-mist-200/80 text-white border-mist-200/80" : "px-3 py-1.5 rounded-xs transition cursor-pointer text-[#888] hover:text-white hover:bg-[#111]"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+        each nav in navs key nav.href
+          Tag(href={nav.href} target="_self" variant={path === nav.href ? "secondary" : "ghost"} label={nav.label} onClick={navigate(nav.href)})
       div(className="flex items-center gap-2")
-        button(className="size-8 rounded-xs bg-[#111] grid place-items-center text-[#888] hover:text-white hover:bg-[#1a1a1a] transition" onClick={toggleTheme} aria-label="Toggle theme")
-          span(className="text-[12px]") #{theme === "dark" ? "☀" : "☾"}
-        a(className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xs bg-gray-200 text-gray-800 text-[13px] font-medium" href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer")
-          span Docs
+        Button(size='icon' icon='theme' variant='secondary' onClick={toggleTheme} aria-label="Toggle theme")
+        Tag(label="Beast Docs" variant="secondary" href="https://beast-docs.vercel.app")
+
   div(className="flex w-full min-h-[calc(100vh-64px)]")
     if sidebarSide === "left" && sidebarOpen
       aside(className="hidden md:flex w-[256px] shrink-0 border-r border-[#1a1a1a] flex-col sticky top-[64px] h-[calc(100vh-64px)] overflow-hidden")

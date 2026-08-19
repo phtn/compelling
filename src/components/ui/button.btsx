@@ -1,0 +1,32 @@
+import { cn } from "@/lib/utils"
+import Icon from "@/lib/icons/index.btsx"
+import type { IconName } from "@/lib/icons/types"
+
+module
+  interface ButtonProps {
+    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
+    size?: "sm" | "md" | "lg" | "icon";
+    className?: string;
+    disabled?: boolean;
+    type?: "button" | "submit" | "reset";
+    icon?: IconName;
+    iconPosition?: "left" | "right";
+    onClick?: VoidFunction;
+    label?: string;
+  }
+
+props {variant, size, className, disabled, type, icon, iconPosition, onClick, label}: ButtonProps
+
+setup
+  const base = "inline-flex items-center justify-center rounded-lg font-mono font-medium transition disabled:opacity-50 disabled:pointer-events-none shrink-0"
+  const variantClass = variant === "primary" ? "bg-accent-1 text-white border border-accent-1 hover:bg-[var(--accent-1-hover)]" : variant === "secondary" ? "bg-[#fafafa] text-foreground/80 border border-[#fafafa] hover:bg-[#ededed]" : variant === "outline" ? "bg-transparent border border-[#262626] text-[#888] hover:text-white hover:bg-[#111]" : variant === "ghost" ? "bg-transparent border border-transparent text-[#666] hover:text-white hover:bg-[#111]" : variant === "mist" ? "bg-mist-400 border border-mist-500 text-mist-800 hover:bg-mist-500" : "bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] hover:text-white hover:bg-[#111] hover:border-[#262626]"
+  const sizeClass = size === "sm" ? "px-2.5 py-1 text-[11px] gap-1.5" : size === "lg" ? "px-4 py-2 text-[13px] gap-2" : size === "icon" ? "h-8 w-9 p-0 gap-0" : "px-3 py-1.5 text-[11px] gap-2"
+
+button(type={type ?? "button"} disabled={disabled} className={cn(base, variantClass, sizeClass, className)} onClick={onClick})
+  if icon && iconPosition !== "right"
+    Icon(name={icon} size={size === "icon" ? 16 : 14})
+  if label
+    span #{label}
+  slot
+  if icon && iconPosition === "right"
+    Icon(name={icon} size={14})

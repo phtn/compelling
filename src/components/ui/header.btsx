@@ -22,7 +22,7 @@ setup
     if (toggleFn) toggleFn()
   }
 
-div(className="flex flex-col lg:flex-row gap-4 items-start justify-between")
+div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-5")
   div(className="flex flex-col gap-3")
     h1(className="font-semibold text-4xl tracking-tighter") #{title}
     div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-50 hover:opacity-100 tracking-widest uppercase")

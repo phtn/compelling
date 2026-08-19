@@ -1,13 +1,13 @@
 props {}: {}
 
 div
-  section(className="w-full px-6 pt-12 pb-8 border-b border-[#1a1a1a]")
-    div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#888] text-[11px] font-mono tracking-wide")
+  section(className="w-full p-6 border-b border-[#1a1a1a]")
+    div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#262626] text-[#888] text-[11px] font-mono tracking-wide")
       span(className="w-1.5 h-1.5 rounded-xs bg-white animate-pulse")
       span OCTANE · BEAST · TSRX · VITE — PRODUCTION-GRADE DEMOS
     h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-white max-w-[720px]")
-      span Compelling demos,
-      span(className="block text-[#888]") usage examples, and guides.
+      span Beast demos,
+      span(className="block text-[#888]") examples, and guides.
     p(className="text-[15px] text-[#888] leading-relaxed max-w-[560px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
     div.flex.flex-wrap.gap-2.mt-6
       a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] hover:bg-[var(--accent-1-hover)] transition" href="/canvas") Explore Canvas

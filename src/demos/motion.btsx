@@ -73,15 +73,15 @@ setup
 div.bg-black
   div(className="w-full px-6 py-6")
     Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-white border-accent-1" : "bg-white text-black border-white")}, {id: "rest", label: "rest " + restCount, className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
-    div(className="grid grid-cols-12 gap-4 mt-6")
+    div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8")
         div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
-            div(className="flex items-center gap-2")
-              div(className="w-1.5 h-1.5 rounded-xs bg-accent-1 animate-pulse")
-              span(className="text-[11px] font-mono tracking-wide text-[#666]") motion({`{ height: isOpen ? 400 : 100 }`} — interrupt + spring
+          div(className="h-[40px] bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+            div(className="items-center")
+              span(className="text-[11px] font-mono tracking-wide text-[#666]") height #{isOpen ? 400 : 100 }
             span(className="text-[11px] font-mono text-[#525252]") stiffness #{stiffness.toFixed(2)} · damping #{damping.toFixed(2)}
-          div(className="p-6 bg-[#0a0a0a] flex flex-col items-center")
+
+          div(className="flex p-6 flex flex-col items-center")
             article(ref={cardRef} className="w-full max-w-[560px] bg-black border border-[#1a1a1a] rounded-xs overflow-hidden select-none touch-none cursor-grab active:cursor-grabbing" style={cardStyle} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onClick={toggleOpenDrag})
               div(className="h-2 bg-accent-1")
               div(className="p-4 flex flex-col h-full")
@@ -95,7 +95,11 @@ div.bg-black
                   div(className="grid grid-cols-3 gap-2")
                     each n in [1,2,3,4,5,6] key n
                       div(className="h-16 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs grid place-items-center text-[11px] font-mono text-[#525252]") #{n}
-                  p(className="text-[12px] font-mono text-[#666] mt-3 leading-relaxed") Height <span class="text-white">#{Math.round(layout.height)}px</span> · scale <span class="text-white">#{layout.scale.toFixed(2)}</span> · drag <span class="text-white">#{dragOffset.toFixed(0)}px</span> · velocity <span class="text-white">#{(velocity.current * 1000).toFixed(0)}</span>
+                  p(className="text-[12px] font-mono text-[#666] mt-3 leading-relaxed")
+                    span Height #{Math.round(layout.height)}px ·
+                    span scale #{layout.scale.toFixed(2)} ·
+                    span drag #{dragOffset.toFixed(0)}px ·
+                    span velocity #{(velocity.current * 1000).toFixed(0)}
                 div(className="mt-auto pt-3 flex gap-2 border-t border-[#1a1a1a]")
                   button(className="px-3 py-1.5 rounded-xs bg-white text-black text-[11px] font-mono border border-white" onClick={() => setIsOpen(true)}) Open 400
                   button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono" onClick={() => setIsOpen(false)}) Close 100
@@ -107,6 +111,7 @@ div.bg-black
                 label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1") DAMPING — #{damping.toFixed(2)}
                 input(className="w-full accent-white" type="range" min="0.3" max="1.2" step="0.05" value={damping} onInput={onDampingInput})
             p(className="text-[11px] font-mono text-[#525252] mt-3 text-center") Click card or drag vertically — interrupt preserves velocity. Rest fires # #{restCount}
+          div(className="h-54")
         div(className="mt-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
           div(className="text-accent-1 text-[12px]") ●
           div(className="text-[12px] leading-relaxed font-mono")

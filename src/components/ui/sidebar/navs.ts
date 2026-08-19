@@ -15,8 +15,8 @@ export const navGroups: NavGroup[] = [
   {
     title: 'General',
     items: [
-      { href: '/', icon: 'overview', label: 'Overview', value: '' },
-      { href: '/canvas', icon: 'users', label: 'Canvas', value: 0 },
+      { href: '/', icon: 'overview', label: 'Overview', value: '0' },
+      { href: '/canvas', icon: 'users', label: 'Canvas', value: '01' },
       { href: '/form', icon: 'eraser', label: 'Form', value: '02' },
       { href: '/grid', icon: 'undo', label: 'Grid', value: '03' },
       { href: '/shell', icon: 'new-folder', label: 'Shell', value: '04' },

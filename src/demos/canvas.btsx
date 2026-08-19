@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "octane"
 import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import Header from "@/components/ui/header.btsx"
+import Frame from "@/components/ui/frame.btsx"
 
 module
   interface Point { x: number; y: number }
@@ -165,24 +166,9 @@ div.bg-black
   div(className="w-full px-6 py-6")
     Header(title="Real-Time Canvas" subtitle="GRANULAR REACTIVITY" icon='mechanics' description="Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "h-8 w-9 bg-mist-400 border-r border-mist-500 flex items-center justify-center"}, {id: "eraser", icon: "eraser", onClick: clearAll, className: "h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700"}, {id: "undo", icon: "undo", onClick: undo, className: "h-8 w-9 bg-mist-400 flex items-center justify-center border-r border-mist-700"}, {id: "users", icon: "users", onClick: () => setShowPeers(!showPeers), className: "h-8 w-9 flex items-center justify-center " + (showPeers ? "bg-white text-black border-white" : "bg-mist-800 border-[#262626] text-[#666]")} ]})
 
-
-    div(className="grid grid-cols-12 gap-4 mt-6")
+    div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-9 flex flex-col gap-4")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden flex flex-col")
-          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3 shrink-0")
-            div(className="flex items-center gap-2")
-              div(className="w-2 h-2 rounded-xs bg-[#525252]")
-              div(className="w-2 h-2 rounded-xs bg-[#525252]")
-              div(className="w-2 h-2 rounded-xs bg-[#525252]")
-              span(className="text-[11px] font-mono tracking-wide text-[#666] ml-2 capitalize") 1400×800 &middot; #{tool}
-            div(className="flex items-center gap-1 text-[11px] font-mono text-[#525252]")
-              span.font-mono #{strokes.length} ST
-              span.font-mono &middot;
-              span.font-mono #{pointsCount} PT
-              span.font-mono &middot;
-              span.font-mono #{deltaKb} KB
-
-
+        Frame(title={"1400\u00d7800 \u00b7 " + tool} subtitle={strokes.length + " ST \u00b7 " + pointsCount + " PT \u00b7 " + deltaKb + " KB"})
           div(className="relative bg-white keep-white w-full h-[500px] overflow-hidden" ref={containerRef} style="background:#fff")
             canvas(className="block w-full h-full touch-none bg-white keep-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair;background:#fff" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
             if showPeers
