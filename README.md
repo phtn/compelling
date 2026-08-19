@@ -2,7 +2,7 @@
 
 # Compelling
 
-> Eight substantial Beast BTSX → TSRX → Octane showcases — canvas, form, grid, shell, timeline, worker, motion, streaming — on Vite SPA routing.
+> Eight substantial Beast → Octane — showcases canvas, form, grid, shell, timeline, worker, motion, streaming — on Vite SPA routing.
 
 [![Beast](https://img.shields.io/badge/Beast-BTSX_→_TSRX-111827?style=flat-square)](https://www.npmjs.com/package/beast-tsrx)
 [![Octane](https://img.shields.io/badge/Octane-0.1.37-0ea5e9?style=flat-square)](https://octanejs.dev/)
@@ -14,6 +14,7 @@
 **Indentation-first authoring. Native TSRX output. Octane owns rendering. Vite ships it.**
 
 <!-- markdownlint-disable MD051 -->
+
 [Quick start](#quick-start) ·
 [Demos](#demos) ·
 [How it works](#how-it-works) ·
@@ -26,22 +27,22 @@
 
 Compelling is a reference app for the [Beast](https://www.npmjs.com/package/beast-tsrx) compiler and [Octane](https://octanejs.dev). Every route is a `.btsx` file — indentation-based, 2-space, typed `Props` at the top — compiled to readable `.tsrx` by `beast-tsrx` and rendered by Octane. The Vite plugin `beastOctane()` runs the compile in-memory so HMR stays native.
 
-It exists to answer one question: *what does Octane feel like on real product surfaces, not toy counters?* Each demo targets a known pain point in React / Vue / Svelte and shows the Octane alternative with measurable UI affordances — granular deltas, cancellable validation, virtualized masonry, suspend/resume hydration, timeline branching, worker proxying, interruptible motion, and edge streaming.
+It exists to answer one question: _what does Octane feel like on real product surfaces, not toy counters?_ Each demo targets a known pain point in React / Vue / Svelte and shows the Octane alternative with measurable UI affordances — granular deltas, cancellable validation, virtualized masonry, suspend/resume hydration, timeline branching, worker proxying, interruptible motion, and edge streaming.
 
 ![Compelling hero](https://res.cloudinary.com/dx0heqhhe/image/upload/v1786873658/compel-up_tao32q.svg)
 
 ## At a glance
 
-| # | Demo | Route | Octane advantage | Pain it replaces |
-| --- | --- | --- | --- | --- |
-| 01 | **Real-Time Collaborative Canvas** | `/canvas` | Granular reactive deltas, only changed points re-render | VDOM reconciliation cost |
-| 02 | **Adaptive Form** | `/form` | Debounced, auto-cancellable validation streams | Manual RxJS subscription cleanup |
-| 03 | **Virtualized Masonry Grid** | `/grid` | Dynamic measurement + `virtualize` + ResizeObserver | `react-window` fixed-size assumptions |
-| 04 | **Isomorphic Shell** | `/shell` | Universal `suspend` / `resume` + partial hydration | Next.js boundary boilerplate |
-| 05 | **Time-Travel Timeline** | `/timeline` | `timeline()` with branching, scrub, compress | Redux DevTools replay setup |
-| 06 | **Worker Physics** | `/worker` | Signal auto-proxy via `SharedArrayBuffer` / `Atomics` | `postMessage` + Comlink glue |
-| 07 | **Motion Orchestrator** | `/motion` | Interruptible springs, gesture velocity preserved | Framer Motion 40 kb + `AnimatePresence` |
-| 08 | **Edge Streaming Search** | `/streaming` | HTTP chunk streaming + keyed edge cache | Server Components infra lock-in |
+| #   | Demo                               | Route        | Octane advantage                                        | Pain it replaces                        |
+| --- | ---------------------------------- | ------------ | ------------------------------------------------------- | --------------------------------------- |
+| 01  | **Real-Time Collaborative Canvas** | `/canvas`    | Granular reactive deltas, only changed points re-render | VDOM reconciliation cost                |
+| 02  | **Adaptive Form**                  | `/form`      | Debounced, auto-cancellable validation streams          | Manual RxJS subscription cleanup        |
+| 03  | **Virtualized Masonry Grid**       | `/grid`      | Dynamic measurement + `virtualize` + ResizeObserver     | `react-window` fixed-size assumptions   |
+| 04  | **Isomorphic Shell**               | `/shell`     | Universal `suspend` / `resume` + partial hydration      | Next.js boundary boilerplate            |
+| 05  | **Time-Travel Timeline**           | `/timeline`  | `timeline()` with branching, scrub, compress            | Redux DevTools replay setup             |
+| 06  | **Worker Physics**                 | `/worker`    | Signal auto-proxy via `SharedArrayBuffer` / `Atomics`   | `postMessage` + Comlink glue            |
+| 07  | **Motion Orchestrator**            | `/motion`    | Interruptible springs, gesture velocity preserved       | Framer Motion 40 kb + `AnimatePresence` |
+| 08  | **Edge Streaming Search**          | `/streaming` | HTTP chunk streaming + keyed edge cache                 | Server Components infra lock-in         |
 
 > [!TIP]
 > Start at `/` for the summary map, then open any card. Every demo is isolated — no shared mutable store — so you can read one `.btsx` file and understand the whole pattern.
@@ -126,20 +127,20 @@ Vite config is minimal — Beast runs before Octane:
 
 ```ts
 // vite.config.ts
-import { defineConfig } from "vite";
-import tailwindcss from "@tailwindcss/vite";
-import { beastOctane } from "beast-tsrx/vite";
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+import { beastOctane } from 'beast-tsrx/vite'
 
 export default defineConfig({
   plugins: [tailwindcss(), beastOctane()],
-  appType: "spa",
-  resolve: { alias: { "@": path.resolve("./src") } },
-});
+  appType: 'spa',
+  resolve: { alias: { '@': path.resolve('./src') } }
+})
 ```
 
 Routing is client-side with `pushState` + `popstate` + global anchor interception — no framework router, eight routes in ~40 lines:
 
-```text
+````text
 /         → Overview + summary map
 /canvas   → Collaborative Canvas
 /form     → Adaptive Form
@@ -296,17 +297,17 @@ compelling/
 │   └── favicon.ico
 ├── .beast/                     # Beast build cache (gitignored)
 └── dist/                       # vite build output (gitignored)
-```
+````
 
 ## Scripts
 
-| Script | Command | What it does |
-| --- | --- | --- |
-| `dev` | `bun run dev` | Vite dev server — `http://localhost:5173`, HMR, Beast in-memory |
-| `build` | `bun run build` | Vite production build → `dist/` |
-| `preview` | `bun run preview` | Serve `dist/` locally |
-| `typecheck` | `bun run typecheck` | `tsrx-tsc --noEmit` — TSRX-aware type checking |
-| `check` | `bun run check` | `typecheck && build` — the ship signal |
+| Script      | Command             | What it does                                                    |
+| ----------- | ------------------- | --------------------------------------------------------------- |
+| `dev`       | `bun run dev`       | Vite dev server — `http://localhost:5173`, HMR, Beast in-memory |
+| `build`     | `bun run build`     | Vite production build → `dist/`                                 |
+| `preview`   | `bun run preview`   | Serve `dist/` locally                                           |
+| `typecheck` | `bun run typecheck` | `tsrx-tsc --noEmit` — TSRX-aware type checking                  |
+| `check`     | `bun run check`     | `typecheck && build` — the ship signal                          |
 
 ```bash
 bun run typecheck   # fast — no emit, catches BTSX type errors via TSRX
@@ -403,6 +404,6 @@ Released under the [ISC License](LICENSE).
 
 ---
 
-*Built with Beast BTSX, compiled to TSRX, rendered by Octane.*
+_Built with Beast BTSX, compiled to TSRX, rendered by Octane._
 
-[Beast](https://github.com/phtn/beast) · [Beast Skill](https://github.com/phtn/beast-skill) · [Octane](https://octanejs.dev)
+[Beast](https://github.com/phtn/beast) · [Beast Docs](https://beast-docs.vercel.app) · [Beast Skill](https://github.com/phtn/beast-skill) · [Octane](https://octanejs.dev)
