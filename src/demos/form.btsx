@@ -282,7 +282,7 @@ div.bg-background
           div(className="text-[11px] font-mono text-muted-foreground text-center") Form valid: #{formValid ? "yes" : "no"} · Progress #{progress}% · validations: #{totalValidations}
           div(className="bg-background border border-border rounded-xs p-3 text-[12px] font-mono text-muted-foreground leading-relaxed")
             div.text-foreground.font-medium.mb-1 Why Octane wins
-            div RxJS needs manual unsubscribe + switchMap + debounce. Octane's <span class="text-foreground">derive(async () => validate(), {"{ debounce: 300, cancelOnUpdate: true }"})</span> cancels prior fetch automatically.
+            div RxJS needs manual unsubscribe + switchMap + debounce. Octane's derive(async () => validate(), {"{ debounce: 300, cancelOnUpdate: true }"}) cancels prior fetch automatically.
 
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 min-w-0")
         div(className="rounded-xs")
@@ -307,7 +307,7 @@ div.bg-background
             div.flex.justify-between
               span(className="text-muted-foreground") Last 10 latencies
               span.text-foreground #{latencies.length ? latencies.join(", ") : "—"}
-          div(className="mt-3 p-2 bg-background border border-border rounded-xs text-[12px] font-mono text-muted-foreground leading-relaxed") Type fast in <span class="text-foreground">email</span> to see cancellations spike. Prior validation is aborted before network resolves.
+          div(className="mt-3 p-2 bg-background border border-border rounded-xs text-[12px] font-mono text-muted-foreground leading-relaxed") Type fast in email to see cancellations spike. Prior validation is aborted before network resolves.
 
         div(className="mt-8")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") VALIDATION DEPENDENCIES
@@ -341,7 +341,7 @@ div.bg-background
         div(className="mt-8")
           div(className="text-[11px] font-mono tracking-wide text-foreground") TIP — TRY THESE
           ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1 leading-relaxed")
-            li Type <span class="text-foreground">taken@taken.com</span> → shows ✗
-            li Type <span class="text-foreground">admin</span> as username → ✗ taken
-            li Type email quickly e.g. <span class="text-foreground">a → ab → abc@co.com</span> and watch cancelled count jump
-            li Password <span class="text-foreground">Octane!12</span> scores Excellent
+            li Type taken@taken.com → shows ✗
+            li Type admin as username → ✗ taken
+            li Type email quickly e.g. a → ab → abc@co.com and watch cancelled count jump
+            li Password Octane!12 scores Excellent

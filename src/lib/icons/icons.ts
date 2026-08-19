@@ -124,6 +124,12 @@ export const icons = {
       '<path fill="currentColor" d="M4 5.756C4 2.778 7.306.988 9.8 2.616l6.512 4.251c2.267 1.48 2.267 4.801 0 6.28L9.8 17.398c-2.494 1.628-5.8-.161-5.8-3.14z" transform-origin="0 0"/>',
     viewBox: '0 0 20 20',
     set: 'svg'
+  },
+  search: {
+    symbol:
+      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12m5-1 3 3"/>',
+    viewBox: '0 0 24 24',
+    set: 'tabler'
   }
 }
 
