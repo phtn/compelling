@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 -->
 
-# Compelling
+# Compelling Beast Demos
 
 > Eight substantial Beast → Octane — showcases canvas, form, grid, shell, timeline, worker, motion, streaming — on Vite SPA routing.
 
