@@ -115,7 +115,7 @@ setup
     {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "" + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")}]
 
 div.bg-background
-  div(className="w-full px-6 py-6")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8")

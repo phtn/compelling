@@ -75,7 +75,7 @@ setup
     {id: "stream", label: "Stream", onClick: startStream, className: ""}]
 
 div.bg-background
-  div(className="w-full px-6 py-6")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Edge-Streaming Search" subtitle="STREAMING EDGE AT CDN" icon='mechanics' description="Server components that stream progressively from edge — yield <skeleton> then each <result-card> hydrates as it arrives. Keyed cache at CDN." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")

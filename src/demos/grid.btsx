@@ -107,7 +107,7 @@ setup
     {id: "clear", label: "Clear filters", onClick: clearFilters, className: ""}]
 
 div.bg-background
-  div(className="w-full px-6 py-6")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div.grid.grid-cols-12.gap-4
       div(className="col-span-12 lg:col-span-9")

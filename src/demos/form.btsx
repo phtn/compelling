@@ -171,11 +171,11 @@ setup
                 ]
 
 div.bg-background
-  div(className="w-full px-6 py-6")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Adaptive Form" subtitle="with validation streams" icon='mechanics' description="Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions." isVisible={showInfo} toggleFn={toggleInfo} pending={saving} actions={[]})
 
     div(className="grid grid-cols-12 gap-4")
-      Frame(title="Create Account" className="col-span-8 flex" subtitle={`${progress}%`})
+      Frame(title="Create Account" className="sm:col-span-10 md:col-span-11 lg:col-span-10 xl:col-span-8 col-span-12 flex" subtitle={`${progress}%`})
         div(className="w-24 h-1 bg-border rounded-xs overflow-hidden flex")
           div.h-1.bg-primary.transition-all(style={"width:" + progress + "%"})
         //

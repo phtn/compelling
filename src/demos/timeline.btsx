@@ -76,7 +76,7 @@ setup
   const toggleInfo = () => setShowInfo(!showInfo)
 
 div.bg-background
-  div(className="w-full px-6 py-6")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Time-Travel State Debugger" subtitle="TEMPORAL REACTIVITY" icon='mechanics' description="Immutable snapshots, bidirectional travel, branching — no Redux DevTools. timeline(content, {compress:true}) gives undo/redo/fork/scrub with structural sharing." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "compress", label: compress ? "Compress on" : "Compress off", onClick: () => setCompress(!compress), className: "" + (compress ? "bg-input/10" : "")}, {id: "fork", label: "Fork Branch", onClick: fork, className: ""}]})
 
     div(className="grid grid-cols-12 gap-4")
