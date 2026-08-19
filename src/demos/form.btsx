@@ -15,7 +15,7 @@ module
     if (/[^A-Za-z0-9]/.test(p)) s++
     if (p.length >= 12) s++
     const labels = ["Too weak", "Weak", "Fair", "Good", "Strong", "Excellent"]
-    const colors = ["bg-[#262626]", "bg-[#525252]", "bg-[#737373]", "bg-[#a3a3a3]", "bg-accent-1", "bg-accent-2"]
+    const colors = ["bg-muted", "bg-muted-foreground", "bg-[#737373]", "bg-[#a3a3a3]", "bg-accent-1", "bg-accent-2"]
     return { score: s, label: labels[s]!, color: colors[s]!, width: (s / 5) * 100 }
   }
 
@@ -160,76 +160,76 @@ setup
   const [showInfo, setShowInfo] = useState(false)
   const toggleInfo = () => setShowInfo(!showInfo)
 
-div.bg-black
+div.bg-background
   div(className="w-full px-6 py-6")
     Header(title="Adaptive Form" subtitle="with validation streams" icon='mechanics' description="Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions." isVisible={showInfo} toggleFn={toggleInfo} pending={saving} actions={[]})
     //
-    div(className="grid grid-cols-12 gap-4 mt-6")
-      div(className="col-span-12 lg:col-span-8 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden min-w-0")
-        div(className="h-14 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-6")
+    div(className="grid grid-cols-12 gap-4")
+      div(className="col-span-12 lg:col-span-8 bg-card border border-border rounded-xs overflow-hidden min-w-0")
+        div(className="h-14 bg-background border-b border-border flex items-center justify-between px-6")
           div.flex.items-center.gap-3
-            div(className="w-7 h-7 rounded-xs bg-white text-black grid place-items-center font-mono font-medium text-[11px]") ✓
+            div(className="w-7 h-7 rounded-xs bg-primary text-primary-foreground grid place-items-center font-mono font-medium text-[11px]") ✓
             div
-              div(className="text-[13px] font-medium text-white") Create account
-              div(className="text-[11px] font-mono text-[#666]") Step 1 of 1 · debounced streams
+              div(className="text-[13px] font-medium text-foreground") Create account
+              div(className="text-[11px] font-mono text-muted-foreground") Step 1 of 1 · debounced streams
           div.flex.items-center.gap-2
-            div(className="w-24 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
-              div.h-1.bg-white.transition-all(style={"width:" + progress + "%"})
-            span(className="text-[11px] font-mono text-[#666]") #{progress}%
+            div(className="w-24 h-1 bg-border rounded-xs overflow-hidden")
+              div.h-1.bg-primary.transition-all(style={"width:" + progress + "%"})
+            span(className="text-[11px] font-mono text-muted-foreground") #{progress}%
         form(className="p-6 space-y-5 min-w-0 overflow-hidden" onSubmit={handleSubmit})
           div(className="grid sm:grid-cols-2 gap-4 min-w-0")
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") EMAIL — STREAM
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") EMAIL — STREAM
               div.relative
-                input(className={"w-full bg-black border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white transition font-mono " + (emailS.valid === true ? "border-white" : emailS.valid === false ? "border-[#525252]" : "border-[#262626]")} value={email} placeholder="you@company.com" onInput={(e) => setEmail((e.target as HTMLInputElement).value)})
+                input(className={"w-full bg-background border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring transition font-mono " + (emailS.valid === true ? "border-primary" : emailS.valid === false ? "border-destructive" : "border-input")} value={email} placeholder="you@company.com" onInput={(e) => setEmail((e.target as HTMLInputElement).value)})
                 div(className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono font-medium")
                   if emailS.checking
-                    span(className="text-[#888] animate-pulse") Checking…
+                    span(className="text-muted-foreground animate-pulse") Checking…
                   elseif emailS.valid === true
-                    span.text-white ✓
+                    span.text-foreground ✓
                   elseif emailS.valid === false
-                    span(className="text-[#888]") ✗
-              div(class={"text-[11px] font-mono mt-1 h-4 " + (emailS.valid === false ? "text-[#888]" : emailS.valid === true ? "text-white" : "text-[#525252]")}) #{emailS.message || "Try 'taken@taken.com' to see taken state. Type fast to see cancellation."}
-              div(className="text-[11px] text-[#525252] font-mono") stream(email) → derive(validate) · 300ms
+                    span(className="text-muted-foreground") ✗
+              div(class={"text-[11px] font-mono mt-1 h-4 " + (emailS.valid === false ? "text-muted-foreground" : emailS.valid === true ? "text-foreground" : "text-muted-foreground")}) #{emailS.message || "Try 'taken@taken.com' to see taken state. Type fast to see cancellation."}
+              div(className="text-[11px] text-muted-foreground font-mono") stream(email) → derive(validate) · 300ms
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") USERNAME — STREAM
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") USERNAME — STREAM
               div.relative
-                input(className={"w-full bg-black border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white transition font-mono " + (usernameS.valid === true ? "border-white" : usernameS.valid === false ? "border-[#525252]" : "border-[#262626]")} value={username} placeholder="octane_fan" onInput={(e) => setUsername((e.target as HTMLInputElement).value)})
+                input(className={"w-full bg-background border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring transition font-mono " + (usernameS.valid === true ? "border-primary" : usernameS.valid === false ? "border-destructive" : "border-input")} value={username} placeholder="octane_fan" onInput={(e) => setUsername((e.target as HTMLInputElement).value)})
                 div(className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono font-medium")
                   if usernameS.checking
-                    span(className="text-[#888] animate-pulse") …
+                    span(className="text-muted-foreground animate-pulse") …
                   elseif usernameS.valid === true
-                    span.text-white ✓
+                    span.text-foreground ✓
                   elseif usernameS.valid === false
-                    span(className="text-[#888]") ✗
-              div(class={"text-[11px] font-mono mt-1 h-4 " + (usernameS.valid === false ? "text-[#888]" : usernameS.valid === true ? "text-white" : "text-[#525252]")}) #{usernameS.message || "Try 'admin' or 'taken' to see race handling."}
-              div(className="text-[11px] text-[#525252] font-mono") cancelOnUpdate: true
+                    span(className="text-muted-foreground") ✗
+              div(class={"text-[11px] font-mono mt-1 h-4 " + (usernameS.valid === false ? "text-muted-foreground" : usernameS.valid === true ? "text-foreground" : "text-muted-foreground")}) #{usernameS.message || "Try 'admin' or 'taken' to see race handling."}
+              div(className="text-[11px] text-muted-foreground font-mono") cancelOnUpdate: true
           div(className="grid sm:grid-cols-2 gap-4 min-w-0")
             div(className="min-w-0")
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") DISPLAY NAME
-              input(className="w-full bg-black border border-[#262626] rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono" value={displayName} placeholder="Alex Rivera" onInput={(e) => setDisplayName((e.target as HTMLInputElement).value)})
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") DISPLAY NAME
+              input(className="w-full bg-background border border-input rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono" value={displayName} placeholder="Alex Rivera" onInput={(e) => setDisplayName((e.target as HTMLInputElement).value)})
               if displayName && displayName.trim().length < 2
-                div(className="text-[11px] font-mono text-[#888] mt-1") At least 2 characters
+                div(className="text-[11px] font-mono text-muted-foreground mt-1") At least 2 characters
               else
-                div(className="text-[11px] font-mono text-[#525252] mt-1") Shown on profile
+                div(className="text-[11px] font-mono text-muted-foreground mt-1") Shown on profile
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") PHONE
-              input(className={"w-full bg-black border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono " + (phoneValid === false ? "border-[#525252]" : "border-[#262626]")} value={phone} placeholder="+1 (555) 000-0000" onInput={(e) => setPhone((e.target as HTMLInputElement).value)})
-              div(class={"text-[11px] font-mono mt-1 " + (phoneValid === false ? "text-[#888]" : "text-[#525252]")}) #{phoneValid === false ? "Invalid phone" : "Optional · validated if filled"}
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") PHONE
+              input(className={"w-full bg-background border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono " + (phoneValid === false ? "border-destructive" : "border-input")} value={phone} placeholder="+1 (555) 000-0000" onInput={(e) => setPhone((e.target as HTMLInputElement).value)})
+              div(class={"text-[11px] font-mono mt-1 " + (phoneValid === false ? "text-muted-foreground" : "text-muted-foreground")}) #{phoneValid === false ? "Invalid phone" : "Optional · validated if filled"}
           div(className="grid sm:grid-cols-2 gap-4 min-w-0")
             div(className="min-w-0")
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") PASSWORD
-              input(className="w-full bg-black border border-[#262626] rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono" type="password" value={password} placeholder="••••••••" onInput={(e) => setPassword((e.target as HTMLInputElement).value)})
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") PASSWORD
+              input(className="w-full bg-background border border-input rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono" type="password" value={password} placeholder="••••••••" onInput={(e) => setPassword((e.target as HTMLInputElement).value)})
               div.flex.gap-1.mt-2
                 each i in [0,1,2,3,4] key i
-                  div.h-1.flex-1.rounded-xs(class={i < pass.score ? pass.color : "bg-[#1a1a1a]"})
+                  div.h-1.flex-1.rounded-xs(class={i < pass.score ? pass.color : "bg-border"})
               div(className="flex justify-between text-[11px] font-mono mt-1")
-                span(class={pass.score >= 3 ? "text-white font-medium" : "text-[#525252]"}) #{pass.label} · #{pass.score}/5
-                span(className="text-[#525252]") #{password.length} chars
+                span(class={pass.score >= 3 ? "text-foreground font-medium" : "text-muted-foreground"}) #{pass.label} · #{pass.score}/5
+                span(className="text-muted-foreground") #{password.length} chars
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") CONFIRM PASSWORD — DERIVED
-              input(className={"w-full bg-black border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono " + (confirmValid === false ? "border-[#525252]" : confirmValid === true ? "border-white" : "border-[#262626]")} type="password" value={confirm} placeholder="••••••••" onInput={(e) => setConfirm((e.target as HTMLInputElement).value)})
-              div(class={"text-[11px] font-mono mt-1 h-4 " + (confirmValid === false ? "text-[#888]" : confirmValid === true ? "text-white" : "text-[#525252]")})
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") CONFIRM PASSWORD — DERIVED
+              input(className={"w-full bg-background border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono " + (confirmValid === false ? "border-destructive" : confirmValid === true ? "border-primary" : "border-input")} type="password" value={confirm} placeholder="••••••••" onInput={(e) => setConfirm((e.target as HTMLInputElement).value)})
+              div(class={"text-[11px] font-mono mt-1 h-4 " + (confirmValid === false ? "text-muted-foreground" : confirmValid === true ? "text-foreground" : "text-muted-foreground")})
                 if confirmValid === false
                   span ✗ Passwords do not match
                 elseif confirmValid === true
@@ -238,110 +238,110 @@ div.bg-black
                   span Must match password
           div(className="grid sm:grid-cols-2 gap-4 min-w-0")
             div(className="min-w-0")
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") WEBSITE
-              input(className={"w-full bg-black border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono " + (websiteValid === false ? "border-[#525252]" : "border-[#262626]")} value={website} placeholder="https://example.com" onInput={(e) => setWebsite((e.target as HTMLInputElement).value)})
-              div(class={"text-[11px] font-mono mt-1 " + (websiteValid === false ? "text-[#888]" : "text-[#525252]")}) #{websiteValid === false ? "Invalid URL" : "Optional"}
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") WEBSITE
+              input(className={"w-full bg-background border rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono " + (websiteValid === false ? "border-destructive" : "border-input")} value={website} placeholder="https://example.com" onInput={(e) => setWebsite((e.target as HTMLInputElement).value)})
+              div(class={"text-[11px] font-mono mt-1 " + (websiteValid === false ? "text-muted-foreground" : "text-muted-foreground")}) #{websiteValid === false ? "Invalid URL" : "Optional"}
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") PLAN
-              select(className="w-full bg-black border border-[#262626] rounded-xs px-3 py-2.5 text-[13px] focus:outline-none focus:border-white font-mono" value={plan} onChange={(e) => setPlan((e.target as HTMLSelectElement).value)})
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") PLAN
+              select(className="w-full bg-background border border-input rounded-xs px-3 py-2.5 text-[13px] focus:outline-none focus:border-ring font-mono" value={plan} onChange={(e) => setPlan((e.target as HTMLSelectElement).value)})
                 option(value="free") Free · $0/mo · 3 projects
                 option(value="pro") Pro · $19/mo · Unlimited
                 option(value="team") Team · $49/mo · SAML + SSO
-              div(className="text-[11px] font-mono text-[#525252] mt-1") Selected: #{plan}
+              div(className="text-[11px] font-mono text-muted-foreground mt-1") Selected: #{plan}
           div
-            label(className="block text-[11px] font-mono tracking-wide text-[#888] mb-1 5") BIO — #{bioCount}/160
-            textarea(className="w-full bg-black border border-[#262626] rounded-xs px-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono rows-3" value={bio} placeholder="Tell us about yourself…" onInput={(e) => setBio((e.target as HTMLTextAreaElement).value)})
-            div(className="w-full h-1 bg-[#1a1a1a] rounded-xs mt-1 overflow-hidden")
+            label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") BIO — #{bioCount}/160
+            textarea(className="w-full bg-background border border-input rounded-xs px-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono rows-3" value={bio} placeholder="Tell us about yourself…" onInput={(e) => setBio((e.target as HTMLTextAreaElement).value)})
+            div(className="w-full h-1 bg-border rounded-xs mt-1 overflow-hidden")
               div.h-1.rounded-xs.transition-all(class={bioCount > 160 ? "bg-accent-2" : bioCount > 140 ? "bg-[#737373]" : "bg-accent-1"} style={"width:" + Math.min(100, (bioCount/160)*100) + "%"})
             if bioCount > 160
-              div(className="text-[11px] font-mono text-[#888] mt-1") #{bioCount - 160} characters over limit
-          div(className="flex flex-col gap-3 bg-black border border-[#1a1a1a] rounded-xs p-4")
+              div(className="text-[11px] font-mono text-muted-foreground mt-1") #{bioCount - 160} characters over limit
+          div(className="flex flex-col gap-3 bg-background border border-border rounded-xs p-4")
             label.flex.items-start.gap-3.cursor-pointer
               input.mt-1(type="checkbox" checked={newsletter} onChange={(e) => setNewsletter((e.target as HTMLInputElement).checked)})
               div(className="text-[13px]")
-                div.font-medium.text-white Email me product updates
-                div(className="text-[12px] font-mono text-[#666]") Monthly digest, unsubscribe anytime
+                div.font-medium.text-foreground Email me product updates
+                div(className="text-[12px] font-mono text-muted-foreground") Monthly digest, unsubscribe anytime
             label.flex.items-start.gap-3.cursor-pointer
               input.mt-1(type="checkbox" checked={agree} onChange={(e) => setAgree((e.target as HTMLInputElement).checked)})
               div(className="text-[13px]")
-                div.font-medium.text-white I agree to Terms and Privacy
-                div(className="text-[12px] font-mono text-[#666]") Required to create account
+                div.font-medium.text-foreground I agree to Terms and Privacy
+                div(className="text-[12px] font-mono text-muted-foreground") Required to create account
           if submitError
-            div(className="bg-[#111] border border-[#262626] text-[#888] text-[13px] rounded-xs p-3 font-mono") #{submitError}
+            div(className="bg-muted border border-input text-muted-foreground text-[13px] rounded-xs p-3 font-mono") #{submitError}
           if submitted
-            div(className="bg-accent-1 text-white text-[13px] rounded-xs p-3 flex items-center gap-2 font-medium border border-accent-1")
+            div(className="bg-accent-1 text-foreground text-[13px] rounded-xs p-3 flex items-center gap-2 font-medium border border-accent-1")
               span(className="text-[12px]") ✓
               span Account created! Verification email sent to #{email}.
-          button(type="submit" disabled={!formValid || saving} class={"w-full py-3 rounded-xs font-medium text-[13px] transition flex items-center justify-center gap-2 " + (formValid && !saving ? "bg-accent-1 text-white hover:bg-[var(--accent-1-hover)]" : "bg-[#0a0a0a] text-[#525252] cursor-not-allowed border border-[#1a1a1a] font-mono")})
+          button(type="submit" disabled={!formValid || saving} class={"w-full py-3 rounded-xs font-medium text-[13px] transition flex items-center justify-center gap-2 " + (formValid && !saving ? "bg-accent-1 text-foreground hover:bg-primary" : "bg-card text-muted-foreground cursor-not-allowed border border-border font-mono")})
             if saving
               fragment
                 span.animate-pulse ●
                 span Creating…
             else
               span Create account →
-          div(className="text-[11px] font-mono text-[#525252] text-center") Form valid: #{formValid ? "yes" : "no"} · Progress #{progress}% · validations: #{totalValidations}
-          div(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[12px] font-mono text-[#525252] leading-relaxed")
-            div.text-white.font-medium.mb-1 Why Octane wins
-            div RxJS needs manual unsubscribe + switchMap + debounce. Octane's <span class="text-white">derive(async () => validate(), {"{ debounce: 300, cancelOnUpdate: true }"})</span> cancels prior fetch automatically.
+          div(className="text-[11px] font-mono text-muted-foreground text-center") Form valid: #{formValid ? "yes" : "no"} · Progress #{progress}% · validations: #{totalValidations}
+          div(className="bg-background border border-border rounded-xs p-3 text-[12px] font-mono text-muted-foreground leading-relaxed")
+            div.text-foreground.font-medium.mb-1 Why Octane wins
+            div RxJS needs manual unsubscribe + switchMap + debounce. Octane's <span class="text-foreground">derive(async () => validate(), {"{ debounce: 300, cancelOnUpdate: true }"})</span> cancels prior fetch automatically.
 
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 min-w-0")
         div(className="rounded-xs")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") LIVE STREAM METRICS
-          div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3 text-center")
-            div.bg-black.p-3
-              div(className="text-[16px] font-medium text-white font-mono") #{totalValidations}
-              div(className="text-[11px] font-mono tracking-wide text-[#525252]") TRIGGERED
-            div.bg-black.p-3
-              div(className="text-[16px] font-medium text-white font-mono") #{cancelledTotal}
-              div(className="text-[11px] font-mono tracking-wide text-[#525252]") CANCELLED
-            div.bg-black.p-3
-              div(className="text-[16px] font-medium text-white font-mono") #{avgLatency}ms
-              div(className="text-[11px] font-mono tracking-wide text-[#525252]") AVG
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") LIVE STREAM METRICS
+          div(className="grid grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-3 text-center")
+            div.bg-background.p-3
+              div(className="text-[16px] font-medium text-foreground font-mono") #{totalValidations}
+              div(className="text-[11px] font-mono tracking-wide text-muted-foreground") TRIGGERED
+            div.bg-background.p-3
+              div(className="text-[16px] font-medium text-foreground font-mono") #{cancelledTotal}
+              div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CANCELLED
+            div.bg-background.p-3
+              div(className="text-[16px] font-medium text-foreground font-mono") #{avgLatency}ms
+              div(className="text-[11px] font-mono tracking-wide text-muted-foreground") AVG
           div(className="mt-3 space-y-2 text-[11px] font-mono")
             div.flex.justify-between
-              span(className="text-[#525252]") Debounce
-              span.text-white 300ms
+              span(className="text-muted-foreground") Debounce
+              span.text-foreground 300ms
             div.flex.justify-between
-              span(className="text-[#525252]") Strategy
-              span.text-white cancelOnUpdate
+              span(className="text-muted-foreground") Strategy
+              span.text-foreground cancelOnUpdate
             div.flex.justify-between
-              span(className="text-[#525252]") Last 10 latencies
-              span.text-white #{latencies.length ? latencies.join(", ") : "—"}
-          div(className="mt-3 p-2 bg-black border border-[#1a1a1a] rounded-xs text-[12px] font-mono text-[#525252] leading-relaxed") Type fast in <span class="text-white">email</span> to see cancellations spike. Prior validation is aborted before network resolves.
+              span(className="text-muted-foreground") Last 10 latencies
+              span.text-foreground #{latencies.length ? latencies.join(", ") : "—"}
+          div(className="mt-3 p-2 bg-background border border-border rounded-xs text-[12px] font-mono text-muted-foreground leading-relaxed") Type fast in <span class="text-foreground">email</span> to see cancellations spike. Prior validation is aborted before network resolves.
 
         div(className="mt-8")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") VALIDATION DEPENDENCIES
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") VALIDATION DEPENDENCIES
           div.mt-3.space-y-2
-            div(className="flex items-center justify-between p-2 rounded-xs bg-black border border-[#1a1a1a]")
+            div(className="flex items-center justify-between p-2 rounded-xs bg-background border border-border")
               div(className="text-[12px]")
-                div.font-medium.text-white.font-mono email
-                div(className="text-[#525252] font-mono text-[11px]") async — available
-              div(class={"text-[11px] font-mono font-medium " + (emailS.valid === true ? "text-white" : emailS.valid === false ? "text-[#666]" : "text-[#525252]")}) #{emailS.valid === true ? "✓" : emailS.valid === false ? "✗" : "○"} #{emailS.checking ? "checking" : ""}
-            div(className="flex items-center justify-between p-2 rounded-xs bg-black border border-[#1a1a1a]")
+                div.font-medium.text-foreground.font-mono email
+                div(className="text-muted-foreground font-mono text-[11px]") async — available
+              div(class={"text-[11px] font-mono font-medium " + (emailS.valid === true ? "text-foreground" : emailS.valid === false ? "text-muted-foreground" : "text-muted-foreground")}) #{emailS.valid === true ? "✓" : emailS.valid === false ? "✗" : "○"} #{emailS.checking ? "checking" : ""}
+            div(className="flex items-center justify-between p-2 rounded-xs bg-background border border-border")
               div(className="text-[12px]")
-                div.font-medium.text-white.font-mono username
-                div(className="text-[#525252] font-mono text-[11px]") async — available
-              div(class={"text-[11px] font-mono font-medium " + (usernameS.valid === true ? "text-white" : usernameS.valid === false ? "text-[#666]" : "text-[#525252]")}) #{usernameS.valid === true ? "✓" : usernameS.valid === false ? "✗" : "○"} #{usernameS.checking ? "checking" : ""}
-            div(className="flex items-center justify-between p-2 rounded-xs bg-black border border-[#1a1a1a]")
+                div.font-medium.text-foreground.font-mono username
+                div(className="text-muted-foreground font-mono text-[11px]") async — available
+              div(class={"text-[11px] font-mono font-medium " + (usernameS.valid === true ? "text-foreground" : usernameS.valid === false ? "text-muted-foreground" : "text-muted-foreground")}) #{usernameS.valid === true ? "✓" : usernameS.valid === false ? "✗" : "○"} #{usernameS.checking ? "checking" : ""}
+            div(className="flex items-center justify-between p-2 rounded-xs bg-background border border-border")
               div(className="text-[12px]")
-                div.font-medium.text-white.font-mono password → confirm
-                div(className="text-[#525252] font-mono text-[11px]") derived — sync
-              div(class={"text-[11px] font-mono font-medium " + (confirmValid === true ? "text-white" : confirmValid === false ? "text-[#666]" : "text-[#525252]")}) #{confirmValid === true ? "✓ match" : confirmValid === false ? "✗ mismatch" : "○"}
-            div(className="flex items-center justify-between p-2 rounded-xs bg-black border border-[#1a1a1a]")
+                div.font-medium.text-foreground.font-mono password → confirm
+                div(className="text-muted-foreground font-mono text-[11px]") derived — sync
+              div(class={"text-[11px] font-mono font-medium " + (confirmValid === true ? "text-foreground" : confirmValid === false ? "text-muted-foreground" : "text-muted-foreground")}) #{confirmValid === true ? "✓ match" : confirmValid === false ? "✗ mismatch" : "○"}
+            div(className="flex items-center justify-between p-2 rounded-xs bg-background border border-border")
               div(className="text-[12px]")
-                div.font-medium.text-white.font-mono bio
-                div(className="text-[#525252] font-mono text-[11px]") 160 max
-              div(class={"text-[11px] font-mono " + (bioCount > 160 ? "text-white" : "text-[#525252]")}) #{bioCount}/160
+                div.font-medium.text-foreground.font-mono bio
+                div(className="text-muted-foreground font-mono text-[11px]") 160 max
+              div(class={"text-[11px] font-mono " + (bioCount > 160 ? "text-foreground" : "text-muted-foreground")}) #{bioCount}/160
 
         div(className="mt-8 min-w-0 overflow-hidden")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") CODE SHAPE
-          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888] max-w-full whitespace-pre-wrap break-words")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CODE SHAPE
+          pre(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground max-w-full whitespace-pre-wrap break-words")
             code const email = stream("")&#10;const validation = derive(async () => &#123;&#10;  return await validate(email())&#10;&#125;, &#123; debounce: 300, cancelOnUpdate: true &#125;)
-          div(className="text-[11px] font-mono text-[#525252] mt-2") In Octane, the stream is the source of truth. No useEffect cleanup discipline, no switchMap.
+          div(className="text-[11px] font-mono text-muted-foreground mt-2") In Octane, the stream is the source of truth. No useEffect cleanup discipline, no switchMap.
         div(className="mt-8")
-          div(className="text-[11px] font-mono tracking-wide text-white") TIP — TRY THESE
-          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1 leading-relaxed")
-            li Type <span class="text-white">taken@taken.com</span> → shows ✗
-            li Type <span class="text-white">admin</span> as username → ✗ taken
-            li Type email quickly e.g. <span class="text-white">a → ab → abc@co.com</span> and watch cancelled count jump
-            li Password <span class="text-white">Octane!12</span> scores Excellent
+          div(className="text-[11px] font-mono tracking-wide text-foreground") TIP — TRY THESE
+          ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1 leading-relaxed")
+            li Type <span class="text-foreground">taken@taken.com</span> → shows ✗
+            li Type <span class="text-foreground">admin</span> as username → ✗ taken
+            li Type email quickly e.g. <span class="text-foreground">a → ab → abc@co.com</span> and watch cancelled count jump
+            li Password <span class="text-foreground">Octane!12</span> scores Excellent

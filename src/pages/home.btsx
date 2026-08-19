@@ -1,215 +1,215 @@
 props {}: {}
 
 div
-  section(className="w-full p-6 border-b border-[#1a1a1a]")
-    div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0a0a0a] border border-[#262626] text-[#888] text-[11px] font-mono tracking-wide")
-      span(className="w-1.5 h-1.5 rounded-xs bg-white animate-pulse")
+  section(className="w-full p-6 border-b border-border")
+    div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-card border border-input text-muted-foreground text-[11px] font-mono tracking-wide")
+      span(className="w-1.5 h-1.5 rounded-xs bg-primary animate-pulse")
       span OCTANE · BEAST · TSRX · VITE — PRODUCTION-GRADE DEMOS
-    h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-white max-w-[720px]")
+    h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
       span Beast demos,
-      span(className="block text-[#888]") examples, and guides.
-    p(className="text-[15px] text-[#888] leading-relaxed max-w-[560px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
+      span(className="block text-muted-foreground") examples, and guides.
+    p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[560px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
     div.flex.flex-wrap.gap-2.mt-6
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] hover:bg-[var(--accent-1-hover)] transition" href="/canvas") Explore Canvas
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#ededed] font-medium text-[13px] hover:bg-[#111] transition" href="/form") Try Async Form
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#888] font-medium text-[13px] hover:bg-[#111] hover:text-white transition" href="/grid") Open Masonry Grid
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#888] font-medium text-[13px] hover:bg-[#111] hover:text-white transition" href="/shell") View Shell
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] hover:bg-[var(--accent-1-hover)] transition" href="/timeline") Timeline
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#888] font-medium text-[13px] hover:bg-[#111] hover:text-white transition" href="/worker") Worker
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[#888] font-medium text-[13px] hover:bg-[#111] hover:text-white transition" href="/motion") Motion
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-2 text-white font-medium text-[13px] hover:bg-[var(--accent-2-hover)] transition" href="/streaming") Streaming
-    div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-8")
-      div.bg-black.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-white") 8
-        div(className="text-[11px] tracking-wide font-mono text-[#666]") SUBSTANTIAL DEMOS
-      div.bg-black.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-white") 60fps
-        div(className="text-[11px] tracking-wide font-mono text-[#666]") TARGET INTERACTION
-      div.bg-black.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-white") Vite
-        div(className="text-[11px] tracking-wide font-mono text-[#666]") SPA ROUTING
-      div.bg-black.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-white") 0
-        div(className="text-[11px] tracking-wide font-mono text-[#666]") MANUAL SUBSCRIPTIONS
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] hover:bg-primary transition" href="/canvas") Explore Canvas
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] hover:bg-muted transition" href="/form") Try Async Form
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/grid") Open Masonry Grid
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/shell") View Shell
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] hover:bg-primary transition" href="/timeline") Timeline
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/worker") Worker
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/motion") Motion
+      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-2 text-foreground font-medium text-[13px] hover:bg-[var(--accent-2-hover)] transition" href="/streaming") Streaming
+    div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border rounded-xs overflow-hidden mt-8")
+      div.bg-background.p-4
+        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 8
+        div(className="text-[11px] tracking-wide font-mono text-muted-foreground") SUBSTANTIAL DEMOS
+      div.bg-background.p-4
+        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 60fps
+        div(className="text-[11px] tracking-wide font-mono text-muted-foreground") TARGET INTERACTION
+      div.bg-background.p-4
+        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") Vite
+        div(className="text-[11px] tracking-wide font-mono text-muted-foreground") SPA ROUTING
+      div.bg-background.p-4
+        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 0
+        div(className="text-[11px] tracking-wide font-mono text-muted-foreground") MANUAL SUBSCRIPTIONS
 
   section(className="w-full px-6 py-8")
-    div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-      div(className="p-4 border-b border-[#1a1a1a] flex flex-wrap items-center justify-between gap-4")
-        h2(className="text-[13px] font-medium tracking-[-0.01em] text-white") Summary map
-        p(className="text-[12px] font-mono text-[#666]") Each demo targets a typical pain point in React/Vue/Svelte and shows Octane's answer.
+    div(className="bg-card border border-border rounded-xs overflow-hidden")
+      div(className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-4")
+        h2(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Summary map
+        p(className="text-[12px] font-mono text-muted-foreground") Each demo targets a typical pain point in React/Vue/Svelte and shows Octane's answer.
       div.overflow-x-auto
         table(className="w-full text-[13px]")
           thead
-            tr(className="border-b border-[#1a1a1a] text-left text-[11px] tracking-wide font-mono text-[#666]")
+            tr(className="border-b border-border text-left text-[11px] tracking-wide font-mono text-muted-foreground")
               th.px-4.py-3.font-medium DEMO
               th.px-4.py-3.font-medium OCTANE ADVANTAGE
               th.px-4.py-3.font-medium TYPICAL PAIN IN OTHERS
               th.px-4.py-3.font-medium ROUTE
           tbody(className="font-mono text-[12px]")
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Collaborative Canvas
-              td(className="px-4 py-3 text-[#888]") Granular reactive updates, delta sync
-              td(className="px-4 py-3 text-[#666]") Virtual DOM reconciliation cost
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Collaborative Canvas
+              td(className="px-4 py-3 text-muted-foreground") Granular reactive updates, delta sync
+              td(className="px-4 py-3 text-muted-foreground") Virtual DOM reconciliation cost
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-white text-[11px] font-medium border border-accent-1" href="/canvas") /canvas
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Adaptive Form
-              td(className="px-4 py-3 text-[#888]") Automatic cancellation, debounce
-              td(className="px-4 py-3 text-[#666]") Manual subscription cleanup (RxJS)
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/canvas") /canvas
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Adaptive Form
+              td(className="px-4 py-3 text-muted-foreground") Automatic cancellation, debounce
+              td(className="px-4 py-3 text-muted-foreground") Manual subscription cleanup (RxJS)
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-white text-[11px] font-medium border border-accent-2" href="/form") /form
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Masonry Grid
-              td(className="px-4 py-3 text-[#888]") Dynamic measurement, virtualize
-              td(className="px-4 py-3 text-[#666]") Fixed-size assumptions (react-window)
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/form") /form
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Masonry Grid
+              td(className="px-4 py-3 text-muted-foreground") Dynamic measurement, virtualize
+              td(className="px-4 py-3 text-muted-foreground") Fixed-size assumptions (react-window)
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-white text-[11px] font-medium border border-accent-1" href="/grid") /grid
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Isomorphic Shell
-              td(className="px-4 py-3 text-[#888]") Universal suspend/resume, partial hydration
-              td(className="px-4 py-3 text-[#666]") Framework-specific boundaries (Next.js)
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/grid") /grid
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Isomorphic Shell
+              td(className="px-4 py-3 text-muted-foreground") Universal suspend/resume, partial hydration
+              td(className="px-4 py-3 text-muted-foreground") Framework-specific boundaries (Next.js)
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-white text-[11px] font-medium border border-accent-2" href="/shell") /shell
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Timeline Control
-              td(className="px-4 py-3 text-[#888]") Time travel, undo/redo, branching
-              td(className="px-4 py-3 text-[#666]") Redux time-travel boilerplate
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/shell") /shell
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Timeline Control
+              td(className="px-4 py-3 text-muted-foreground") Time travel, undo/redo, branching
+              td(className="px-4 py-3 text-muted-foreground") Redux time-travel boilerplate
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-white text-[11px] font-medium border border-accent-1" href="/timeline") /timeline
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Worker Physics
-              td(className="px-4 py-3 text-[#888]") SharedArrayBuffer auto-proxy
-              td(className="px-4 py-3 text-[#666]") postMessage + Comlink
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/timeline") /timeline
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Worker Physics
+              td(className="px-4 py-3 text-muted-foreground") SharedArrayBuffer auto-proxy
+              td(className="px-4 py-3 text-muted-foreground") postMessage + Comlink
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-white text-[11px] font-medium border border-accent-2" href="/worker") /worker
-            tr(className="border-b border-[#1a1a1a] hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Motion Orchestrator
-              td(className="px-4 py-3 text-[#888]") Interrupt + spring presets
-              td(className="px-4 py-3 text-[#666]") 40kb Framer + AnimatePresence
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/worker") /worker
+            tr(className="border-b border-border hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Motion Orchestrator
+              td(className="px-4 py-3 text-muted-foreground") Interrupt + spring presets
+              td(className="px-4 py-3 text-muted-foreground") 40kb Framer + AnimatePresence
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-white text-[11px] font-medium border border-accent-1" href="/motion") /motion
-            tr(className="hover:bg-[#111] transition")
-              td.px-4.py-3.font-medium.text-white.font-sans Edge Streaming
-              td(className="px-4 py-3 text-[#888]") HTTP streaming + keyed cache
-              td(className="px-4 py-3 text-[#666]") Next.js Server Components limits
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/motion") /motion
+            tr(className="hover:bg-muted transition")
+              td.px-4.py-3.font-medium.text-foreground.font-sans Edge Streaming
+              td(className="px-4 py-3 text-muted-foreground") HTTP streaming + keyed cache
+              td(className="px-4 py-3 text-muted-foreground") Next.js Server Components limits
               td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-white text-[11px] font-medium border border-accent-2" href="/streaming") /streaming
+                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/streaming") /streaming
 
   section(className="w-full px-6 pb-12")
-    div(className="grid lg:grid-cols-2 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/canvas")
+    div(className="grid lg:grid-cols-2 gap-px bg-border border border-border rounded-xs overflow-hidden")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/canvas")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-white grid place-items-center text-[12px] font-mono border border-accent-1") →
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /canvas
+          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") →
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /canvas
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 01 — Real-Time Collaborative Canvas
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Superior reactivity and fine-grained state sync. Only re-renders changed pixels, not entire canvas. WebSocket delta sync, presence cursors, 60fps strokes.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 01 — Real-Time Collaborative Canvas
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Superior reactivity and fine-grained state sync. Only re-renders changed pixels, not entire canvas. WebSocket delta sync, presence cursors, 60fps strokes.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") useState + effect
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") delta sync
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") ResizeObserver
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") useState + effect
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") delta sync
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") ResizeObserver
         div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/form")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/form")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-white grid place-items-center text-[12px] font-mono border border-accent-2") ✓
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /form
+          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ✓
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /form
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 02 — Adaptive Form with Validation Streams
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Composable async flows and cancellation. Debounced 300ms, cancelOnUpdate, race handling. No manual subscriptions.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 02 — Adaptive Form with Validation Streams
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Composable async flows and cancellation. Debounced 300ms, cancelOnUpdate, race handling. No manual subscriptions.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") derive + cancel
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") AbortController
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") optimistic UI
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") derive + cancel
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") AbortController
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") optimistic UI
         div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/grid")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/grid")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-white grid place-items-center text-[12px] font-mono border border-accent-1") ⊞
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /grid
+          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ⊞
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /grid
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 03 — Virtualized Masonry Grid
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Zero-config performance. Built-in virtualization + masonry, ResizeObserver remeasure, 10k+ items, overscan, dynamic heights.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 03 — Virtualized Masonry Grid
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Zero-config performance. Built-in virtualization + masonry, ResizeObserver remeasure, 10k+ items, overscan, dynamic heights.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") virtualize
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") ResizeObserver
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") columns
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") virtualize
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") ResizeObserver
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") columns
         div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/shell")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/shell")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-white grid place-items-center text-[12px] font-mono border border-accent-2") ◈
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /shell
+          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ◈
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /shell
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 04 — Isomorphic Shell with Progressive Hydration
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 04 — Isomorphic Shell with Progressive Hydration
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") Hydrate
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") Suspense
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") lazy
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Hydrate
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Suspense
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") lazy
         div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/timeline")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/timeline")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-white grid place-items-center text-[12px] font-mono border border-accent-1") ⏱
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /timeline
+          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ⏱
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /timeline
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 05 — Timeline — Time as Dimension
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Every signal gets .timeline(). Scrub, fork, diff. Structural sharing, branch from any point.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 05 — Timeline — Time as Dimension
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Every signal gets .timeline(). Scrub, fork, diff. Structural sharing, branch from any point.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") timeline
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") fork
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") structural sharing
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") timeline
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") fork
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") structural sharing
         div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/worker")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/worker")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-white grid place-items-center text-[12px] font-mono border border-accent-2") ⚙
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /worker
+          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ⚙
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /worker
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 06 — Worker — Zero-Cost Threading
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") SharedArrayBuffer auto-proxy, 120fps physics without blocking. Gravity slider updates worker instantly.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 06 — Worker — Zero-Cost Threading
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") SharedArrayBuffer auto-proxy, 120fps physics without blocking. Gravity slider updates worker instantly.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") SharedArrayBuffer
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") Atomics
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") ~0ms
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") SharedArrayBuffer
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Atomics
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") ~0ms
         div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/motion")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/motion")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-white grid place-items-center text-[12px] font-mono border border-accent-1") ◎
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /motion
+          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ◎
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /motion
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 07 — Motion — Animation Orchestrator
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Interruptible springs, velocity preserved, mode:'interrupt'. No Framer 40kb.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 07 — Motion — Animation Orchestrator
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Interruptible springs, velocity preserved, mode:'interrupt'. No Framer 40kb.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") spring
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") interrupt
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") onPan
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") spring
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") interrupt
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") onPan
         div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-black p-6 hover:bg-[#0a0a0a] transition flex flex-col gap-4" href="/streaming")
+      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/streaming")
         div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-white grid place-items-center text-[12px] font-mono border border-accent-2") ⇡
-          span(className="px-2 py-1 rounded-xs bg-[#111] border border-[#1a1a1a] text-[11px] font-mono text-[#666]") /streaming
+          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ⇡
+          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /streaming
         div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-white group-hover:text-white transition") 08 — Streaming — Edge at CDN
-          p(className="text-[13px] text-[#666] mt-1 leading-relaxed") Streams progressively from edge — yield skeleton then each card. Keyed cache at CDN.
+          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 08 — Streaming — Edge at CDN
+          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Streams progressively from edge — yield skeleton then each card. Keyed cache at CDN.
         div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") streaming
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") edge
-          span(className="px-2 py-1 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#888]") cache
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") streaming
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") edge
+          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") cache
         div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
 
   section(className="w-full px-6 pb-12")
-    div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-6 sm:p-8")
-      h2(className="text-[14px] font-medium tracking-[-0.01em] text-white flex items-center gap-2")
-        span(className="w-1 h-4 bg-white rounded-xs inline-block")
+    div(className="bg-card border border-border rounded-xs p-6 sm:p-8")
+      h2(className="text-[14px] font-medium tracking-[-0.01em] text-foreground flex items-center gap-2")
+        span(className="w-1 h-4 bg-primary rounded-xs inline-block")
         span How routing works
-      p(className="text-[#666] text-[13px] mt-2 max-w-2xl leading-relaxed font-mono") Vite SPA routing with history API. App state tracks window.location.pathname, pushState on navigation, popstate for back/forward. No external router, no page reloads. Direct hits fallback to index.html via Vite appType spa.
-      div(className="grid sm:grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-6")
-        div(className="bg-black p-4")
-          div(className="font-medium text-[13px] text-white") / → Home
-          div(className="text-[#666] text-[12px] mt-1 font-mono") Landing + overview
-        div(className="bg-black p-4")
-          div(className="font-medium text-[13px] text-white") /canvas · /form · /grid · /shell
-          div(className="text-[#666] text-[12px] mt-1 font-mono") Each demo isolated, own route, deep-linkable
-        div(className="bg-black p-4")
-          div(className="font-medium text-[13px] text-white") Vite appType: spa
-          div(className="text-[#666] text-[12px] mt-1 font-mono") History fallback in dev + preview
+      p(className="text-muted-foreground text-[13px] mt-2 max-w-2xl leading-relaxed font-mono") Vite SPA routing with history API. App state tracks window.location.pathname, pushState on navigation, popstate for back/forward. No external router, no page reloads. Direct hits fallback to index.html via Vite appType spa.
+      div(className="grid sm:grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-6")
+        div(className="bg-background p-4")
+          div(className="font-medium text-[13px] text-foreground") / → Home
+          div(className="text-muted-foreground text-[12px] mt-1 font-mono") Landing + overview
+        div(className="bg-background p-4")
+          div(className="font-medium text-[13px] text-foreground") /canvas · /form · /grid · /shell
+          div(className="text-muted-foreground text-[12px] mt-1 font-mono") Each demo isolated, own route, deep-linkable
+        div(className="bg-background p-4")
+          div(className="font-medium text-[13px] text-foreground") Vite appType: spa
+          div(className="text-muted-foreground text-[12px] mt-1 font-mono") History fallback in dev + preview
       div.flex.flex-wrap.gap-2.mt-6
-        a(className="px-4 py-2 rounded-xs bg-accent-1 text-white font-medium text-[13px] hover:bg-[var(--accent-1-hover)]" href="/canvas") Start with Canvas →
-        a(className="px-4 py-2 rounded-xs bg-black border border-[#262626] text-[#ededed] font-medium text-[13px] hover:bg-[#111] transition" href="https://github.com/octanejs/octane" target="_blank" rel="noreferrer") Octane docs →
+        a(className="px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] hover:bg-primary" href="/canvas") Start with Canvas →
+        a(className="px-4 py-2 rounded-xs bg-background border border-input text-foreground font-medium text-[13px] hover:bg-muted transition" href="https://github.com/octanejs/octane" target="_blank" rel="noreferrer") Octane docs →

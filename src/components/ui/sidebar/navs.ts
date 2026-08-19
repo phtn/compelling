@@ -29,9 +29,9 @@ export const navGroups: NavGroup[] = [
   {
     title: 'Resources',
     items: [
-      { href: 'https://beast-docs.vercel.app', icon: 'home-back', label: 'beast-tsrx', value: '↗' },
-      { href: 'https://octanejs.dev', icon: 'home-back', label: 'octane', value: '↗' },
-      { href: 'https://tsrx.dev', icon: 'home-back', label: 'tsrx', value: '↗' }
+      { href: 'https://beast-docs.vercel.app', icon: 'mechanics', label: 'beast-tsrx', value: '↗' },
+      { href: 'https://octanejs.dev', icon: 'mechanics', label: 'octane', value: '↗' },
+      { href: 'https://tsrx.dev', icon: 'mechanics', label: 'tsrx', value: '↗' }
     ]
   }
 ]

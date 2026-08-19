@@ -109,70 +109,70 @@ setup
     ctx.fillText(`gravity ${gravity.toFixed(1)} · frame ${frame}`, 8, rect.height - 8)
   }, [particles, frame, gravity])
 
-div.bg-black
+div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (running ? "bg-accent-1 text-white border-accent-1" : "bg-[#0a0a0a] border-[#262626] text-[#666]")}, {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (shared ? "bg-accent-2 text-white border-accent-2" : "bg-[#0a0a0a] border-[#262626] text-[#666]")} ]})
+    Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (running ? "bg-accent-1 text-foreground border-accent-1" : "bg-card border-input text-muted-foreground")}, {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")} ]})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+        div(className="bg-card border border-border rounded-xs overflow-hidden")
+          div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
             div(className="flex items-center gap-2")
               div(className="w-1.5 h-1.5 rounded-xs bg-accent-1 animate-pulse")
-              span(className="text-[11px] font-mono tracking-wide text-[#666]") worker — physicsEngine.bind({ particles, gravity })
-            span(className="text-[11px] font-mono text-[#525252]") #{fps} fps · #{particles.length} particles
-          div(className="relative bg-black p-2")
-            canvas(className="block w-full h-[420px] bg-black border border-[#1a1a1a] rounded-xs" ref={canvasRef} width={800} height={500} style="width:100%;height:420px")
-          div(className="p-3 bg-black border-t border-[#1a1a1a] space-y-3")
+              span(className="text-[11px] font-mono tracking-wide text-muted-foreground") worker — physicsEngine.bind({ particles, gravity })
+            span(className="text-[11px] font-mono text-muted-foreground") #{fps} fps · #{particles.length} particles
+          div(className="relative bg-background p-2")
+            canvas(className="block w-full h-[420px] bg-background border border-border rounded-xs" ref={canvasRef} width={800} height={500} style="width:100%;height:420px")
+          div(className="p-3 bg-background border-t border-border space-y-3")
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1.5") GRAVITY — #{gravity.toFixed(1)} (updates worker instantly)
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1.5") GRAVITY — #{gravity.toFixed(1)} (updates worker instantly)
               input(className="w-full accent-white" type="range" min="0" max="20" step="0.1" value={gravity} onInput={onGravityInput})
-              div(className="flex justify-between text-[11px] font-mono text-[#525252] mt-1")
+              div(className="flex justify-between text-[11px] font-mono text-muted-foreground mt-1")
                 span 0 — float
                 span 9.8 — earth
                 span 20 — heavy
             div
-              label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1.5") PARTICLES — #{count}
+              label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1.5") PARTICLES — #{count}
               input(className="w-full accent-white" type="range" min="40" max="600" step="20" value={count} onInput={onCountInput})
             div(className="flex gap-2")
-              button(className="px-3 py-1.5 rounded-xs bg-white text-black text-[11px] font-mono border border-white" onClick={() => setCount(220)}) 220
-              button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono" onClick={randomizeParticles}) Randomize
+              button(className="px-3 py-1.5 rounded-xs bg-primary text-primary-foreground text-[11px] font-mono border border-primary" onClick={() => setCount(220)}) 220
+              button(className="px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[11px] font-mono" onClick={randomizeParticles}) Randomize
         //
-        div(className="mt-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
+        div(className="mt-3 bg-card border border-border rounded-xs p-3 flex gap-3")
           div(className="text-accent-2 text-[12px]") ●
           div(className="text-[12px] leading-relaxed font-mono")
-            div(className="font-medium text-white") Why Octane wins
-            div(className="text-[#666] mt-1") React needs useWorker + Comlink + serialization. Octane worker.bind({particles,gravity}) auto-proxies signals — gravity.set() hits worker without copy.
+            div(className="font-medium text-foreground") Why Octane wins
+            div(className="text-muted-foreground mt-1") React needs useWorker + Comlink + serialization. Octane worker.bind({particles,gravity}) auto-proxies signals — gravity.set() hits worker without copy.
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") METRICS
-          div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
-            div(className="bg-black p-3 text-center")
-              div(className="text-[16px] font-medium text-white") #{fps}
-              div(className="text-[11px] font-mono text-[#525252]") FPS
-            div(className="bg-black p-3 text-center")
+        div(className="bg-card border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") METRICS
+          div(className="grid grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-3")
+            div(className="bg-background p-3 text-center")
+              div(className="text-[16px] font-medium text-foreground") #{fps}
+              div(className="text-[11px] font-mono text-muted-foreground") FPS
+            div(className="bg-background p-3 text-center")
               div(className="text-[16px] font-medium text-accent-1") #{gravity.toFixed(1)}
-              div(className="text-[11px] font-mono text-[#525252]") GRAVITY
-            div(className="bg-black p-3 text-center")
+              div(className="text-[11px] font-mono text-muted-foreground") GRAVITY
+            div(className="bg-background p-3 text-center")
               div(className="text-[16px] font-medium text-accent-2") #{count}
-              div(className="text-[11px] font-mono text-[#525252]") COUNT
+              div(className="text-[11px] font-mono text-muted-foreground") COUNT
           div(className="mt-3 space-y-1.5 text-[11px] font-mono")
             div(className="flex justify-between")
-              span(className="text-[#525252]") shared
-              span(className="text-white") #{shared ? "yes" : "no"}
+              span(className="text-muted-foreground") shared
+              span(className="text-foreground") #{shared ? "yes" : "no"}
             div(className="flex justify-between")
-              span(className="text-[#525252]") frame
-              span(className="text-white") #{frame}
+              span(className="text-muted-foreground") frame
+              span(className="text-foreground") #{frame}
             div(className="flex justify-between")
-              span(className="text-[#525252]") transport
-              span(className="text-white") #{shared ? "Atomics" : "clone"}
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") BINDING
-          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888] whitespace-pre-wrap break-words")
+              span(className="text-muted-foreground") transport
+              span(className="text-foreground") #{shared ? "Atomics" : "clone"}
+        div(className="bg-card border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") BINDING
+          pre(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground whitespace-pre-wrap break-words")
             code physicsEngine.bind({"{"}particles, gravity{"}"})&#10;// slider → worker instantly
-          div(className="text-[11px] font-mono text-[#525252] mt-2") No postMessage, no serialization — signal is shared.
-        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-white") TIP
-          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1")
+          div(className="text-[11px] font-mono text-muted-foreground mt-2") No postMessage, no serialization — signal is shared.
+        div(className="bg-background border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-foreground") TIP
+          ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1")
             li Drag gravity → particles fall faster
             li Change count → spawns without jank
             li Toggle Shared vs Clone to see fps delta

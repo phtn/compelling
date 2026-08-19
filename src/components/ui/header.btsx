@@ -1,8 +1,21 @@
 import Icon from "@/lib/icons/index.btsx"
 import { cn } from "@/lib/utils"
 import type { IconName } from "@/lib/icons/types"
+import Button from "./button.btsx"
+import ButtonGroup from "./button-group.btsx"
 
 module
+  interface HeaderAction {
+    id: string;
+    label?: string;
+    icon?: IconName;
+    href?: string;
+    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
+    size?: "sm" | "md" | "lg" | "icon";
+    className?: string;
+    onClick?: VoidFunction;
+  }
+
   interface HeaderProps {
     title: string;
     subtitle?: string;
@@ -12,45 +25,50 @@ module
     toggleFn?: VoidFunction;
     pending?: boolean;
     pendingLabel?: string;
-    actions?: {id: string; label?: string; icon?: IconName; href?: string; className?: string; onClick?: VoidFunction}[]
+    actions?: HeaderAction[];
+    className?: string;
+    actionsClassName?: string;
   }
 
-props {title, subtitle, description, icon, isVisible, toggleFn, pending, pendingLabel, actions}: HeaderProps
+props {title, subtitle, description, icon, isVisible, toggleFn, pending, pendingLabel, actions, className, actionsClassName}: HeaderProps
 
 setup
   const handleIconClick = () => {
     if (toggleFn) toggleFn()
   }
 
-div(className="flex flex-col lg:flex-row gap-4 items-start justify-between pb-5")
-  div(className="flex flex-col gap-3")
-    h1(className="font-semibold text-4xl tracking-tighter") #{title}
-    div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-50 hover:opacity-100 tracking-widest uppercase")
-      span(className="group-hover:opacity-50") #{subtitle}
-      if toggleFn
-        Icon(name={icon ?? "overview"} size={16} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out cursor-pointer" onClick={handleIconClick})
-    p(className={cn("text-[#666] mt-2 max-w-2xl text-[13px] leading-relaxed font-mono", isVisible ? "flex" : "hidden")}) #{description}
-  div(className="flex flex-wrap gap-2")
-    if pending !== undefined
-      div(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2")
-        div(className={"w-1.5 h-1.5 rounded-xs " + (pending ? "bg-white animate-pulse" : "bg-white")})
-        span #{pending ? (pendingLabel ?? "Saving...") : "Saved"}
-    each action in (actions ?? []) key action.id
-      if action.href
-        a(href={action.href} className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition flex items-center gap-2"} target={action.href.startsWith("http") ? "_blank" : undefined} rel={action.href.startsWith("http") ? "noreferrer" : undefined} onClick={action.onClick})
-          if action.icon
-            Icon(name={action.icon} size={14})
-          if action.label
-            span #{action.label}
-      elseif action.onClick
-        button(onClick={action.onClick} className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition flex items-center gap-2"})
-          if action.icon
-            Icon(name={action.icon} size={14})
-          if action.label
-            span #{action.label}
-      else
-        div(className={action.className ?? "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666] flex items-center gap-2"})
-          if action.icon
-            Icon(name={action.icon} size={14})
-          if action.label
-            span #{action.label}
+div(className={cn("flex flex-col lg:flex-row gap-4 items-start justify-between pb-5", className)})
+  div(className="flex flex-col gap-3 min-w-0 flex-1")
+    h1(className="font-semibold text-4xl tracking-tighter text-foreground") #{title}
+    if subtitle || toggleFn
+      div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-70 hover:opacity-100 tracking-widest uppercase text-muted-foreground")
+        if subtitle
+          span(className="group-hover:opacity-50") #{subtitle}
+        if toggleFn
+          Icon(name={icon ?? "overview"} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out cursor-pointer" onClick={handleIconClick})
+    if description
+      p(className={cn("text-muted-foreground mt-2 max-w-2xl text-[13px] leading-relaxed font-mono", isVisible === false ? "hidden" : "flex")}) #{description}
+    slot
+  if pending !== undefined || (actions && actions.length > 0)
+    div(className="flex flex-wrap gap-3 items-center shrink-0")
+      if pending !== undefined
+        div(className="px-3 py-1.5 rounded-[10px] bg-card border border-border text-[11px] font-mono text-muted-foreground flex items-center gap-2 h-9")
+          div(className={"w-1.5 h-1.5 rounded-full " + (pending ? "bg-foreground animate-pulse" : "bg-foreground")})
+          span #{pending ? (pendingLabel ?? "Saving...") : "Saved"}
+      if actions && actions.length > 0
+        ButtonGroup(variant="default" size="sm" className={cn("flex", actionsClassName)})
+          each action in actions key action.id
+            if action.href
+              a(href={action.href} className={cn("inline-flex items-center justify-center text-[12px] font-medium transition gap-2 px-3 h-9", action.className ?? "bg-card border-input text-muted-foreground hover:text-foreground hover:bg-muted")} target={action.href.startsWith("http") ? "_blank" : undefined} rel={action.href.startsWith("http") ? "noreferrer" : undefined} onClick={action.onClick})
+                if action.icon
+                  Icon(name={action.icon})
+                if action.label
+                  span #{action.label}
+            elseif action.onClick
+              Button(variant={action.variant ?? "outline"} size={action.size ?? "sm"} icon={action.icon} label={action.label} onClick={action.onClick} className={`hover:bg-border/30 ` + action.className})
+            else
+              div(className={cn("flex items-center justify-center rounded-[10px] text-[11px] font-mono gap-2 px-3 h-9", action.className ?? "bg-card border-border text-muted-foreground")})
+                if action.icon
+                  Icon(name={action.icon})
+                if action.label
+                  span #{action.label}

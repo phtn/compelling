@@ -100,115 +100,115 @@ setup
   const [showInfo, setShowInfo] = useState(false)
   const toggleInfo = () => setShowInfo(!showInfo)
 
-div.bg-black
+div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "clear", label: "Clear filters", onClick: clearFilters, className: "px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400"}, {id: "count", label: filtered.length.toLocaleString() + " / 10,000", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
+    Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "px-3 py-1.5 rounded-xs bg-card text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "clear", label: "Clear filters", onClick: clearFilters, className: "px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400"}, {id: "count", label: filtered.length.toLocaleString() + " / 10,000", className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
     div.grid.grid-cols-12.gap-4.mt-6
-      div(className="col-span-12 lg:col-span-3 bg-[#0a0a0a] rounded-xs h-fit sticky top-[72px]")
+      div(className="col-span-12 lg:col-span-3 bg-card rounded-xs h-fit sticky top-[72px]")
         div
-          label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") SEARCH
+          label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") SEARCH
           div.relative
-            input(className="w-full bg-black border border-[#262626] rounded-xs pl-8 pr-3 py-2.5 text-[13px] placeholder:text-[#525252] focus:outline-none focus:border-white font-mono" value={query} placeholder="Search title, category, author" onInput={(e) => setQuery((e.target as HTMLInputElement).value)})
-            div(className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#525252] text-[12px]") ⌕
-          div(className="text-[11px] font-mono text-[#525252] mt-1") #{filtered.length.toLocaleString()} matches
+            input(className="w-full bg-background border border-input rounded-xs pl-8 pr-3 py-2.5 text-[13px] placeholder:text-muted-foreground focus:outline-none focus:border-ring font-mono" value={query} placeholder="Search title, category, author" onInput={(e) => setQuery((e.target as HTMLInputElement).value)})
+            div(className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground text-[12px]") ⌕
+          div(className="text-[11px] font-mono text-muted-foreground mt-1") #{filtered.length.toLocaleString()} matches
         div.mt-4
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") CATEGORY
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CATEGORY
           div.flex.flex-wrap.gap-1.mt-2
             each cat in CATS key cat
-              button(onClick={() => setCategory(cat)} class={"px-2.5 py-1 rounded-xs text-[11px] font-mono font-medium border transition " + (category === cat ? "bg-white text-black border-white" : "bg-black border-[#1a1a1a] text-[#666] hover:bg-[#111] hover:text-white")}) #{cat}
+              button(onClick={() => setCategory(cat)} class={"px-2.5 py-1 rounded-xs text-[11px] font-mono font-medium border transition " + (category === cat ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:bg-muted hover:text-foreground")}) #{cat}
         div.mt-4.grid.grid-cols-2.gap-3
           div
-            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") SORT
-            select(className="w-full bg-black border border-[#262626] rounded-xs px-2 py-2 text-[12px] font-mono" value={sort} onChange={(e) => setSort((e.target as HTMLSelectElement).value)})
+            label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") SORT
+            select(className="w-full bg-background border border-input rounded-xs px-2 py-2 text-[12px] font-mono" value={sort} onChange={(e) => setSort((e.target as HTMLSelectElement).value)})
               option(value="featured") Featured
               option(value="likes") Most liked
               option(value="price-asc") Price low→high
               option(value="price-desc") Price high→low
               option(value="newest") Newest
           div
-            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") COLUMNS — #{columns}
+            label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") COLUMNS — #{columns}
             input.w-full.accent-white(type="range" min="1" max="5" value={columns} onInput={(e) => setColumns(parseInt((e.target as HTMLInputElement).value, 10))})
         div.mt-3.grid.grid-cols-2.gap-3
           div
-            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") GAP — #{gap}px
+            label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") GAP — #{gap}px
             input.w-full.accent-white(type="range" min="8" max="32" value={gap} onInput={(e) => setGap(parseInt((e.target as HTMLInputElement).value, 10))})
           div
-            label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1 5") OVERSCAN — #{overscan}
+            label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1 5") OVERSCAN — #{overscan}
             input.w-full.accent-white(type="range" min="0" max="8" value={overscan} onInput={(e) => setOverscan(parseInt((e.target as HTMLInputElement).value, 10))})
         div(className="rounded-xs mt-6 space-y-2 text-xs font-mono")
           div.flex.justify-between
-            span(className="text-[#525252]") Total
-            span.font-medium.text-white #{filtered.length.toLocaleString()}
+            span(className="text-muted-foreground") Total
+            span.font-medium.text-foreground #{filtered.length.toLocaleString()}
           div.flex.justify-between
-            span(className="text-[#525252]") Rendered
-            span.font-medium.text-white #{visibleCount.toLocaleString()} (#{ratio}%)
+            span(className="text-muted-foreground") Rendered
+            span.font-medium.text-foreground #{visibleCount.toLocaleString()} (#{ratio}%)
           div.flex.justify-between
-            span(className="text-[#525252]") Saved renders
-            span.font-medium.text-white #{(filtered.length - visibleCount).toLocaleString()}
-          div(className="w-full h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
-            div.h-1.bg-white(style={"width:" + ratio + "%"})
+            span(className="text-muted-foreground") Saved renders
+            span.font-medium.text-foreground #{(filtered.length - visibleCount).toLocaleString()}
+          div(className="w-full h-1 bg-border rounded-xs overflow-hidden")
+            div.h-1.bg-primary(style={"width:" + ratio + "%"})
           div.flex.justify-between
-            span(className="text-[#525252]") Remeasures
-            span.text-white #{remeasures}
+            span(className="text-muted-foreground") Remeasures
+            span.text-foreground #{remeasures}
           div.flex.justify-between
-            span(className="text-[#525252]") Row height (est.)
-            span.text-white #{rowH}px
+            span(className="text-muted-foreground") Row height (est.)
+            span.text-foreground #{rowH}px
           div.flex.justify-between
-            span(className="text-[#525252]") Viewport
-            span.text-white #{viewportH}px · top #{Math.round(scrollTop)}px
+            span(className="text-muted-foreground") Viewport
+            span.text-foreground #{viewportH}px · top #{Math.round(scrollTop)}px
         div(className="rounded-xs mt-6 text-xs leading-relaxed font-mono")
-          div.font-medium.text-white Why Octane wins
-            div(className="text-[#666] mt-1") React-Window needs fixed.
+          div.font-medium.text-foreground Why Octane wins
+            div(className="text-muted-foreground mt-1") React-Window needs fixed.
       div(className="col-span-12 lg:col-span-9")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-          div(className="h-9 bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+        div(className="bg-card border border-border rounded-xs overflow-hidden")
+          div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
             div.flex.items-center.gap-2
-              div.w-1.5.h-1.5.rounded-xs.bg-white.animate-pulse
-              span(className="text-[11px] font-mono tracking-wide text-[#666]") VIRTUALIZED — #{columns} cols — gap #{gap}px — overscan #{overscan}
+              div.w-1.5.h-1.5.rounded-xs.bg-primary.animate-pulse
+              span(className="text-[11px] font-mono tracking-wide text-muted-foreground") VIRTUALIZED — #{columns} cols — gap #{gap}px — overscan #{overscan}
             div(className="text-[11px] font-mono") #{visibleCount} rendered — est. #{totalHeight.toLocaleString()}px
-          div(ref={containerRef} className="relative h-[640px] overflow-auto bg-black p-2")
+          div(ref={containerRef} className="relative h-[640px] overflow-auto bg-background p-2")
             div(style={"column-count:" + columns + ";column-gap:" + gap + "px"})
                   each item in visible key item.id
-                    div(className="break-inside-avoid mb-4 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden hover:border-[#262626] transition group")
+                    div(className="break-inside-avoid mb-4 bg-card border border-border rounded-xs overflow-hidden hover:border-input transition group")
                       div.relative.overflow-hidden(style={"height:" + item.height + "px;background:" + item.color})
                         img(className="w-full h-full object-cover opacity-80 group-hover:opacity-90 transition duration-500 grayscale group-hover:grayscale-0" src={"https://picsum.photos/seed/" + item.seed + "/400/" + item.height} alt={item.title})
                         div(className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent")
-                        div(className="absolute top-2 left-2 px-1.5 py-1 rounded-xs text-[10px] font-mono font-medium tracking-wide text-white border border-white/20" style={"background:" + item.color}) #{item.category.toUpperCase()}
-                        div(className="absolute bottom-2 right-2 px-2 py-1 rounded-xs bg-black/80 backdrop-blur border border-[#262626] text-[11px] font-mono font-medium text-white") $#{item.price}
+                        div(className="absolute top-2 left-2 px-1.5 py-1 rounded-xs text-[10px] font-mono font-medium tracking-wide text-foreground border border-primary/20" style={"background:" + item.color}) #{item.category.toUpperCase()}
+                        div(className="absolute bottom-2 right-2 px-2 py-1 rounded-xs bg-background/80 backdrop-blur border border-input text-[11px] font-mono font-medium text-foreground") $#{item.price}
                       div.p-3
                         div.flex.items-start.justify-between.gap-2
                           div.flex-1.min-w-0
-                            div(className="text-[13px] font-medium text-white leading-tight truncate") #{item.title}
-                            div(className="text-[11px] font-mono text-[#666]") by #{item.author} · seed #{item.seed}
-                          div(className="w-7 h-7 rounded-xs grid place-items-center text-white text-[10px] font-mono font-medium border border-white" style={"background:" + item.color}) #{item.author.slice(0,1)}
+                            div(className="text-[13px] font-medium text-foreground leading-tight truncate") #{item.title}
+                            div(className="text-[11px] font-mono text-muted-foreground") by #{item.author} · seed #{item.seed}
+                          div(className="w-7 h-7 rounded-xs grid place-items-center text-foreground text-[10px] font-mono font-medium border border-primary" style={"background:" + item.color}) #{item.author.slice(0,1)}
                         div.flex.items-center.gap-2.mt-2
                           div(className="flex items-center gap-1 text-[11px] font-mono")
-                            span.text-white ★
+                            span.text-foreground ★
                             span.fon
-                            span (className="text-[#525252]" #{item.likes})
-                          div(className="ml-auto px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#666]") #{item.height}px
+                            span (className="text-muted-foreground" #{item.likes})
+                          div(className="ml-auto px-2 py-1 rounded-xs bg-background border border-border text-[11px] font-mono text-muted-foreground") #{item.height}px
                         div.flex.gap-1.mt-2
-                          span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#525252]") #{Math.round(item.height/10)*10}h
-                          span(className="px-2 py-1 rounded-xs bg-black border border-[#1a1a1a] text-[11px] font-mono text-[#525252]") ##{item.id}
-          div(className="grid grid-cols-3 divide-x divide-[#1a1a1a] bg-black text-center text-[11px] font-mono")
+                          span(className="px-2 py-1 rounded-xs bg-background border border-border text-[11px] font-mono text-muted-foreground") #{Math.round(item.height/10)*10}h
+                          span(className="px-2 py-1 rounded-xs bg-background border border-border text-[11px] font-mono text-muted-foreground") ##{item.id}
+          div(className="grid grid-cols-3 divide-x divide-border bg-background text-center text-[11px] font-mono")
             div.p-3
-              div(className="font-medium text-white text-[13px]") #{filtered.length.toLocaleString()}
-              div(className="tracking-wide text-[#525252]") FILTERED
+              div(className="font-medium text-foreground text-[13px]") #{filtered.length.toLocaleString()}
+              div(className="tracking-wide text-muted-foreground") FILTERED
             div.p-3
-              div(className="font-medium text-white text-[13px]") #{visibleCount}
-              div(className="tracking-wide text-[#525252]") IN DOM
+              div(className="font-medium text-foreground text-[13px]") #{visibleCount}
+              div(className="tracking-wide text-muted-foreground") IN DOM
             div.p-3
-              div(className="font-medium text-white text-[13px]") -#{(100 - ratio).toFixed(1)}%
-              div(className="tracking-wide text-[#525252]") COST SAVED
-        div(className="mt-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") PERFORMANCE NOTES
-          div(className="grid sm:grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
-            div.bg-black.p-3
-              div(className="font-medium text-white text-[12px]") ResizeObserver
-              div(className="text-[#666] mt-1 text-[11px] font-mono") Remeasures on column/gap change. Count #{remeasures}.
-            div.bg-black.p-3
-              div(className="font-medium text-white text-[12px]") Overscan #{overscan}
-              div(className="text-[#666] mt-1 text-[11px] font-mono") Extra rows above/below viewport to avoid blank scroll.
-            div.bg-black.p-3
-              div(className="font-medium text-white text-[12px]") 10k → #{visibleCount}
-              div(className="text-[#666] mt-1 text-[11px] font-mono") No fixed size assumptions. Dynamic heights.
+              div(className="font-medium text-foreground text-[13px]") -#{(100 - ratio).toFixed(1)}%
+              div(className="tracking-wide text-muted-foreground") COST SAVED
+        div(className="mt-3 bg-card border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") PERFORMANCE NOTES
+          div(className="grid sm:grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-3")
+            div.bg-background.p-3
+              div(className="font-medium text-foreground text-[12px]") ResizeObserver
+              div(className="text-muted-foreground mt-1 text-[11px] font-mono") Remeasures on column/gap change. Count #{remeasures}.
+            div.bg-background.p-3
+              div(className="font-medium text-foreground text-[12px]") Overscan #{overscan}
+              div(className="text-muted-foreground mt-1 text-[11px] font-mono") Extra rows above/below viewport to avoid blank scroll.
+            div.bg-background.p-3
+              div(className="font-medium text-foreground text-[12px]") 10k → #{visibleCount}
+              div(className="text-muted-foreground mt-1 text-[11px] font-mono") No fixed size assumptions. Dynamic heights.

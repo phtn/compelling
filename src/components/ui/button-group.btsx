@@ -1,0 +1,22 @@
+import { cn } from "@/lib/utils"
+
+module
+  interface ButtonGroupProps {
+    orientation?: "horizontal" | "vertical"
+    attached?: boolean
+    variant?: "default" | "segmented"
+    size?: "sm" | "md" | "lg"
+    className?: string
+    children?: HTMLElement
+  }
+
+props { orientation = "horizontal", attached = true, variant = "default", size = "md", className, children }: ButtonGroupProps
+
+setup
+  const base = "inline-flex shrink-0 overflow-hidden p-1"
+  const orientationClass = orientation === "vertical" ? "flex-col" : "flex-row"
+  const variantClass = variant === "segmented" ? "bg-[#F1F1F1] dark:bg-muted rounded-xl border border-[#E2E2E2] dark:border-border" : attached ? "rounded-xl border border-border overflow-hidden divide-x divide-border has-[>button]:gap-0" : "gap-0"
+  const sizeClass = size === "sm" ? "[&>*]:h-9 [&>*]:text-[11px]" : size === "lg" ? "[&>*]:h-11 [&>*]:text-[14px]" : "[&>*]:h-10 [&>*]:text-[13px]"
+
+div(className={cn(base, orientationClass, variantClass, sizeClass, attached && orientation === "horizontal" && "[&>*]:rounded-none [&>*]:border-0 first:[&>*]:rounded-l-[11px] last:[&>*]:rounded-r-[11px]", attached && orientation === "vertical" && "[&>*]:rounded-none [&>*]:border-0 first:[&>*]:rounded-t-[11px] last:[&>*]:rounded-b-[11px]", className)})
+  div #{children}

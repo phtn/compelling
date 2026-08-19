@@ -70,76 +70,76 @@ setup
     return () => cancelAnimationFrame(raf)
   }, [])
 
-div.bg-black
+div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#262626] text-[12px] font-medium text-[#888] hover:text-white hover:bg-[#111] transition"}, {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-white border-accent-1" : "bg-white text-black border-white")}, {id: "rest", label: "rest " + restCount, className: "px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[11px] font-mono text-[#666]"}]})
+    Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-foreground border-accent-1" : "bg-primary text-primary-foreground border-primary")}, {id: "rest", label: "rest " + restCount, className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs overflow-hidden")
-          div(className="h-[40px] bg-black border-b border-[#1a1a1a] flex items-center justify-between px-3")
+        div(className="bg-card border border-border rounded-xs overflow-hidden")
+          div(className="h-[40px] bg-background border-b border-border flex items-center justify-between px-3")
             div(className="items-center")
-              span(className="text-[11px] font-mono tracking-wide text-[#666]") height #{isOpen ? 400 : 100 }
-            span(className="text-[11px] font-mono text-[#525252]") stiffness #{stiffness.toFixed(2)} · damping #{damping.toFixed(2)}
+              span(className="text-[11px] font-mono tracking-wide text-muted-foreground") height #{isOpen ? 400 : 100 }
+            span(className="text-[11px] font-mono text-muted-foreground") stiffness #{stiffness.toFixed(2)} · damping #{damping.toFixed(2)}
 
           div(className="flex p-6 flex flex-col items-center")
-            article(ref={cardRef} className="w-full max-w-[560px] bg-black border border-[#1a1a1a] rounded-xs overflow-hidden select-none touch-none cursor-grab active:cursor-grabbing" style={cardStyle} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onClick={toggleOpenDrag})
+            article(ref={cardRef} className="w-full max-w-[560px] bg-background border border-border rounded-xs overflow-hidden select-none touch-none cursor-grab active:cursor-grabbing" style={cardStyle} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onClick={toggleOpenDrag})
               div(className="h-2 bg-accent-1")
               div(className="p-4 flex flex-col h-full")
                 div(className="flex items-start justify-between gap-3")
                   div
-                    div(className="text-[11px] font-mono tracking-wide text-[#666]") EXPANDABLE CARD
-                    h3(className="text-[16px] font-medium text-white mt-1") Drag or click — velocity preserved
-                    p(className="text-[12px] font-mono text-[#666] mt-1") Pan to drag, flick to close. New target cancels old spring.
-                  div(className={"w-8 h-8 rounded-xs grid place-items-center text-white text-[12px] font-mono border " + (isOpen ? "bg-accent-1 border-accent-1" : "bg-[#111] border-[#1a1a1a]")}) #{isOpen ? "−" : "+"}
+                    div(className="text-[11px] font-mono tracking-wide text-muted-foreground") EXPANDABLE CARD
+                    h3(className="text-[16px] font-medium text-foreground mt-1") Drag or click — velocity preserved
+                    p(className="text-[12px] font-mono text-muted-foreground mt-1") Pan to drag, flick to close. New target cancels old spring.
+                  div(className={"w-8 h-8 rounded-xs grid place-items-center text-foreground text-[12px] font-mono border " + (isOpen ? "bg-accent-1 border-accent-1" : "bg-muted border-border")}) #{isOpen ? "−" : "+"}
                 div(className="flex-1 min-h-0 mt-4 overflow-auto" style={innerStyle})
                   div(className="grid grid-cols-3 gap-2")
                     each n in [1,2,3,4,5,6] key n
-                      div(className="h-16 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs grid place-items-center text-[11px] font-mono text-[#525252]") #{n}
-                  p(className="text-[12px] font-mono text-[#666] mt-3 leading-relaxed")
+                      div(className="h-16 bg-card border border-border rounded-xs grid place-items-center text-[11px] font-mono text-muted-foreground") #{n}
+                  p(className="text-[12px] font-mono text-muted-foreground mt-3 leading-relaxed")
                     span Height #{Math.round(layout.height)}px ·
                     span scale #{layout.scale.toFixed(2)} ·
                     span drag #{dragOffset.toFixed(0)}px ·
                     span velocity #{(velocity.current * 1000).toFixed(0)}
-                div(className="mt-auto pt-3 flex gap-2 border-t border-[#1a1a1a]")
-                  button(className="px-3 py-1.5 rounded-xs bg-white text-black text-[11px] font-mono border border-white" onClick={() => setIsOpen(true)}) Open 400
-                  button(className="px-3 py-1.5 rounded-xs bg-[#0a0a0a] border border-[#1a1a1a] text-[#666] text-[11px] font-mono" onClick={() => setIsOpen(false)}) Close 100
+                div(className="mt-auto pt-3 flex gap-2 border-t border-border")
+                  button(className="px-3 py-1.5 rounded-xs bg-primary text-primary-foreground text-[11px] font-mono border border-primary" onClick={() => setIsOpen(true)}) Open 400
+                  button(className="px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[11px] font-mono" onClick={() => setIsOpen(false)}) Close 100
             div(className="w-full max-w-[560px] mt-4 grid grid-cols-2 gap-3")
               div
-                label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1") STIFFNESS — #{stiffness.toFixed(2)}
+                label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1") STIFFNESS — #{stiffness.toFixed(2)}
                 input(className="w-full accent-white" type="range" min="0.1" max="1" step="0.05" value={stiffness} onInput={onStiffnessInput})
               div
-                label(className="block text-[11px] font-mono tracking-wide text-[#666] mb-1") DAMPING — #{damping.toFixed(2)}
+                label(className="block text-[11px] font-mono tracking-wide text-muted-foreground mb-1") DAMPING — #{damping.toFixed(2)}
                 input(className="w-full accent-white" type="range" min="0.3" max="1.2" step="0.05" value={damping} onInput={onDampingInput})
-            p(className="text-[11px] font-mono text-[#525252] mt-3 text-center") Click card or drag vertically — interrupt preserves velocity. Rest fires # #{restCount}
+            p(className="text-[11px] font-mono text-muted-foreground mt-3 text-center") Click card or drag vertically — interrupt preserves velocity. Rest fires # #{restCount}
           div(className="h-54")
-        div(className="mt-3 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-3 flex gap-3")
+        div(className="mt-3 bg-card border border-border rounded-xs p-3 flex gap-3")
           div(className="text-accent-1 text-[12px]") ●
           div(className="text-[12px] leading-relaxed font-mono")
-            div(className="font-medium text-white") Why Octane wins
-            div(className="text-[#666] mt-1") Framer adds 40kb + <span class="text-white">AnimatePresence</span>. Octane <span class="text-white">motion({`{height,spring}`})</span> runs in animation frame, never blocks reactive graph, <span class="text-white">onPan</span> keeps velocity.
+            div(className="font-medium text-foreground") Why Octane wins
+            div(className="text-muted-foreground mt-1") Framer adds 40kb + <span class="text-foreground">AnimatePresence</span>. Octane <span class="text-foreground">motion({`{height,spring}`})</span> runs in animation frame, never blocks reactive graph, <span class="text-foreground">onPan</span> keeps velocity.
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") STATE
-          div(className="grid grid-cols-3 gap-px bg-[#1a1a1a] border border-[#1a1a1a] rounded-xs overflow-hidden mt-3")
-            div(className="bg-black p-3 text-center")
-              div(className={"text-[16px] font-medium " + (isOpen ? "text-accent-1" : "text-white")}) #{isOpen ? "OPEN" : "CLOSED"}
-              div(className="text-[11px] font-mono text-[#525252]") ISOPEN
-            div(className="bg-black p-3 text-center")
-              div(className="text-[16px] font-medium text-white") #{dragOffset.toFixed(0)}px
-              div(className="text-[11px] font-mono text-[#525252]") DRAG
-            div(className="bg-black p-3 text-center")
+        div(className="bg-card border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") STATE
+          div(className="grid grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-3")
+            div(className="bg-background p-3 text-center")
+              div(className={"text-[16px] font-medium " + (isOpen ? "text-accent-1" : "text-foreground")}) #{isOpen ? "OPEN" : "CLOSED"}
+              div(className="text-[11px] font-mono text-muted-foreground") ISOPEN
+            div(className="bg-background p-3 text-center")
+              div(className="text-[16px] font-medium text-foreground") #{dragOffset.toFixed(0)}px
+              div(className="text-[11px] font-mono text-muted-foreground") DRAG
+            div(className="bg-background p-3 text-center")
               div(className="text-[16px] font-medium text-accent-2") #{(velocity.current*1000).toFixed(0)}
-              div(className="text-[11px] font-mono text-[#525252]") VEL
-          div(className="mt-3 h-1 bg-[#1a1a1a] rounded-xs overflow-hidden")
+              div(className="text-[11px] font-mono text-muted-foreground") VEL
+          div(className="mt-3 h-1 bg-border rounded-xs overflow-hidden")
             div(className="h-1 bg-accent-1 transition-all" style={"width:" + (isOpen ? "100%" : "28%")})
-        div(className="bg-[#0a0a0a] border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-[#666]") CODE
-          pre(className="bg-black border border-[#1a1a1a] rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-[#888] whitespace-pre-wrap break-words")
+        div(className="bg-card border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CODE
+          pre(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground whitespace-pre-wrap break-words")
             code motion({"{"}height: isOpen?400:100{"}"}, {"{"}mode:'interrupt'{"}"})
-          div(className="text-[11px] font-mono text-[#525252] mt-2") New target cancels old — no queue.
-        div(className="bg-black border border-[#1a1a1a] rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-white") TIP
-          ul(className="list-disc list-inside text-[12px] font-mono text-[#666] mt-2 space-y-1")
+          div(className="text-[11px] font-mono text-muted-foreground mt-2") New target cancels old — no queue.
+        div(className="bg-background border border-border rounded-xs p-4")
+          div(className="text-[11px] font-mono tracking-wide text-foreground") TIP
+          ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1")
             li Click card to toggle
             li Drag down flick &gt;500 → close
             li Drag up flick &lt;-500 → open

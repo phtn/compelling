@@ -16,6 +16,7 @@ props {href, icon, label, value, path, onNavigate}: Props
 
 setup
   const isExternal = href.startsWith("http")
+  const isSelected = path === href
   const handleClick = (e: MouseEvent) => {
     if (!isExternal) {
       e.preventDefault();
@@ -23,7 +24,8 @@ setup
     }
   }
 
-a(href={href} className={cn('w-full h-10 flex items-center ps-0.5 pe-3 font-medium rounded-xl border-0 hover:bg-[#ECECEC85]', {'bg-[#F1f1f1] border-[#ECECEC] dark:bg-mist-400/25': path === href})} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noreferrer" : undefined} onClick={handleClick})
-  Icon(name={icon} className={cn("mr-3 p-1.5 text-[#7b7b7b]", {'rounded-lg text-[#171717] bg-white invert shadow-xs': path === href})})
-  span(className="font-medium text-[12px] opacity-90") #{label}
-  span(className="w-7 opacity-80 text-sm text-right ml-auto font-mono") #{value}
+a(href={href} className={cn('w-full flex items-center gap-3 pl-[3px] pr-[10px] py-[3px] rounded-[12px] border text-left transition-colors', isSelected ? 'bg-[#F1F1F1] border-[#E2E2E2] dark:bg-muted dark:border-border/50' : 'bg-transparent border-transparent hover:bg-[#F1F1F1] dark:hover:bg-muted')} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noreferrer" : undefined} onClick={handleClick})
+  div(className={cn('size-8 shrink-0 flex items-center justify-center rounded-[8px]', isSelected ? 'bg-[#FCFCFC] shadow-[0_0_4px_rgba(18,18,18,0.10)] text-[#121212] dark:bg-card dark:text-foreground' : 'bg-transparent text-[#7B7B7B] dark:text-muted-foreground')})
+    Icon(name={icon} size={20} className={cn('m-0', isSelected ? 'text-[#121212] dark:text-foreground' : 'text-[#7B7B7B] dark:text-muted-foreground')})
+  span(className="flex-1 text-[12px] font-semibold leading-4 text-[#121212] dark:text-foreground truncate") #{label}
+  span(className="ml-auto shrink-0 text-right font-mono text-[11px] leading-none text-[#7B7B7B] dark:text-muted-foreground tabular-nums") #{value}

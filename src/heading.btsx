@@ -2,9 +2,9 @@ props { source, direction, output }: {source: string; direction: string; output:
 main.heading
   h1(className='flex items-center justify-center font-mono tracking-[-0.02em]')
     div(className='w-28 md:w-64 text-end')
-      span(className='text-[24px] font-medium text-white') #{source}
+      span(className='text-[24px] font-medium text-foreground') #{source}
     div(className='flex items-center justify-center w-16 md:w-48')
-      div(className='bg-white text-black size-10 md:size-16 aspect-square flex items-center justify-center rounded-xs border border-white')
+      div(className='bg-primary text-primary-foreground size-10 md:size-16 aspect-square flex items-center justify-center rounded-xs border border-border')
         span(className='font-medium text-2xl md:text-4xl') #{direction}
     div(className='w-28 md:w-64 text-start')
-      span(className='text-[24px] font-medium text-white') #{output}
+      span(className='text-[24px] font-medium text-foreground') #{output}
