@@ -11,15 +11,21 @@
     "check": "bun run typecheck && bun run build"
   },
   "dependencies": {
+    "@typegpu/noise": "^0.12.0",
+    "@typegpu/three": "^0.12.0",
     "beast-tsrx": "^0.2.4",
     "clsx": "^2.1.1",
     "octane": "0.1.37",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "three": "^0.185.1",
+    "typegpu": "^0.12.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.8",
     "@tsrx/typescript-plugin": "0.3.118",
     "@types/node": "^26.2.0",
+    "@types/three": "^0.185.4",
+    "@webgpu/types": "^0.1.72",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.9.3",
     "vite": "^8.0.16"

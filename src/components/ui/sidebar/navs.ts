@@ -23,7 +23,8 @@ export const navGroups: NavGroup[] = [
       { href: '/timeline', icon: 'timeline', label: 'Timeline', value: '05' },
       { href: '/worker', icon: 'folder', label: 'Worker', value: '06' },
       { href: '/motion', icon: 'mechanics', label: 'Motion', value: '07' },
-      { href: '/streaming', icon: 'play', label: 'Streaming', value: '08' }
+      { href: '/streaming', icon: 'play', label: 'Streaming', value: '08' },
+      { href: '/tgpu', icon: 'mechanics', label: 'TypeGPU', value: '09' }
     ]
   },
   {
