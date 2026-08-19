@@ -15,16 +15,17 @@ module
     label?: string;
     onClick?: VoidFunction;
     onRemove?: VoidFunction;
+    style?: HTMLAnchorElement['style'];
   }
 
-props {href='#', target='_blank', rel='noreferrer', variant, size, className, icon, iconPosition, label, onClick, onRemove}: TagProps
+props {href='#', target='_blank', rel='noreferrer', variant, size, className, icon, iconPosition, label, onClick, onRemove, style}: TagProps
 
 setup
   const base = "inline-flex items-center justify-center rounded-lg font-display font-medium tracking-tighter transition shrink-0 border"
   const variantClass = variant === "primary" ? "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] dark:bg-[linear-gradient(in_oklab_180deg,oklab(22.2%_0_0)_0%,oklab(21.3%_0_0)_100%)] text-[#121212] border-[#D1D1D1] dark:border-border/50 shadow-[inset_0_1px_0_#FFFFFF65,0_3px_4px_-1px_#00000015] dark:shadow-[inset_0_1px_0_#bababa30,0_3px_4px_-1px_#00000095] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border" : variant === "secondary" ? "bg-secondary text-secondary-foreground border border-border/50" : variant === "outline" ? "bg-transparent border-input text-muted-foreground" : variant === "ghost" ? "bg-transparent border-transparent text-muted-foreground" : variant === "mist" ? "bg-muted border-border text-muted-foreground" : "bg-card border-border text-muted-foreground"
   const sizeClass = size === "sm" ? "px-2 h-9 text-[10px] gap-1" : size === "lg" ? "px-3 h-10 text-[12px] gap-1.5" : "px-2.5 h-10 text-sm gap-1.5"
 
-a(href={href} target="_blank" rel="noopener noreferrer" className={cn(base, variantClass, sizeClass, onClick && "cursor-pointer hover:bg-muted hover:text-foreground hover:border-input", className)} onClick={onClick})
+a(href={href} target="_blank" rel="noopener noreferrer" className={cn(base, variantClass, sizeClass, onClick && "cursor-pointer hover:bg-muted hover:text-foreground hover:border-input", className)} onClick={onClick} style={style})
   if icon && iconPosition !== "right"
     Icon(name={icon} size={12})
   if label

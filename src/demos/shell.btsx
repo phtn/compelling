@@ -104,15 +104,20 @@ setup
   const toggleInfo = () => setShowInfo(!showInfo)
   const forceHydrateAll = () => setHydrated({ load: true, idle: true, visible: true, interaction: true, media: true })
 
+  const actions = [
+    {id: "cart", label: "Cart (" + cartCount + ")", onClick: addToCart, className: ""},
+    {id: "force", label: "Force hydrate all", onClick: forceHydrateAll, className: ""},
+    {id: "elapsed", label: elapsed + "s since shell", className: ""}]
+
 div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Isomorphic Shell with Progressive Hydration" subtitle="PROGRESSIVE HYDRATION" description="Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "cart", label: "Cart (" + cartCount + ")", onClick: addToCart, className: "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground font-medium text-[12px] hover:bg-primary transition border border-accent-1"}, {id: "force", label: "Force hydrate all", onClick: forceHydrateAll, className: "px-3 py-1.5 rounded-xs bg-background border border-input text-foreground font-medium text-[12px] hover:bg-muted transition"}, {id: "elapsed", label: elapsed + "s since shell", className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
+    Header(title="Isomorphic Shell with Progressive Hydration" subtitle="PROGRESSIVE HYDRATION" icon='mechanics' description="Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     if showToast
       div(className="fixed bottom-6 right-6 z-50 bg-primary text-primary-foreground px-4 py-3 rounded-xs shadow-2xl border border-border flex items-center gap-2")
         div(className="w-6 h-6 rounded-xs bg-background text-foreground grid place-items-center text-[11px] font-mono") ✓
         span(className="font-medium text-[13px]") #{toastMsg}
 
-    div.grid.grid-cols-12.gap-4.mt-6
+    div.grid.grid-cols-12.gap-4
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
           div(className="bg-card border border-border rounded-xs overflow-hidden")

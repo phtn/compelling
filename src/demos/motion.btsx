@@ -70,9 +70,12 @@ setup
     return () => cancelAnimationFrame(raf)
   }, [])
 
+  const actions = [
+    {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "" + (isOpen ? "" : "")}]
+
 div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (isOpen ? "bg-accent-1 text-foreground border-accent-1" : "bg-primary text-primary-foreground border-primary")}, {id: "rest", label: "rest " + restCount, className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
+    Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8")
         div(className="bg-card border border-border rounded-xs overflow-hidden")

@@ -13,16 +13,17 @@ module
     iconPosition?: "left" | "right";
     onClick?: VoidFunction;
     label?: string;
+    style?: HTMLButtonElement['style']
   }
 
-props {variant, size, className, disabled, type, icon, iconPosition, onClick, label}: ButtonProps
+props {variant, size, className, disabled, type, icon, iconPosition, onClick, label, style}: ButtonProps
 
 setup
   const base = "inline-flex items-center justify-center rounded-xl font-mono font-medium transition disabled:opacity-50 disabled:pointer-events-none shrink-0 min-w-10"
   const variantClass = variant === "primary" ? "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] text-[#121212] border border-[#D4D4D4] shadow-[inset_0_1px_0_#FFFFFF33,0_3px_4px_-1px_#00000015] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border" : variant === "secondary" ? "bg-secondary text-secondary-foreground border border-secondary" : variant === "outline" ? "bg-transparent border-input text-muted-foreground" : variant === "ghost" ? "bg-transparent border-transparent hover:bg-secondary/50 text-muted-foreground" : variant === "mist" ? "bg-muted border-border text-muted-foreground" : "bg-card border-border text-muted-foreground"
   const sizeClass = size === "sm" ? "px-2 h-9 text-[10px] gap-1 rounded-lg" : size === "lg" ? "px-3 h-11 text-[12px] gap-1.5" : "px-2.5 h-10 text-sm gap-1.5"
 
-button(type={type ?? "button"} disabled={disabled} className={cn(base, variantClass, sizeClass, className)} onClick={onClick})
+button(type={type ?? "button"} disabled={disabled} className={cn(base, variantClass, sizeClass, className)} onClick={onClick} style={style})
   if icon && iconPosition !== "right"
     Icon(name={icon} size={size === "icon" ? 16 : 14})
   if label

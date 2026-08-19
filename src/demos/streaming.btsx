@@ -71,9 +71,12 @@ setup
     return () => window.clearTimeout(t)
   }, [query])
 
+  const actions = [
+    {id: "stream", label: "Stream", onClick: startStream, className: ""}]
+
 div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Edge-Streaming Search" subtitle="STREAMING EDGE AT CDN" icon='mechanics' description="Server components that stream progressively from edge — yield <skeleton> then each <result-card> hydrates as it arrives. Keyed cache at CDN." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "stream", label: "Stream", onClick: startStream, className: "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground font-medium text-[12px] hover:bg-primary border border-accent-1"}, {id: "status", label: (streaming ? "streaming… " : "idle ") + results.length + "/" + (filtered.length || all.length), className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
+    Header(title="Edge-Streaming Search" subtitle="STREAMING EDGE AT CDN" icon='mechanics' description="Server components that stream progressively from edge — yield <skeleton> then each <result-card> hydrates as it arrives. Keyed cache at CDN." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4 mt-6")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
         div(className="bg-card border border-border rounded-xs overflow-hidden")

@@ -100,9 +100,12 @@ setup
   const [showInfo, setShowInfo] = useState(false)
   const toggleInfo = () => setShowInfo(!showInfo)
 
+  const actions = [
+    {id: "clear", label: "Clear filters", onClick: clearFilters, className: ""}]
+
 div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", icon: "home-back", href: "/", className: "px-3 py-1.5 rounded-xs bg-card text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "clear", label: "Clear filters", onClick: clearFilters, className: "px-3 py-1 rounded-none bg-mist-200 text-mist-800 font-medium text-[12px] transition border border-mist-400"}, {id: "count", label: filtered.length.toLocaleString() + " / 10,000", className: "px-3 py-1.5 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground"}]})
+    Header(title="Virtualized Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div.grid.grid-cols-12.gap-4.mt-6
       div(className="col-span-12 lg:col-span-3 bg-card rounded-xs h-fit sticky top-[72px]")
         div

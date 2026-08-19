@@ -109,10 +109,15 @@ setup
     ctx.fillText(`gravity ${gravity.toFixed(1)} · frame ${frame}`, 8, rect.height - 8)
   }, [particles, frame, gravity])
 
+
+  const actions = [
+    {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "" + (running ? "bg-accent-1 text-foreground border-accent-1" : "bg-card border-input text-muted-foreground")},
+    {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "" + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")}]
+
 div.bg-background
   div(className="w-full px-6 py-6")
-    Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "home", label: "← Home", href: "/", className: "px-3 py-1.5 rounded-xs bg-card border border-input text-[12px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition"}, {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (running ? "bg-accent-1 text-foreground border-accent-1" : "bg-card border-input text-muted-foreground")}, {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "px-3 py-1.5 rounded-xs border text-[12px] font-mono " + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")} ]})
-    div(className="grid grid-cols-12 gap-4 mt-6")
+    Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
+    div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8")
         div(className="bg-card border border-border rounded-xs overflow-hidden")
           div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")

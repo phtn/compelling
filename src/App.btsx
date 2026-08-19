@@ -148,22 +148,22 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
                   a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
                   a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
                   a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
-          footer(className="border-t border-border mt-auto w-full")
+          footer(className="border-t border-border/30 mt-auto w-full")
             div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
               div(className="flex items-center gap-3")
-                div(className="w-7 h-7 rounded-xs bg-primary text-primary-foreground grid place-items-center font-mono font-medium text-[10px]") ◼
                 div
-                  div(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Compelling — Beast · TSRX · Octane
-                  div(className="text-[12px] font-mono text-muted-foreground") © 2025 Sound Rack. Vite SPA routing. Deployed on Vercel.
+                  div(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Compelling Demos built on
+                    a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") Beast
+                  div(className="text-[12px] font-mono text-muted-foreground") ©2026 Beast - Deployed on Cloudflare.
               div(className="flex items-center gap-4 text-[12px] font-mono text-muted-foreground")
-                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") beast-tsrx
+                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") beast docs
                 span(className="text-muted-foreground") /
                 a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") octane
                 span(className="text-muted-foreground") /
                 a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") tsrx
-                span(className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-border")
+                a(href="https://github.com/phtn/beast" target="_blank" rel="noreferrer" className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-border")
                   span(className="w-1.5 h-1.5 rounded-xs bg-accent-2 inline-block")
-                  span(className="text-muted-foreground") All systems operational
+                  span(className="text-muted-foreground") Beast
       else
         fragment
           div(className="md:hidden sticky top-[64px] z-30 bg-background border-b border-border flex items-center gap-2 px-4 py-2 overflow-x-auto")
@@ -202,22 +202,22 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
                   a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
                   a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
                   a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
-          footer(className="border-t border-border mt-auto w-full")
+          footer(className="border-t border-border/30 mt-auto w-full")
             div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
               div(className="flex items-center gap-3")
-                div(className="w-7 h-7 rounded-xs bg-primary text-primary-foreground grid place-items-center font-mono font-medium text-[10px]") ◼
                 div
-                  div(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Compelling — Beast · TSRX · Octane
-                  div(className="text-[12px] font-mono text-muted-foreground") © 2025 Sound Rack. Vite SPA routing. Deployed on Vercel.
+                  div(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Compelling Demos built on
+                    a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") Beast
+                  div(className="text-[12px] font-mono text-muted-foreground") ©2026 Beast - Deployed on Cloudflare.
               div(className="flex items-center gap-4 text-[12px] font-mono text-muted-foreground")
-                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") beast-tsrx
+                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") beast docs
                 span(className="text-muted-foreground") /
                 a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") octane
                 span(className="text-muted-foreground") /
                 a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") tsrx
-                span(className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-border")
+                a(href="https://github.com/phtn/beast" target="_blank" rel="noreferrer" className="hidden sm:inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-border")
                   span(className="w-1.5 h-1.5 rounded-xs bg-accent-2 inline-block")
-                  span(className="text-muted-foreground") All systems operational
+                  span(className="text-muted-foreground") Beast
     if sidebarSide === "right" && sidebarOpen
       aside(className="hidden md:flex w-[256px] shrink-0 bg-background border-l border-border/50 flex-col sticky top-[64px] h-[calc(100vh-64px)] overflow-hidden")
         div(className="flex items-center justify-between h-[44px] px-3 border-b border-border shrink-0")
@@ -235,8 +235,8 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
           div(className="flex items-center gap-2 px-2 py-2 rounded-xs bg-card border border-border")
             div(className="hidden w-7 h-7 rounded-xs bg-primary text-primary-foreground grid place-items-center font-mono font-medium text-[10px]") ◼
             div(className="flex-1 min-w-0")
-              div(className="text-[12px] font-medium text-foreground leading-none") compelling
-              div(className="text-[11px] font-mono text-muted-foreground") v0.0.0 · open
+              div(className="text-[12px] font-medium text-foreground leading-none")
+              div(className="text-[11px] font-mono text-muted-foreground") v0.1.1
             div(className="w-1.5 h-1.5 rounded-xs bg-primary")
   if sidebarOpen
     div(className="md:hidden fixed inset-0 z-40 flex")

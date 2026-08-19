@@ -65,7 +65,7 @@ div(className={cn("flex flex-col lg:flex-row gap-4 items-start justify-between p
                 if action.label
                   span #{action.label}
             elseif action.onClick
-              Button(variant={action.variant ?? "outline"} size={action.size ?? "sm"} icon={action.icon} label={action.label} onClick={action.onClick} className={`hover:bg-border/30 ` + action.className})
+              Button(variant={action.variant ?? "outline"} size={action.size ?? "sm"} icon={action.icon} label={action.label} onClick={action.onClick} className={`hover:bg-input/50 ` + action.className})
             else
               div(className={cn("flex items-center justify-center rounded-[10px] text-[11px] font-mono gap-2 px-3 h-9", action.className ?? "bg-card border-border text-muted-foreground")})
                 if action.icon
