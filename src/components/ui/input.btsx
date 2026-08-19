@@ -18,7 +18,7 @@ module
     onKeyDown?: (e: KeyboardEvent) => void;
   }
 
-props { value, defaultValue, placeholder = "Search files...", type = "text", disabled, leftIcon = "search", rightSlot = "/", className, inputClassName, onChange, onKeyDown }: InputProps
+props { value, defaultValue, placeholder = "Search files...", type = "text", disabled, leftIcon, rightSlot, className, inputClassName, onChange, onKeyDown }: InputProps
 
 setup
   const [inner, setInner] = useState(defaultValue ?? "")
@@ -31,11 +31,11 @@ setup
     onChange?.(v)
   }
 
-div(className={cn("relative w-full max-w-[280px] flex items-center", className)})
+div(className={cn("relative w-full flex items-center", className)})
   if leftIcon
     div(className="absolute left-1 top-1.5 size-8 grid place-items-center rounded-[8px] text-[#7B7B7B] pointer-events-none shrink-0")
       Icon(name={leftIcon} size={18} className="m-0 text-[#7B7B7B]")
-  input(type={type} value={val} placeholder={placeholder} disabled={disabled} className={cn("font-mono w-full h-11 rounded-xl border bg-[#F8F7F7] border-[#E2E2E2] dark:bg-muted dark:border-border pl-8 pr-14 text-[12px] font-medium tracking-[-0.12px] leading-4 text-[#121212] dark:text-foreground placeholder:text-[#7B7B7B] placeholder:font-medium focus:outline-none focus-visible:ring-1 focus-visible:ring-[#E2E2E2] focus-visible:bg-[#FCFCFC] dark:focus-visible:bg-card disabled:opacity-50 disabled:cursor-not-allowed transition-colors", !leftIcon && "pl-2", !rightSlot && "pr-2", inputClassName)} onInput={handleInput} onKeyDown={onKeyDown})
-  if rightSlot
-    kbd(className="absolute right-[7px] top-1/2 -translate-y-1/2 inline-flex items-center justify-center min-w-4 h-6 px-2 py-[2px] rounded-[6px] bg-input dark:bg-muted-foreground text-white dark:text-background text-[12px] font-medium leading-none pointer-events-none select-none") #{rightSlot}
+  input(type={type} value={val} placeholder={placeholder} disabled={disabled} className={cn("font-mono w-full h-11 rounded-xl border border-border/50 dark:bg-muted dark:border-border pl-8 pr-14 text-[12px] font-medium tracking-[-0.12px] leading-4 text-[#121212] dark:text-foreground placeholder:text-border/80 placeholder:font-medium focus:outline-none focus-visible:ring-1 focus-visible:ring-[#E2E2E2] focus-visible:bg-[#FCFCFC] dark:focus-visible:bg-card disabled:opacity-50 disabled:cursor-not-allowed transition-colors", !leftIcon && "pl-3", !rightSlot && "pr-3", inputClassName)} onInput={handleInput} onKeyDown={onKeyDown})
+  if type === "search"
+    kbd(className="absolute right-[7px] top-1/2 -translate-y-1/2 inline-flex items-center justify-center min-w-4 h-6 px-2 py-[2px] rounded-[6px] bg-input dark:bg-muted-foreground text-white dark:text-background text-[12px] font-medium leading-none pointer-events-none select-none") /
   slot

@@ -11,6 +11,7 @@ module
 
   interface SelectProps {
     value?: string;
+    size?: "sm" | "lg";
     defaultValue?: string;
     placeholder?: string;
     label?: string;
@@ -22,7 +23,7 @@ module
     contentClassName?: string;
   }
 
-props { value, defaultValue, placeholder = "Select...", label, disabled, items = [], onValueChange, className, triggerClassName, contentClassName }: SelectProps
+props { value,  size="sm", defaultValue, placeholder = "Select...", label, disabled, items = [], onValueChange, className, triggerClassName, contentClassName }: SelectProps
 
 setup
   const [open, setOpen] = useState(false)
@@ -59,14 +60,14 @@ setup
     }
   }, [open])
 
-div(ref={containerRef} className={cn("relative inline-flex flex-col gap-1.5 w-full max-w-[128px]", className)})
+div(ref={containerRef} className={cn("relative inline-flex flex-col gap-1.5 w-full", className)})
   if label
     label(className="text-[11px] font-medium tracking-wide text-muted-foreground") #{label}
-  button(type="button" disabled={disabled} aria-expanded={open} aria-haspopup="listbox" className={cn("inline-flex items-center justify-between w-full h-9 px-3 rounded-[10px] border text-[12px] font-medium leading-4 transition-colors gap-2 shrink-0", open ? "bg-[#FCFCFC] border-[#E2E2E2] dark:bg-card dark:border-border" : "bg-[#F1F1F1] border-[#ECECEC] dark:bg-muted dark:border-border", disabled && "opacity-50 pointer-events-none", triggerClassName)} onClick={() => setOpen(!open)})
+  button(type="button" disabled={disabled} aria-expanded={open} size={size} aria-haspopup="listbox" className={cn("inline-flex items-center justify-between w-full h-9 px-3 rounded-[10px] border text-[12px] font-medium leading-4 transition-colors gap-2 shrink-0", size === "lg" ? "h-10" : "h-9", open ? "bg-[#FCFCFC] border-[#E2E2E2] dark:bg-card dark:border-border" : "bg-[#F1F1F1] border-[#ECECEC] dark:bg-muted dark:border-border", disabled && "opacity-50 pointer-events-none", triggerClassName)} onClick={() => setOpen(!open)})
     span(className={cn("truncate flex-1 text-left", selectedValue ? "text-[#121212] dark:text-foreground" : "text-[#7B7B7B] dark:text-muted-foreground")}) #{selectedLabel ?? placeholder}
     Icon(name="chevron-down-tiny" size={16} className={cn("ml-auto shrink-0 text-[#7B7B7B] transition-transform duration-200", open && "rotate-180")})
   if open
     div(role="listbox" className={cn("absolute top-full left-0 w-full mt-1 bg-[#FCFCFC] dark:bg-popover border border-[#E2E2E2] dark:border-border rounded-[10px] p-1 shadow-[0_1px_4px_-4px_#00000013,0_8px_16px_-12px_#00000020] z-50 max-h-60 overflow-auto", contentClassName)})
       each item in items key item.value
-        div(role="option" aria-selected={selectedValue === item.value} aria-disabled={item.disabled} className={cn("px-2 py-2 rounded-[8px] text-[12px] font-medium leading-4 cursor-pointer transition-colors flex items-center", selectedValue === item.value ? "bg-[#F1F1F1] text-[#121212] dark:bg-muted dark:text-foreground" : "bg-transparent text-[#7B7B7B] hover:bg-[#F1F1F1] hover:text-[#121212] dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-foreground", item.disabled && "opacity-50 pointer-events-none")} onClick={() => !item.disabled && handleSelect(item.value)})
+        div(role="option" aria-selected={selectedValue === item.value} aria-disabled={item.disabled} className={cn("px-2 py-2 mt-1 rounded-[8px] text-[12px] font-medium leading-4 cursor-pointer transition-colors flex items-center", selectedValue === item.value ? "bg-[#F1F1F1] text-[#121212] dark:bg-muted dark:text-foreground" : "bg-transparent text-[#7B7B7B] hover:bg-[#F1F1F1] hover:text-[#121212] dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-foreground", item.disabled && "opacity-50 pointer-events-none")} onClick={() => !item.disabled && handleSelect(item.value)})
           span(className="truncate") #{item.label}
