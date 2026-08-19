@@ -1,24 +1,15 @@
 props {}: {}
 
 div
-  section(className="w-full p-6 border-b border-border")
+  section(className="w-full p-6 border-b border-border/30")
     div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-card border border-input text-muted-foreground text-[11px] font-mono tracking-wide")
       span(className="w-1.5 h-1.5 rounded-xs bg-primary animate-pulse")
       span OCTANE · BEAST · TSRX · VITE — PRODUCTION-GRADE DEMOS
     h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
       span Beast demos,
       span(className="block text-muted-foreground") examples, and guides.
-    p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[560px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
-    div.flex.flex-wrap.gap-2.mt-6
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] hover:bg-primary transition" href="/canvas") Explore Canvas
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] hover:bg-muted transition" href="/form") Try Async Form
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/grid") Open Masonry Grid
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/shell") View Shell
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] hover:bg-primary transition" href="/timeline") Timeline
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/worker") Worker
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-card border border-input text-muted-foreground font-medium text-[13px] hover:bg-muted hover:text-foreground transition" href="/motion") Motion
-      a(className="inline-flex items-center gap-2 px-4 py-2 rounded-xs bg-accent-2 text-foreground font-medium text-[13px] hover:bg-[var(--accent-2-hover)] transition" href="/streaming") Streaming
-    div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border rounded-xs overflow-hidden mt-8")
+    p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
+    div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border rounded-xl overflow-hidden mt-8")
       div.bg-background.p-4
         div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 8
         div(className="text-[11px] tracking-wide font-mono text-muted-foreground") SUBSTANTIAL DEMOS
@@ -33,7 +24,7 @@ div
         div(className="text-[11px] tracking-wide font-mono text-muted-foreground") MANUAL SUBSCRIPTIONS
 
   section(className="w-full px-6 py-8")
-    div(className="bg-card border border-border rounded-xs overflow-hidden")
+    div(className="bg-card border border-border rounded-xl overflow-hidden")
       div(className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-4")
         h2(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Summary map
         p(className="text-[12px] font-mono text-muted-foreground") Each demo targets a typical pain point in React/Vue/Svelte and shows Octane's answer.
@@ -96,7 +87,7 @@ div
                 a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/streaming") /streaming
 
   section(className="w-full px-6 pb-12")
-    div(className="grid lg:grid-cols-2 gap-px bg-border border border-border rounded-xs overflow-hidden")
+    div(className="grid lg:grid-cols-2 gap-px bg-border border border-border rounded-xl overflow-hidden")
       a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/canvas")
         div.flex.items-start.justify-between.gap-4
           div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") →
@@ -195,7 +186,7 @@ div
         div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
 
   section(className="w-full px-6 pb-12")
-    div(className="bg-card border border-border rounded-xs p-6 sm:p-8")
+    div(className="bg-card border border-border rounded-xl p-6 sm:p-8")
       h2(className="text-[14px] font-medium tracking-[-0.01em] text-foreground flex items-center gap-2")
         span(className="w-1 h-4 bg-primary rounded-xs inline-block")
         span How routing works

@@ -94,6 +94,36 @@ export const icons = {
       '<path fill="currentColor" d="M2 10.385h16v6H2z" opacity=".2" transform-origin="0 0"/><path fill="currentColor" d="M7.441 2.76c.808 0 1.563.404 2.011 1.076l.677 1.016c.17.255.456.408.763.408h5.15a2.417 2.417 0 0 1 2.417 2.417v7.083a2.417 2.417 0 0 1-2.417 2.417H3.958a2.417 2.417 0 0 1-2.417-2.417V5.177A2.417 2.417 0 0 1 3.958 2.76zm0 1.5H3.958a.917.917 0 0 0-.917.917v9.583c0 .506.41.917.917.917h12.083c.506 0 .917-.41.917-.917V7.677a.917.917 0 0 0-.917-.917h-5.15A2.42 2.42 0 0 1 8.88 5.684l-.677-1.016a.92.92 0 0 0-.763-.408z" transform-origin="0 0"/>',
     viewBox: '0 0 20 20',
     set: 'svg'
+  },
+  canvas: {
+    symbol:
+      '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path fill="currentColor" fill-rule="evenodd" d="M24 24v-5L39 4l5 5l-15 15z" clip-rule="evenodd"/><path d="M16 24H9a5 5 0 0 0 0 10h30a5 5 0 0 1 0 10H18"/></g>',
+    viewBox: '0 0 48 48',
+    set: 'icon-park-solid'
+  },
+  forms: {
+    symbol:
+      '<g transform="scale(0.417)"><g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="3"><path d="M4 10a2 2 0 0 1 2-2h36a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path stroke-linecap="square" d="M4 16h40"/><path stroke-linecap="round" d="M27 32h9m8-22v16M4 10v16"/></g></g>',
+    viewBox: '0 0 20 20',
+    set: 'svg'
+  },
+  grid: {
+    symbol:
+      '<g transform="scale(0.417)"><g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="3"><rect width="36" height="36" rx="3" transform="translate(6 6)"/><path d="M13 13h8v8h-8zm0 14h8v8h-8z"/><path stroke-linecap="round" d="M27 28h8m-8 7h8m-8-22h8m-8 7h8"/></g></g>',
+    viewBox: '0 0 20 20',
+    set: 'svg'
+  },
+  timeline: {
+    symbol:
+      '<path fill="currentColor" d="M12.971 7.893a.75.75 0 0 1 1.342 0l1.137 2.276 2.277 1.138a.75.75 0 0 1 .097 1.284l-.097.058-2.277 1.139-1.137 2.276a.75.75 0 0 1-1.284.097l-.058-.097-1.139-2.277-2.276-1.138a.75.75 0 0 1-.097-1.284l.097-.058 2.275-1.138zm-7.454 6.044a.75.75 0 1 1 0 1.5H2.6a.75.75 0 1 1 0-1.5zm8.124-4.032-.578 1.159a.75.75 0 0 1-.335.335l-1.158.579 1.158.579a.75.75 0 0 1 .287.252l.049.084.578 1.157.58-1.157a.75.75 0 0 1 .252-.287l.084-.049 1.158-.579-1.158-.579a.75.75 0 0 1-.287-.252l-.049-.084-.58-1.159zM7.183 8.728a.75.75 0 1 1 0 1.5H2.6a.75.75 0 1 1 0-1.5zM16.35 3.52a.75.75 0 0 1 0 1.5H2.6a.75.75 0 0 1 0-1.5z" transform-origin="0 0"/>',
+    viewBox: '0 0 20 20',
+    set: 'svg'
+  },
+  play: {
+    symbol:
+      '<path fill="currentColor" d="M4 5.756C4 2.778 7.306.988 9.8 2.616l6.512 4.251c2.267 1.48 2.267 4.801 0 6.28L9.8 17.398c-2.494 1.628-5.8-.161-5.8-3.14z" transform-origin="0 0"/>',
+    viewBox: '0 0 20 20',
+    set: 'svg'
   }
 }
 

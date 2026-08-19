@@ -10,5 +10,5 @@ div(className="flex items-center gap-3")
     div
       div(className="font-semibold text-orange-400 dark:text-orange-300 text-sm tracking-tight leading-none opacity-100") Compelling
       div(className="font-semibold text-foreground text-base md:text-lg tracking-tight leading-none") Demos & Guides
-    div(className="hidden sm:block h-3 w-px bg-border mx-px")
+    div(className="hidden sm:block h-3 w-px bg-border/30 mx-0.75")
     div(className="hidden lg:block text-[12px] font-mono text-muted-foreground tracking-[-0.01em]") Beast
