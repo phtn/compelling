@@ -76,13 +76,13 @@ setup
 div(className="min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground antialiased")
   header(className="sticky top-0 z-40 backdrop-blur-3xl border-b border-border/30 w-full")
     div(className="w-full px-4 flex items-center justify-between h-[64px] gap-4")
-      Brand(imageUrl="https://res.cloudinary.com/dx0heqhhe/image/upload/v1786873658/compel-up_tao32q.svg")
+      Brand(imageUrl="https://res.cloudinary.com/dx0heqhhe/image/upload/v1787232482/compelling-beast_han49i.svg")
       nav(className="hidden lg:flex items-center gap-1")
         each nav in navs key nav.href
           Tag(href={nav.href} target="_self" variant={path === nav.href ? "secondary" : "ghost"} label={nav.label} onClick={navigate(nav.href)})
       div(className="flex items-center gap-2")
         Button(size='icon' icon='theme' variant='ghost' onClick={toggleTheme} aria-label="Toggle theme")
-        Tag(label="Beast Docs" variant="primary" href="https://beast-docs.vercel.app")
+        Tag(label="Docs" variant="primary" href="https://beast-docs.vercel.app")
 
   div(className="flex w-full min-h-[calc(100vh-64px)]")
     if sidebarSide === "left" && sidebarOpen

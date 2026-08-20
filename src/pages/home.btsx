@@ -14,20 +14,20 @@ div
       span(className="size-2 rounded-xs bg-orange-300 animate-pulse")
       span  BEAST &rarr; OCTANE &rarr; VITE
     h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
-      span Beast demos,
-      span(className="block text-muted-foreground") examples, and guides.
-    p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
+      span Compelling
+      span(className="block text-muted-foreground") beast examples.
+    p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mt-4") Powered by OctaneJS and Vite.
 
     // HIGHLIGHTS
     div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-background border border-border rounded-xl overflow-hidden mt-8 invert")
       each highlight in highlights
-        div.py-2.px-5(className="border-r border-border/50 last:border-r-0")
+        div(className="border-r py-2 px-5 border-border/50 last:border-r-0")
           div(className="text-base font-semibold tracking-[-0.02em] text-foreground") #{highlight.value}
           div(className="text-xs tracking-[-0.02em] font-mono text-muted-foreground capitalize") #{highlight.label}
 
 
   // GRID
-  section(className="w-full px-6 pb-12")
+  section(className="w-full px-3 md:px-4 lg:px-5 xl:px-6 pb-12")
     div(className="grid lg:grid-cols-2 gap-px bg-border/50 border border-border/50 rounded-xl overflow-hidden")
       each nav in navs key nav.href
         a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href={nav.href})
