@@ -1,10 +1,14 @@
 import Button from "@/components/ui/button.btsx"
 import Icon from "@/lib/icons/index.btsx"
+import { navGroups } from "@/components/ui/sidebar/navs"
 
 props {}: {}
 
+setup
+  const navs = navGroups[0].items.slice(1, navGroups[0].items.length)
+
 div
-  section(className="w-full p-6 md:border-b border-border/30")
+  section(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-card border border-input text-muted-foreground text-[11px] font-mono tracking-wide")
       span(className="size-2 rounded-xs bg-orange-300 animate-pulse")
       span  BEAST &rarr; OCTANE &rarr; VITE
@@ -30,168 +34,21 @@ div
   // GRID
   section(className="w-full px-6 pb-12")
     div(className="grid lg:grid-cols-2 gap-px bg-border border border-border rounded-xl overflow-hidden")
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/canvas")
-        div
-          div.flex.items-start.justify-between
-            h3(className="font-sans font-semibold text-foreground group-hover:text-foreground text-base tracking-tighter transition") 01 — Real-Time Collaborative Canvas
-            span(className="px-2 py-1 rounded-full bg-border/15 text-[10px] font-mono text-muted-foreground") /canvas
-          p(className="text-sm text-muted-foreground mt-4 leading-relaxed") Superior reactivity and fine-grained state sync. Only re-renders changed pixels, not entire canvas. WebSocket delta sync, presence cursors, 60fps strokes.
+      each nav in navs key nav.href
+        a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href={nav.href})
+          // TITLE
+          div
+            div.flex.items-start.justify-between
+              h3(className="font-sans font-semibold text-foreground group-hover:text-foreground text-base tracking-tighter transition") #{nav.title}
+              span(className="px-2 py-1 rounded-full bg-border/15 text-[10px] font-mono text-muted-foreground") #{nav.href}
+            p(className="text-sm text-muted-foreground mt-4 leading-relaxed") #{nav.description}
 
-        div.flex.items-center.justify-between
-          div.flex.flex-wrap.mt-1.border.border-border.rounded-lg.w-fit.divide-x.overflow-hidden
-            span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") useState
-            span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") useEffect
-            span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") delta sync
-            span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") ResizeObserver
-          Icon(name="arrow-right")
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/form")
-        div.flex.items-center.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ✓
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /form
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 02 — Adaptive Form with Validation Streams
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Composable async flows and cancellation. Debounced 300ms, cancelOnUpdate, race handling. No manual subscriptions.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") derive + cancel
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") AbortController
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") optimistic UI
-        div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/grid")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ⊞
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /grid
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 03 — Virtualized Masonry Grid
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Zero-config performance. Built-in virtualization + masonry, ResizeObserver remeasure, 10k+ items, overscan, dynamic heights.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") virtualize
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") ResizeObserver
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") columns
-        div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/shell")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ◈
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /shell
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 04 — Isomorphic Shell with Progressive Hydration
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Hydrate
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Suspense
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") lazy
-        div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/timeline")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ⏱
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /timeline
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 05 — Timeline — Time as Dimension
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Every signal gets .timeline(). Scrub, fork, diff. Structural sharing, branch from any point.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") timeline
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") fork
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") structural sharing
-        div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/worker")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ⚙
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /worker
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 06 — Worker — Zero-Cost Threading
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") SharedArrayBuffer auto-proxy, 120fps physics without blocking. Gravity slider updates worker instantly.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") SharedArrayBuffer
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") Atomics
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") ~0ms
-        div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/motion")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-1 text-foreground grid place-items-center text-[12px] font-mono border border-accent-1") ◎
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /motion
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 07 — Motion — Animation Orchestrator
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Interruptible springs, velocity preserved, mode:'interrupt'. No Framer 40kb.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") spring
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") interrupt
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") onPan
-        div(className="mt-2 text-[13px] font-medium text-accent-1 flex items-center gap-1") Open demo
-      a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href="/streaming")
-        div.flex.items-start.justify-between.gap-4
-          div(className="w-8 h-8 rounded-xs bg-accent-2 text-foreground grid place-items-center text-[12px] font-mono border border-accent-2") ⇡
-          span(className="px-2 py-1 rounded-xs bg-muted border border-border text-[11px] font-mono text-muted-foreground") /streaming
-        div
-          h3(className="text-[15px] font-medium tracking-[-0.01em] text-foreground group-hover:text-foreground transition") 08 — Streaming — Edge at CDN
-          p(className="text-[13px] text-muted-foreground mt-1 leading-relaxed") Streams progressively from edge — yield skeleton then each card. Keyed cache at CDN.
-        div.flex.flex-wrap.gap-1.5.mt-1
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") streaming
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") edge
-          span(className="px-2 py-1 rounded-xs bg-card border border-border text-[11px] font-mono text-muted-foreground") cache
-        div(className="mt-2 text-[13px] font-medium text-accent-2 flex items-center gap-1") Open demo
-
-  // TABLE
-  section(className="w-full px-6 py-8")
-    div(className="bg-card border border-border rounded-xl overflow-hidden")
-      div(className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-4")
-        h2(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Summary map
-        p(className="text-[12px] font-mono text-muted-foreground") Each demo targets a typical pain point in React/Vue/Svelte and shows Octane's answer.
-      div.overflow-x-auto
-        table(className="w-full text-[13px]")
-          thead
-            tr(className="border-b border-border text-left text-[11px] tracking-wide font-mono text-muted-foreground")
-              th.px-4.py-3.font-medium DEMO
-              th.px-4.py-3.font-medium OCTANE ADVANTAGE
-              th.px-4.py-3.font-medium TYPICAL PAIN IN OTHERS
-              th.px-4.py-3.font-medium ROUTE
-          tbody(className="font-mono text-[12px]")
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Collaborative Canvas
-              td(className="px-4 py-3 text-muted-foreground") Granular reactive updates, delta sync
-              td(className="px-4 py-3 text-muted-foreground") Virtual DOM reconciliation cost
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/canvas") /canvas
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Adaptive Form
-              td(className="px-4 py-3 text-muted-foreground") Automatic cancellation, debounce
-              td(className="px-4 py-3 text-muted-foreground") Manual subscription cleanup (RxJS)
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/form") /form
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Masonry Grid
-              td(className="px-4 py-3 text-muted-foreground") Dynamic measurement, virtualize
-              td(className="px-4 py-3 text-muted-foreground") Fixed-size assumptions (react-window)
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/grid") /grid
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Isomorphic Shell
-              td(className="px-4 py-3 text-muted-foreground") Universal suspend/resume, partial hydration
-              td(className="px-4 py-3 text-muted-foreground") Framework-specific boundaries (Next.js)
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/shell") /shell
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Timeline Control
-              td(className="px-4 py-3 text-muted-foreground") Time travel, undo/redo, branching
-              td(className="px-4 py-3 text-muted-foreground") Redux time-travel boilerplate
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/timeline") /timeline
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Worker Physics
-              td(className="px-4 py-3 text-muted-foreground") SharedArrayBuffer auto-proxy
-              td(className="px-4 py-3 text-muted-foreground") postMessage + Comlink
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/worker") /worker
-            tr(className="border-b border-border hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Motion Orchestrator
-              td(className="px-4 py-3 text-muted-foreground") Interrupt + spring presets
-              td(className="px-4 py-3 text-muted-foreground") 40kb Framer + AnimatePresence
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-1 text-foreground text-[11px] font-medium border border-accent-1" href="/motion") /motion
-            tr(className="hover:bg-muted transition")
-              td.px-4.py-3.font-medium.text-foreground.font-sans Edge Streaming
-              td(className="px-4 py-3 text-muted-foreground") HTTP streaming + keyed cache
-              td(className="px-4 py-3 text-muted-foreground") Next.js Server Components limits
-              td.px-4.py-3
-                a(className="inline-flex px-2 py-1 rounded-xs bg-accent-2 text-foreground text-[11px] font-medium border border-accent-2" href="/streaming") /streaming
+          // TAGS
+          div.flex.items-center.justify-between
+            div.flex.flex-wrap.mt-1.border.border-border.rounded-lg.w-fit.divide-x.overflow-hidden
+              each tag in nav.tags key tag
+                span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") #{tag}
+            Icon(name="arrow-right")
 
   section(className="w-full px-6 pb-12")
     div(className="bg-card border border-border rounded-xl p-6 sm:p-8")
