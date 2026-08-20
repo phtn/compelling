@@ -43,7 +43,7 @@ Generated project includes: `src/App.btsx` (typed `Props` + links), `src/main.ts
 
 Beast owns compact authoring; Octane owns rendering. BTSX compiles to readable TSRX — most Octane APIs pass through as normal imports/setup.
 
-Read `references/beast-syntax-cheatsheet.md` before writing BTSX. Read `references/beast-diagnostics.md` before fixing errors. Read `references/beast-coverage.md` for Octane parity.
+Read `references/beast-syntax-cheatsheet.md` before writing BTSX. Read `references/beast-diagnostics.md` before fixing errors. Read `references/beast-coverage.md` for Octane parity. When creating, editing, or consuming this repository's shared UI, also read the project-specific `references/ui-components.md`; treat `src/components/ui` as the final authority and keep the catalog synchronized with public API changes.
 
 Core shapes:
 ```

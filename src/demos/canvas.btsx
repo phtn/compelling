@@ -11,8 +11,8 @@ module
   interface Point { x: number; y: number }
   interface Stroke { id: string; points: Point[]; color: string; size: number; tool: string; userId: string }
   interface Peer { id: string; name: string; color: string; x: number; y: number; initials: string }
-  const TOOLS = ["pen", "highlighter", "eraser"]
-  const COLORS = ["#dedede", "#d7d0fe", "#ffecba", "#fe7672", "#cee1e7", "#e7e7e7", "#525152"]
+  const TOOLS = ["pen-bold", "pencil-bold", "eraser"]
+  const COLORS = ["#d7d0fe", "#ffecba", "#fe7672", "#e7e7e7", "#525152"]
   const PEERS: Peer[] = [
     { id: "p1", name: "Alex Chen", color: "#d7d0fe", x: 22, y: 34, initials: "AC" },
     { id: "p2", name: "Maya Patel", color: "#ffecba", x: 68, y: 52, initials: "MP" },
@@ -178,11 +178,14 @@ setup
 
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
-    Header(title="Real-Time Canvas" subtitle="GRANULAR REACTIVITY" icon='mechanics' description="Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
+    Header(title="Canvas" subtitle="GRANULAR REACTIVITY" icon='mechanics' description="Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
 
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-9 flex flex-col gap-4")
-        Frame(title={"1400\u00d7800 \u00b7 " + tool} subtitle={strokes.length + " ST \u00b7 " + pointsCount + " PT \u00b7 " + deltaKb + " KB"})
+        Frame(title={tool} className="relative" subtitle={strokes.length + " ST \u00b7 " + pointsCount + " PT \u00b7 " + deltaKb + " KB"})
+          Icon(name='undo' onClick={undo} className="absolute top-1 left-1/3" )
+          Icon(name='eraser' onClick={clearAll} className="absolute top-1 left-1/2" )
+
           div(className="relative bg-white keep-white w-full h-[500px] overflow-hidden" ref={containerRef} style="background:#fff")
             canvas(className="block w-full h-full touch-none bg-white keep-white" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair;background:#fff" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp})
             if showPeers
@@ -198,20 +201,18 @@ div.bg-background
 
 
           // CONTROLS
-          div(className="border-t border-border/50 p-3 flex items-center justify-evenly gap-3")
-            div(className="flex items-center gap-2")
+          div(className="border-t border-border/50 p-1 md:p-3 flex items-center justify-evenly gap-3")
+            div(className="flex items-center gap-1 md:gap-2")
               ButtonGroup(size="sm")
                 each t in TOOLS key t
-                  Button(size='sm' onClick={() => setTool(t)} className={tool === t ? 'bg-border/20 border border-border/30 rounded-lg' : `border border-border/0`} variant="outline" label={t} attached={true} )
+                  Button(size='icon' icon={t} onClick={() => setTool(t)} className={tool === t ? 'bg-border/20 border border-border/30 rounded-lg' : `border border-border/0`} variant="outline" attached={true} )
             div(className="flex items-center gap-2")
-              span(className="text-[10px] font-mono tracking-wide text-muted-foreground") COLOR
               ButtonGroup(size="sm")
                 each c in COLORS key c
                   Button(size='sm' onClick={() => setColor(c)} className={color === c ? 'bg-border/20 border border-border/30' : `border border-border/0 bg-[${c}] text-foreground/0`} variant="outline" attached={true} label={color === c ? '●' : '●'} style={"background: " + c})
             div(className="flex items-center gap-2")
-              span(className="text-[10px] font-mono tracking-wide text-muted-foreground") SIZE
               ButtonGroup(size="sm")
-                each s in [2,4,7,12] key s
+                each s in [2,6,12] key s
                   Button(size='sm' onClick={() => setSize(s)} className={size === s ? 'bg-border/20 border border-border/30' : 'border border-border/0'} variant="outline" label={s} attached={true} )
 
         div(className="bg-card border border-border rounded-xl p-4")

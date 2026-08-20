@@ -199,7 +199,8 @@ beast-skill/
 ├── references/
 │   ├── beast-syntax-cheatsheet.md    # BTSX authoring reference
 │   ├── beast-diagnostics.md          # Error codes and fixes
-│   └── beast-coverage.md             # Octane parity map
+│   ├── beast-coverage.md             # Octane parity map
+│   └── ui-components.md              # compelling shared UI catalog
 ├── scripts/
 │   ├── beast-doctor.cjs              # Portable bounded checker
 │   └── src/beast-doctor.ts           # Source of truth

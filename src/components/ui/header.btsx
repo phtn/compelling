@@ -44,7 +44,7 @@ props { title, subtitle, description, icon, isVisible = true, toggleFn, pending,
 
 div(className={cn(HEADER_CLASS, className)})
   div(className="flex flex-col gap-3 min-w-0 flex-1")
-    h1(className="font-semibold text-4xl tracking-tighter text-foreground") #{title}
+    h1(className="font-semibold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl tracking-tighter text-foreground") #{title}
     if subtitle || toggleFn
       div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-70 hover:opacity-100 tracking-widest uppercase text-muted-foreground")
         if subtitle

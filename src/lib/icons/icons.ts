@@ -130,6 +130,18 @@ export const icons = {
       '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12m5-1 3 3"/>',
     viewBox: '0 0 24 24',
     set: 'tabler'
+  },
+  'pen-bold': {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M47.724 72.117a3.996 3.996 0 0 1-3.996 3.995h-8a4.004 4.004 0 0 1-4.004-4.004v-47.75a29.2 29.2 0 0 1 6.4-18.245l.8-1a1.024 1.024 0 0 1 1.6 0l.8 1a29.2 29.2 0 0 1 6.4 18.245zm3.007-15.005h-3v6h4a5 5 0 0 0 5-5v-22a3 3 0 0 0-6 0zm-3.008 0H31.73v6h15.992z" clip-rule="evenodd"/>',
+    viewBox: '0 0 80 80',
+    set: 'glyphs'
+  },
+  'pencil-bold': {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M35.72 75a3.996 3.996 0 0 1-3.996-3.996v-56.25a5 5 0 0 1 1.095-3.124L38.924 4a1.025 1.025 0 0 1 1.6 0l6.104 7.63a5 5 0 0 1 1.096 3.124v56.242A4.004 4.004 0 0 1 43.719 75zm11.996-19H31.725v6h15.99z" clip-rule="evenodd"/>',
+    viewBox: '0 0 80 80',
+    set: 'glyphs'
   }
 }
 
