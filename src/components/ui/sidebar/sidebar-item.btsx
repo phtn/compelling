@@ -40,4 +40,4 @@ a(href={href} className={itemClassName} target={isExternal ? "_blank" : undefine
   div(className={iconContainerClassName})
     Icon(name={icon} size={20} className={cn(SIDEBAR_ICON_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)})
   span(className={cn(SIDEBAR_LABEL_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)}) #{label}
-  span(className={cn(SIDEBAR_VALUE_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)}) #{value}
+  // span(className={cn(SIDEBAR_VALUE_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)}) #{value}
