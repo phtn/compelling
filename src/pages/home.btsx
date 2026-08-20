@@ -6,6 +6,7 @@ props {}: {}
 
 setup
   const navs = navGroups[0].items.slice(1, navGroups[0].items.length)
+  const highlights = [{label: 'substantial Demos', value: 9}, {label: 'target interaction', value:'60fps' }, {label: 'routing', value: 'vite'}, {label: 'subscriptions', value: '0'}]
 
 div
   section(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
@@ -16,19 +17,13 @@ div
       span Beast demos,
       span(className="block text-muted-foreground") examples, and guides.
     p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mt-4") Eight substantial showcases — canvas, form, grid, shell plus timeline, worker, motion and streaming — each on its own Vite route. Two accents, light/dark, rounded-xs.
+
+    // HIGHLIGHTS
     div(className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border rounded-xl overflow-hidden mt-8")
-      div.bg-background.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 8
-        div(className="text-[10px] tracking-wide font-mono text-muted-foreground") SUBSTANTIAL DEMOS
-      div.bg-background.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 60fps
-        div(className="text-[10px] tracking-wide font-mono text-muted-foreground") TARGET INTERACTION
-      div.bg-background.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") vite
-        div(className="text-[10px] tracking-wide font-mono text-muted-foreground") SPA ROUTING
-      div.bg-background.p-4
-        div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") 0
-        div(className="text-[10px] tracking-wide font-mono text-muted-foreground") MANUAL SUBSCRIPTIONS
+      each highlight in highlights
+        div.bg-background.p-4
+          div(className="text-[20px] font-semibold tracking-[-0.02em] text-foreground") #{highlight.value}
+          div(className="text-[10px] tracking-wide font-mono text-muted-foreground capitalize") #{highlight.label}
 
 
   // GRID
@@ -40,7 +35,7 @@ div
           div
             div.flex.items-start.justify-between
               h3(className="font-sans font-semibold text-foreground group-hover:text-foreground text-base tracking-tighter transition") #{nav.title}
-              span(className="px-2 py-1 rounded-full bg-border/15 text-[10px] font-mono text-muted-foreground") #{nav.href}
+              span(className="px-2 py-1 rounded-full bg-border/10 text-[10px] font-mono text-muted-foreground") #{nav.href}
             p(className="text-sm text-muted-foreground mt-4 leading-relaxed") #{nav.description}
 
           // TAGS
