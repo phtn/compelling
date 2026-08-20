@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "octane"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
 import Callout from "@/components/ui/callout.btsx"
+import PrimaryButton from "@/components/ui/primary-button.btsx"
 
 module
   interface Review { id: string; author: string; rating: number; text: string; date: string; verified: boolean }
@@ -129,37 +130,34 @@ div.bg-background
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
           Frame(title="Storefront · load() — immediate" subtitle={hydrated.load ? "hydrated \u2713 \u00b7 " + elapsed + "s" : "hydrating\u2026 \u00b7 " + elapsed + "s"})
             div(className="p-6 sm:p-8 flex flex-col lg:flex-row gap-6")
-              div.flex-1
+              div.flex-1.space-y-10
                 div(className="inline-flex items-center gap-2 text-[11px] font-mono tracking-wide text-muted-foreground")
                   span.px-1.5.py-1.rounded-xs.bg-primary.text-primary-foreground.font-medium FLAGSHIP
                   span 11.4CH · 140W · HDMI 2.1
-                h2(className="text-[24px] font-semibold tracking-[-0.02em] leading-none mt-3 text-foreground") Marantz Cinema 30
+                h2(className="text-[24px] font-semibold tracking-[-0.02em] leading-none mt-3 text-foreground") Denon AVC-X3800H 9.4
                 p(className="text-muted-foreground text-[13px] leading-relaxed mt-2 font-mono") The reference powerhouse with HDAM, Dirac Live, 8K passthrough. Server-rendered shell — same code, no mismatch.
-                div.flex.flex-wrap.gap-1.5.mt-4
+                div.flex.flex-wrap.mt-4.border.border-border.rounded-md.w-fit.overflow-hidden.divide-x.divide-border
                   each f in ["Dolby Atmos", "IMAX Enhanced", "Dirac Live", "HEOS"] key f
-                    span(className="px-2 py-1 rounded-xs bg-background border border-border text-[11px] font-mono text-muted-foreground") #{f}
-                div.flex.items-end.gap-4.mt-5
+                    span(className="px-2 py-1 bg-background text-[11px] font-mono text-muted-foreground") #{f}
+                div.flex.items-end.gap-3.mt-5
                   div
-                    div(className="text-[11px] font-mono line-through text-muted-foreground") $4,999
-                    div(className="text-[20px] font-semibold tracking-tight text-foreground") $4,499
-                  button(className="flex-1 sm:flex-none bg-accent-1 text-foreground hover:bg-primary font-medium px-5 py-2.5 rounded-xs text-[13px] transition flex items-center justify-center gap-2 border border-accent-1" onClick={addToCart})
-                    span Add to Cart
-                    span.font-mono →
-                  button(className="px-4 py-2.5 rounded-xs border border-input text-muted-foreground hover:bg-muted hover:text-foreground transition font-medium text-[13px]" onClick={() => setShowDetail(!showDetail)}) #{showDetail ? "Hide" : "Details"}
-                div(className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground mt-3")
-                  span.flex.items-center.gap-1
-                    span.w-1.h-1.rounded-xs.bg-primary
-                    span In stock · Ships today
-                  span(className="text-muted-foreground") ·
-                  span Free 2-day delivery
-              div(className="w-full lg:w-72 h-56 lg:h-64 bg-background rounded-xs overflow-hidden relative border border-border")
-                img.w-full.h-full.object-cover.opacity-80.grayscale(src="https://picsum.photos/seed/marantz30/600/400" alt="Marantz")
+                    div(className="text-3xl font-semibold tracking-tight text-foreground") $4,499
+                  PrimaryButton( size='lg' onClick={addToCart} label="Add to Cart ")
+                  PrimaryButton( size='lg' tone='dark' onClick={() => setShowDetail(!showDetail)} label={showDetail ? "Hide" : "Details"})
+
+              div(className="w-full lg:w-72 h-fit space-y-14 bg-background rounded-xs overflow-hidden relative")
+                img.w-full.h-full.object-cover.h-72.opacity-80.rounded-xl.grayscale(src="https://picsum.photos/seed/denon/600/400" alt="Denon")
                 div.absolute.inset-0.bg-gradient-to-t.from-black.via-transparent.to-transparent
-                div(className="absolute bottom-3 left-3 right-3 bg-background/80 backdrop-blur border border-input rounded-xs p-3 flex items-center justify-between")
+                div(className="absolute bottom-3 left-3 right-3 bg-background/80 backdrop-blur border border-input rounded-xl p-3 flex items-center justify-between")
                   div
                     div(className="text-[11px] font-mono tracking-wide text-muted-foreground") TODAY'S DEAL
                     div(className="text-[13px] font-medium text-foreground") Save $500 — ends midnight
                   div(className="text-[11px] font-mono text-foreground") 04:21:33
+                div(className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground mt-10")
+                  span.flex.items-center.gap-1.whitespace-nowrap
+                    span.size-2.rounded-xs.bg-border
+                    span in-stock · ships today · 2-day delivery
+                  span(className="text-muted-foreground") ·
             if showDetail
               div(className="px-6 pb-6 grid sm:grid-cols-3 gap-px bg-border border-t border-border rounded-xs overflow-hidden mt-4")
                 div.bg-background.p-3
