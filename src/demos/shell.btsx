@@ -3,6 +3,7 @@ import { idle, initializeHydrationEventCapture, interaction, load, media, never,
 import { useEffect, useMemo, useState } from "octane"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
+import Callout from "@/components/ui/callout.btsx"
 
 module
   interface Review { id: string; author: string; rating: number; text: string; date: string; verified: boolean }
@@ -109,6 +110,11 @@ setup
     {id: "cart", label: "Cart (" + cartCount + ")", onClick: addToCart, className: ""},
     {id: "force", label: "Force hydrate all", onClick: forceHydrateAll, className: ""},
     {id: "elapsed", label: elapsed + "s since shell", className: ""}]
+
+  const info = {
+    title: "Why Octane wins",
+    text: "Next.js requires getServerProps per route \u2014 framework boundary. Octane's suspend/resume is universal: same component suspends server, resumes client. Partial hydration via Hydrate strategies, not whole-page.",
+  }
 
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
@@ -274,13 +280,7 @@ div.bg-background
             div(className="text-[13px] text-muted-foreground mt-2 font-mono") Footer is static, never hydrates. Zero JS shipped.
             div(className="mt-2 text-[11px] font-mono text-muted-foreground") Hydrate(when={"{"}never(){"}"})
 
-        div(className="bg-background border border-border rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-foreground") WHY IT WINS
-          ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1 leading-relaxed")
-            li Next.js requires <span class="text-foreground">getServerProps</span> per route — framework boundary.
-            li Octane's <span class="text-foreground">suspend/resume</span> is universal: same component suspends server, resumes client.
-            li Partial hydration via <span class="text-foreground">Hydrate</span> strategies, not whole-page.
-
+        Callout(title={info.title} text={info.text})
     div(className="w-full px-6")
       div(className="bg-card border border-border rounded-xs p-6 mt-4")
         div(className="flex flex-wrap items-center gap-2 text-[11px] font-mono tracking-wide text-muted-foreground")

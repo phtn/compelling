@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
+import Callout from "@/components/ui/callout.btsx"
 
 
 
@@ -74,6 +75,11 @@ setup
   const actions = [
     {id: "toggle", label: isOpen ? "Close" : "Open", onClick: () => setIsOpen(!isOpen), className: "" + (isOpen ? "" : "")}]
 
+  const info = {
+    title: "Why Octane wins",
+    text: "Framer adds 40kb + AnimatePresence. Octane motion({height,spring}) runs in animation frame, never blocks reactive graph, onPan keeps velocity.",
+  }
+
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Declarative Animation Orchestrator" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
@@ -111,11 +117,7 @@ div.bg-background
                 input(className="w-full accent-white" type="range" min="0.3" max="1.2" step="0.05" value={damping} onInput={onDampingInput})
             p(className="text-[11px] font-mono text-muted-foreground mt-3 text-center") Click card or drag vertically — interrupt preserves velocity. Rest fires # #{restCount}
           div(className="h-54")
-        div(className="mt-3 bg-card border border-border rounded-xs p-3 flex gap-3")
-          div(className="text-accent-1 text-[12px]") ●
-          div(className="text-[12px] leading-relaxed font-mono")
-            div(className="font-medium text-foreground") Why Octane wins
-            div(className="text-muted-foreground mt-1") Framer adds 40kb + <span class="text-foreground">AnimatePresence</span>. Octane <span class="text-foreground">motion({`{height,spring}`})</span> runs in animation frame, never blocks reactive graph, <span class="text-foreground">onPan</span> keeps velocity.
+        Callout(title={info.title} text={info.text})
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
         div(className="bg-card border border-border rounded-xs p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") STATE

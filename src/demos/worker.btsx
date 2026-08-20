@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "octane"
 import { cn } from "@/lib/utils"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
+import Callout from "@/components/ui/callout.btsx"
 
 module
   interface Particle { x: number; y: number; vx: number; vy: number; life: number }
@@ -115,6 +116,11 @@ setup
     {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "" + (running ? "bg-accent-1 text-foreground border-accent-1" : "bg-card border-input text-muted-foreground")},
     {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "" + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")}]
 
+  const info = {
+    title: "Why Octane wins",
+    text: "React needs useWorker + Comlink + serialization. Octane worker.bind({particles,gravity}) auto-proxies signals — gravity.set() hits worker without copy.",
+  }
+
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Web Worker Reactivity" subtitle="ZERO-COST THREADING" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
@@ -137,14 +143,12 @@ div.bg-background
             div(className="flex gap-2")
               button(className="px-3 py-1.5 rounded-xs bg-primary text-primary-foreground text-[11px] font-mono border border-primary" onClick={() => setCount(220)}) 220
               button(className="px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[11px] font-mono" onClick={randomizeParticles}) Randomize
-        //
-        div(className="mt-3 bg-border/15 dark:bg-border/30 border border-border/25 dark:border-border/30 rounded-xl shadow-xs p-3 flex gap-3")
-          div(className="text-orange-300 text-[12px]") ●
-          div(className="text-[12px] leading-relaxed")
-            div(className="font-display font-bold text-foreground tracking-tight") Why Octane wins
-            div(className="text-muted-foreground font-mono mt-1") React needs useWorker + Comlink + serialization. Octane worker.bind({particles,gravity}) auto-proxies signals — gravity.set() hits worker without copy.
+
+        // CALLOUT
+        Callout(title={info.title} text={info.text})
+
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
-        div(className="bg-card border border-border rounded-xs p-4")
+        div(className="bg-border/15 border border-border/30 rounded-xl p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") METRICS
           div(className="grid grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-3")
             div(className="bg-background p-3 text-center")
@@ -166,12 +170,12 @@ div.bg-background
             div(className="flex justify-between")
               span(className="text-muted-foreground") transport
               span(className="text-foreground") #{shared ? "Atomics" : "clone"}
-        div(className="bg-card border border-border rounded-xs p-4")
+        div(className="bg-card border border-border/0 rounded-xs p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") BINDING
-          pre(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground whitespace-pre-wrap break-words")
+          pre(className="bg-background border border-border border-dashed rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground whitespace-pre-wrap break-words")
             code physicsEngine.bind({"{"}particles, gravity{"}"})&#10;// slider → worker instantly
           div(className="text-[11px] font-mono text-muted-foreground mt-2") No postMessage, no serialization — signal is shared.
-        div(className="bg-background border border-border rounded-xs p-4")
+        div(className="bg-border/15 border border-border/30 rounded-xl p-4")
           div(className="text-[11px] font-mono tracking-wide text-foreground") TIP
           ul(className="list-disc list-inside text-[12px] font-mono text-muted-foreground mt-2 space-y-1")
             li Drag gravity → particles fall faster

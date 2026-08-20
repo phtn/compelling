@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
+import Callout from "@/components/ui/callout.btsx"
 import Input from "@/components/ui/input.btsx"
 import Select from "@/components/ui/select.btsx"
 
@@ -170,6 +171,11 @@ setup
                   { value: "team", label: "Team · $49/mo · SAML + SSO" },
                 ]
 
+  const info = {
+    title: "Why Octane wins",
+    text: "RxJS needs manual unsubscribe + switchMap + debounce. Octane's derive(async () => validate(), { debounce: 300, cancelOnUpdate: true }) cancels prior fetch automatically.",
+  }
+
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Adaptive Form" subtitle="with validation streams" icon='mechanics' description="Composable async flows with automatic cancellation. Each keystroke pushes to a stream; derive cancels the prior fetch, debounces 300ms, and handles race conditions." isVisible={showInfo} toggleFn={toggleInfo} pending={saving} actions={[]})
@@ -284,12 +290,7 @@ div.bg-background
             else
               span Create account →
           div(className="text-[11px] font-mono text-muted-foreground text-center") Form valid: #{formValid ? "yes" : "no"} · Progress #{progress}% · validations: #{totalValidations}
-          div(className="bg-border/10 rounded-lg p-3 text-[12px] font-mono text-muted-foreground leading-relaxed")
-            div(className="p-3 flex gap-3")
-              div(className="text-orange-300 text-[12px] font-mono") ●
-              div.text-foreground.font-medium.mb-1 Why Octane wins
-            div RxJS needs manual unsubscribe + switchMap + debounce. Octane's derive(async () => validate(), { debounce: 300, cancelOnUpdate: true }) cancels prior fetch automatically.
-
+          Callout(title={info.title} text={info.text})
       // COL-2
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 min-w-0")
         div(className="rounded-xs")

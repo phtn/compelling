@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "octane"
 import Header from "@/components/ui/header.btsx"
 import Frame from "@/components/ui/frame.btsx"
+import Callout from "@/components/ui/callout.btsx"
 
 module
   interface HistoryEntry { value: string; ts: number; branch: number }
@@ -76,6 +77,11 @@ setup
   const [showInfo, setShowInfo] = useState(false)
   const toggleInfo = () => setShowInfo(!showInfo)
 
+  const info = {
+    title: "Why Octane wins",
+    text: "Redux needs DevTools + manual replay. Octane treats time as dimension \u2014 timeline(signal) gives structural-shared snapshots, fork() branches instantly.",
+  }
+
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Time-Travel State Debugger" subtitle="TEMPORAL REACTIVITY" icon='mechanics' description="Immutable snapshots, bidirectional travel, branching — no Redux DevTools. timeline(content, {compress:true}) gives undo/redo/fork/scrub with structural sharing." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "compress", label: compress ? "Compress on" : "Compress off", onClick: () => setCompress(!compress), className: "" + (compress ? "bg-input/10" : "")}, {id: "fork", label: "Fork Branch", onClick: fork, className: ""}]})
@@ -101,12 +107,7 @@ div.bg-background
                 span(className="w-6 h-6 rounded-xs bg-muted border border-border grid place-items-center text-[10px]") #{history.length - 1 - i}
                 span(className="flex-1 truncate") #{h.value.slice(0, 64)}#{h.value.length > 64 ? "…" : ""}
                 span(className="text-[10px] px-1.5 py-0.5 rounded-xs bg-muted border border-border") b#{h.branch}
-        div(className="bg-background border border-border rounded-xs p-3 flex gap-3")
-          div(className="text-accent-1 text-[12px]") ●
-          div(className="text-[12px] leading-relaxed font-mono pb-14")
-            div(className="font-medium text-foreground") Why Octane wins
-            div(className="text-muted-foreground mt-1") Redux needs DevTools + manual replay. Octane treats <span class="text-foreground">time as dimension</span> — <span class="text-foreground">timeline(signal)</span> gives structural-shared snapshots, <span class="text-foreground">fork()</span> branches instantly.
-
+        Callout(title={info.title} text={info.text})
       div(className="col-span-12 lg:col-span-4 flex flex-col gap-4")
         div(className="bg-card border border-border rounded-xs p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") METRICS
