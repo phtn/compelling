@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "octane"
 import Header from "@/components/ui/header.btsx"
+import Frame from "@/components/ui/frame.btsx"
 
 module
   interface Result { id: string; title: string; excerpt: string; score: number; cached: boolean }
@@ -77,14 +78,9 @@ setup
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
     Header(title="Edge-Streaming Search" subtitle="STREAMING EDGE AT CDN" icon='mechanics' description="Server components that stream progressively from edge — yield <skeleton> then each <result-card> hydrates as it arrives. Keyed cache at CDN." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
-    div(className="grid grid-cols-12 gap-4 mt-6")
+    div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
-        div(className="bg-card border border-border rounded-xs overflow-hidden")
-          div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
-            div(className="flex items-center gap-2")
-              div(className={"w-1.5 h-1.5 rounded-xs " + (streaming ? "bg-accent-1 animate-pulse" : "bg-muted-foreground")})
-              span(className="text-[11px] font-mono tracking-wide text-muted-foreground") stream({`{ ssr:'streaming', key: query }`})
-            span(className="text-[11px] font-mono text-muted-foreground") edge #{edgeMs}ms · cache #{cacheHits}
+        Frame(title={"Stream \u00b7 " + query + " \u00b7 " + results.length + " results"} subtitle={edgeMs + "ms edge \u00b7 " + cacheHits + " hits \u00b7 " + hydrated + "/" + results.length + " hydrated" + (streaming ? " \u00b7 streaming" : "")})
           div(className="p-4")
             div(className="relative")
               input(className="w-full bg-background border border-input rounded-xs pl-9 pr-3 py-3 text-[13px] font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent-1" value={query} placeholder="Search — try octane, timeline, worker" onInput={onQueryInput})

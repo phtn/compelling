@@ -2,6 +2,7 @@ import { Activity, ErrorBoundary, Hydrate, Suspense, use } from "octane"
 import { idle, initializeHydrationEventCapture, interaction, load, media, never, visible } from "octane/hydration"
 import { useEffect, useMemo, useState } from "octane"
 import Header from "@/components/ui/header.btsx"
+import Frame from "@/components/ui/frame.btsx"
 
 module
   interface Review { id: string; author: string; rating: number; text: string; date: string; verified: boolean }
@@ -120,12 +121,7 @@ div.bg-background
     div.grid.grid-cols-12.gap-4
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
-          div(className="bg-card border border-border rounded-xs overflow-hidden")
-            div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
-              div.flex.items-center.gap-2
-                div.w-1.5.h-1.5.rounded-xs.bg-primary(class={hydrated.load ? "" : "animate-pulse"})
-                span(className="text-[11px] font-mono tracking-wide text-muted-foreground") Hydrate: load() — immediate
-              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.load ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}) #{hydrated.load ? "hydrated ✓" : "hydrating…"}
+          Frame(title="Storefront · load() — immediate" subtitle={hydrated.load ? "hydrated \u2713 \u00b7 " + elapsed + "s" : "hydrating\u2026 \u00b7 " + elapsed + "s"})
             div(className="p-6 sm:p-8 flex flex-col lg:flex-row gap-6")
               div.flex-1
                 div(className="inline-flex items-center gap-2 text-[11px] font-mono tracking-wide text-muted-foreground")
@@ -171,12 +167,7 @@ div.bg-background
                   div(className="text-muted-foreground text-[11px] font-mono") Dirac Live included
 
         Hydrate(when={idle({ timeout: 1500 })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, idle: true }))})
-          div(className="bg-card border border-border rounded-xs overflow-hidden")
-            div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
-              div.flex.items-center.gap-2
-                div.w-1.5.h-1.5.rounded-xs.bg-primary(class={hydrated.idle ? "" : "animate-pulse"})
-                span(className="text-[11px] font-mono tracking-wide text-muted-foreground") Hydrate: idle({"{"} timeout: 1500 {"}"}) — reviews
-              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.idle ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}) #{hydrated.idle ? "hydrated ✓" : "waiting for idle…"}
+          Frame(title="Reviews · idle({ timeout: 1500 })" subtitle={hydrated.idle ? "hydrated \u2713" : "waiting for idle\u2026"})
             div.p-6
               div.flex.items-center.justify-between
                 div
@@ -190,12 +181,7 @@ div.bg-background
               div(className="mt-3 text-[11px] font-mono text-muted-foreground") Hydrate when idle → server sends seeded HTML, client hydrates without blocking main thread.
 
         Hydrate(when={visible({ rootMargin: "200px" })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, visible: true }))})
-          div(className="bg-card border border-border rounded-xs overflow-hidden")
-            div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
-              div.flex.items-center.gap-2
-                div.w-1.5.h-1.5.rounded-xs.bg-primary(class={hydrated.visible ? "" : "animate-pulse"})
-                span(className="text-[11px] font-mono tracking-wide text-muted-foreground") Hydrate: visible({"{"} rootMargin: "200px" {"}"}) — related
-              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.visible ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}) #{hydrated.visible ? "hydrated ✓" : "waiting for visible…"}
+          Frame(title="Related · visible({ rootMargin: \"200px\" })" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
             div.p-6
               h3(className="text-[14px] font-medium tracking-[-0.01em] text-foreground") You may also like
               p(className="text-[11px] font-mono text-muted-foreground mt-1") Hydrates only when scrolled into view — saves JS until needed.
@@ -205,12 +191,7 @@ div.bg-background
               div(className="mt-3 text-[11px] font-mono text-muted-foreground") Scrolled into viewport → hydration gate resolves.
 
         Hydrate(when={interaction({ events: ["click", "focusin"] })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, interaction: true }))})
-          div(className="bg-card border border-border rounded-xs overflow-hidden")
-            div(className="h-9 bg-background border-b border-border flex items-center justify-between px-3")
-              div.flex.items-center.gap-2
-                div.w-1.5.h-1.5.rounded-xs.bg-primary(class={hydrated.interaction ? "" : "animate-pulse"})
-                span(className="text-[11px] font-mono tracking-wide text-muted-foreground") Hydrate: interaction(["click","focusin"]) — Q&A
-              span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.interaction ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}) #{hydrated.interaction ? "hydrated ✓" : "waiting for click…"}
+          Frame(title="Q\u0026A · interaction([\"click\",\"focusin\"])" subtitle={hydrated.interaction ? "hydrated \u2713" : "waiting for click\u2026"})
             div.p-6
               h3(className="text-[14px] font-medium tracking-[-0.01em] text-foreground") Q&A
               p(className="text-[11px] font-mono text-muted-foreground") Click to hydrate — captures early events before JS loads.

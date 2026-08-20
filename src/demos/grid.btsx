@@ -159,8 +159,8 @@ div.bg-background
               div(className="text-muted-foreground mt-1 text-[11px] font-mono") No fixed size assumptions. Dynamic heights.
       div(className="col-span-12 lg:col-span-3 rounded-xs h-fit sticky top-[72px]")
         div
-          Input(value={query} onChange={(v) => setQuery(v as string)} placeholder="Search title, category")
-          div(className="text-[11px] font-mono text-right text-muted-foreground mt-1") #{filtered.length.toLocaleString()} matches
+          Input(value={query} onChange={(v) => setQuery(v as string)} placeholder="Search title, category" type="search")
+          div(className="text-2xs font-mono text-right text-muted-foreground mt-1 px-2") #{filtered.length.toLocaleString()} matches
         div.mt-4
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CATEGORY
           div.flex.flex-wrap.gap-1.mt-2
