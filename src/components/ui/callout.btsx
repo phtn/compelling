@@ -1,6 +1,18 @@
-props {title, text}: {title: string, text: string}
-div(className="mt-3 bg-border/15 dark:bg-border/30 border border-border/25 dark:border-border/30 rounded-xl shadow-xs p-3 flex gap-3")
-  div(className="text-orange-300 text-[12px]") ●
+import { cn } from "@/lib/utils"
+
+module
+  export interface CalloutProps {
+    title: string
+    text: string
+    className?: string
+  }
+
+  const CALLOUT_CLASS = "mt-3 flex gap-3 rounded-xl border border-border/25 bg-border/15 p-3 shadow-xs dark:border-border/30 dark:bg-border/30"
+
+props { title, text, className }: CalloutProps
+
+div(className={cn(CALLOUT_CLASS, className)})
+  div(className="text-[12px] text-orange-300" aria-hidden={true}) ●
   div(className="text-[12px] leading-relaxed")
     div(className="font-display font-bold text-foreground tracking-tight") #{title}
     div(className="text-muted-foreground font-mono mt-1") #{text}

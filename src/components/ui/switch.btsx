@@ -1,0 +1,57 @@
+import { cn } from "@/lib/utils"
+import { useId, useState } from "octane"
+
+module
+  export interface SwitchProps {
+    checked?: boolean
+    defaultChecked?: boolean
+    disabled?: boolean
+    required?: boolean
+    id?: string
+    name?: string
+    value?: string
+    label?: string
+    className?: string
+    labelClassName?: string
+    controlClassName?: string
+    thumbClassName?: string
+    onCheckedChange?: (checked: boolean) => void
+    "aria-label"?: string
+    "aria-describedby"?: string
+  }
+
+  const SWITCH_ROOT_CLASS = "group inline-flex items-center"
+  const SWITCH_ROW_CLASS = "min-h-14 w-full border-t border-[#ECECEC] px-6 py-4 dark:border-border"
+  const SWITCH_LABEL_CLASS = "mr-auto pr-3 font-[Inter,system-ui,sans-serif] text-xs font-medium leading-4 text-[#121212] dark:text-foreground"
+  const SWITCH_INPUT_CLASS = "peer sr-only"
+  const SWITCH_TRACK_CLASS = "relative flex h-[22px] w-10 shrink-0 rounded-full p-0.5 transition-[background-color,box-shadow] duration-200 ease-out peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2"
+  const SWITCH_TRACK_CHECKED_CLASS = "bg-[#121212B3] shadow-[inset_0_1px_0.6px_#1212124D] dark:bg-foreground/70"
+  const SWITCH_TRACK_UNCHECKED_CLASS = "bg-[#ECECEC] shadow-[inset_0_0_1px_0.5px_#1212121A] dark:bg-border"
+  const SWITCH_THUMB_CLASS = "size-[18px] shrink-0 rounded-full bg-[#F8F7F7] shadow-[inset_0_1px_0.5px_#FFFFFFD1,0_0_2.6px_#00000040,0_1px_4px_#00000024] transition-transform duration-200 ease-out"
+
+props { checked, defaultChecked = false, disabled, required, id, name, value, label, className, labelClassName, controlClassName, thumbClassName, onCheckedChange, "aria-label": ariaLabel, "aria-describedby": ariaDescribedBy }: SwitchProps
+
+setup
+  const generatedId = useId()
+  const switchId = id ?? generatedId
+  const labelId = `${switchId}-label`
+  const hasLabel = label !== undefined
+  const [internalChecked, setInternalChecked] = useState(defaultChecked)
+  const isControlled = checked !== undefined
+  const isChecked = isControlled ? checked : internalChecked
+  const rootClassName = cn(SWITCH_ROOT_CLASS, hasLabel && SWITCH_ROW_CLASS, disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer", className)
+  const trackClassName = cn(SWITCH_TRACK_CLASS, isChecked ? SWITCH_TRACK_CHECKED_CLASS : SWITCH_TRACK_UNCHECKED_CLASS, controlClassName)
+  const resolvedThumbClassName = cn(SWITCH_THUMB_CLASS, isChecked && "translate-x-[18px]", thumbClassName)
+
+  const handleChange = (event: Event) => {
+    const nextChecked = (event.currentTarget as HTMLInputElement).checked
+    if (!isControlled) setInternalChecked(nextChecked)
+    onCheckedChange?.(nextChecked)
+  }
+
+label(for={switchId} className={rootClassName})
+  if hasLabel
+    span(id={labelId} className={cn(SWITCH_LABEL_CLASS, labelClassName)}) #{label}
+  input(id={switchId} type="checkbox" role="switch" checked={isChecked} disabled={disabled} required={required} name={name} value={value} className={SWITCH_INPUT_CLASS} aria-label={ariaLabel} aria-labelledby={hasLabel ? labelId : undefined} aria-describedby={ariaDescribedBy} onChange={handleChange})
+  span(className={trackClassName} aria-hidden={true})
+    span(className={resolvedThumbClassName})

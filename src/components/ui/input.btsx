@@ -4,38 +4,47 @@ import type { IconName } from "@/lib/icons/types"
 import { useState } from "octane"
 
 module
-  interface InputProps {
-    value?: string;
-    defaultValue?: string;
-    placeholder?: string;
-    type?: string;
-    disabled?: boolean;
-    leftIcon?: IconName;
-    rightSlot?: string;
-    className?: string;
-    inputClassName?: string;
-    onChange?: (value: string) => void;
-    onKeyDown?: (e: KeyboardEvent) => void;
+  export interface InputProps {
+    value?: string
+    defaultValue?: string
+    placeholder?: string
+    type?: string
+    disabled?: boolean
+    leftIcon?: IconName
+    rightSlot?: unknown
+    className?: string
+    inputClassName?: string
+    onChange?: (value: string) => void
+    onKeyDown?: (event: KeyboardEvent) => void
+    children?: unknown
   }
 
-props { value, defaultValue, placeholder = "Search files...", type = "text", disabled, leftIcon, rightSlot, className, inputClassName, onChange, onKeyDown }: InputProps
+  const INPUT_ROOT_CLASS = "relative flex w-full items-center"
+  const INPUT_ICON_CONTAINER_CLASS = "pointer-events-none absolute left-1 top-1.5 grid size-8 shrink-0 place-items-center rounded-[8px] text-[#7B7B7B]"
+  const INPUT_BASE_CLASS = "h-11 w-full rounded-md border border-border/50 pl-8 pr-14 font-mono text-[12px] font-medium leading-4 tracking-[-0.12px] text-[#121212] transition-colors placeholder:font-medium placeholder:text-border/80 focus:outline-none focus-visible:bg-[#FCFCFC] focus-visible:ring-1 focus-visible:ring-[#E2E2E2] disabled:cursor-not-allowed disabled:opacity-50 dark:border-border dark:bg-muted dark:text-foreground dark:focus-visible:bg-card"
+  const INPUT_SEARCH_HINT_CLASS = "pointer-events-none absolute right-[7px] top-1/2 inline-flex h-6 min-w-4 -translate-y-1/2 select-none items-center justify-center rounded-[6px] bg-input px-2 py-[2px] text-[12px] font-medium leading-none text-white dark:bg-muted-foreground dark:text-background"
+
+props { value, defaultValue, placeholder = "Search files...", type = "text", disabled, leftIcon, rightSlot, className, inputClassName, onChange, onKeyDown, children }: InputProps
 
 setup
-  const [inner, setInner] = useState(defaultValue ?? "")
+  const [internalValue, setInternalValue] = useState(defaultValue ?? "")
   const isControlled = value !== undefined
-  const val = isControlled ? (value as string) : inner
+  const inputValue = isControlled ? value : internalValue
+  const hasTrailingContent = type === "search" || rightSlot !== undefined || children !== undefined
+  const resolvedInputClassName = cn(INPUT_BASE_CLASS, !leftIcon && "pl-3", !hasTrailingContent && "pr-3", inputClassName)
 
-  const handleInput = (e: Event) => {
-    const v = (e.target as HTMLInputElement).value
-    if (!isControlled) setInner(v)
-    onChange?.(v)
+  const handleInput = (event: InputEvent) => {
+    const nextValue = (event.currentTarget as HTMLInputElement).value
+    if (!isControlled) setInternalValue(nextValue)
+    onChange?.(nextValue)
   }
 
-div(className={cn("relative w-full flex items-center", className)})
+div(className={cn(INPUT_ROOT_CLASS, className)})
   if leftIcon
-    div(className="absolute left-1 top-1.5 size-8 grid place-items-center rounded-[8px] text-[#7B7B7B] pointer-events-none shrink-0")
+    div(className={INPUT_ICON_CONTAINER_CLASS})
       Icon(name={leftIcon} size={18} className="m-0 text-[#7B7B7B]")
-  input(type={type} value={val} placeholder={placeholder} disabled={disabled} className={cn("font-mono w-full h-11 rounded-xl border border-border/50 dark:bg-muted dark:border-border pl-8 pr-14 text-[12px] font-medium tracking-[-0.12px] leading-4 text-[#121212] dark:text-foreground placeholder:text-border/80 placeholder:font-medium focus:outline-none focus-visible:ring-1 focus-visible:ring-[#E2E2E2] focus-visible:bg-[#FCFCFC] dark:focus-visible:bg-card disabled:opacity-50 disabled:cursor-not-allowed transition-colors", !leftIcon && "pl-3", !rightSlot && "pr-3", inputClassName)} onInput={handleInput} onKeyDown={onKeyDown})
+  input(type={type} value={inputValue} placeholder={placeholder} disabled={disabled} className={resolvedInputClassName} onInput={handleInput} onKeyDown={onKeyDown})
   if type === "search"
-    kbd(className="absolute right-[7px] top-1/2 -translate-y-1/2 inline-flex items-center justify-center min-w-4 h-6 px-2 py-[2px] rounded-[6px] bg-input dark:bg-muted-foreground text-white dark:text-background text-[12px] font-medium leading-none pointer-events-none select-none") /
-  slot
+    kbd(className={INPUT_SEARCH_HINT_CLASS}) /
+  | #{rightSlot}
+  | #{children}

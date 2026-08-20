@@ -18,7 +18,7 @@ export const navGroups: NavGroup[] = [
   {
     title: 'General',
     items: [
-      { href: '/', icon: 'overview', label: 'Overview', title: '', description: '', value: '0', tags: [] },
+      { href: '/', icon: 'overview', label: 'Overview', title: '', description: '', value: '00', tags: [] },
       {
         href: '/canvas',
         icon: 'canvas',

@@ -94,10 +94,10 @@ div.bg-background
             div(className="mt-3 flex items-center gap-3")
               input(className="flex-1 accent-white" type="range" min="0" max={Math.max(0, history.length - 1)} value={pos} onInput={(e) => scrubTo(parseInt((e.target as HTMLInputElement).value, 10))})
               span(className="text-[11px] font-mono text-muted-foreground") #{pos} / #{history.length - 1}
-            div(className="mt-2 flex gap-1.5")
-              button(className="px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[11px] font-mono border border-accent-1 hover:bg-primary" onClick={undo} disabled={!canUndo}) Undo
-              button(className="px-3 py-1.5 rounded-xs bg-muted border border-input text-muted-foreground text-[11px] font-mono hover:text-foreground" onClick={redo} disabled={!canRedo}) Redo
-              button(className="px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[11px] font-mono" onClick={() => { setHistory([{ value: "Hello Octane — built-in temporal reactivity", ts: Date.now(), branch: 0 }]); setPos(0); setContent("Hello Octane — built-in temporal reactivity") }}) Reset
+            div(className="mt-2 flex rounded-xl border border-border overflow-hidden w-fit")
+              button(className="px-3 py-1.5 text-foreground text-[11px] font-mono" onClick={undo} disabled={!canUndo}) Undo
+              button(className="px-3 py-1.5 bg-muted text-muted-foreground text-[11px] font-mono hover:text-foreground" onClick={redo} disabled={!canRedo}) Redo
+              button(className="px-3 py-1.5 bg-card text-muted-foreground text-[11px] font-mono" onClick={() => { setHistory([{ value: "Hello Octane — built-in temporal reactivity", ts: Date.now(), branch: 0 }]); setPos(0); setContent("Hello Octane — built-in temporal reactivity") }}) Reset
             p(className="text-[11px] font-mono text-muted-foreground mt-2") ⌘Z / ⇧⌘Z to undo/redo. Fork creates branch #{branches}. Compress dedupes &lt;400ms.
         div(className="bg-card border border-border rounded-xs p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") HISTORY — #{history.length} snapshots (max #{maxBranches})

@@ -2,42 +2,47 @@ import Icon from "@/lib/icons/index.btsx"
 import { cn } from "@/lib/utils"
 import type { IconName } from "@/lib/icons/types"
 import Button from "./button.btsx"
+import type { ButtonSize, ButtonVariant } from "./button.btsx"
 import ButtonGroup from "./button-group.btsx"
 
 module
-  interface HeaderAction {
-    id: string;
-    label?: string;
-    icon?: IconName;
-    href?: string;
-    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
-    size?: "sm" | "md" | "lg" | "icon";
-    className?: string;
-    onClick?: VoidFunction;
+  export interface HeaderAction {
+    id: string
+    label?: string
+    icon?: IconName
+    href?: string
+    variant?: ButtonVariant
+    size?: ButtonSize
+    className?: string
+    onClick?: (event: MouseEvent) => void
   }
 
-  interface HeaderProps {
-    title: string;
-    subtitle?: string;
-    description?: string;
-    icon?: IconName;
-    isVisible?: boolean;
-    toggleFn?: VoidFunction;
-    pending?: boolean;
-    pendingLabel?: string;
-    actions?: HeaderAction[];
-    className?: string;
-    actionsClassName?: string;
+  export interface HeaderProps {
+    title: string
+    subtitle?: string
+    description?: string
+    icon?: IconName
+    isVisible?: boolean
+    toggleFn?: VoidFunction
+    pending?: boolean
+    pendingLabel?: string
+    actions?: readonly HeaderAction[]
+    className?: string
+    actionsClassName?: string
+    children?: unknown
   }
 
-props {title, subtitle, description, icon, isVisible, toggleFn, pending, pendingLabel, actions, className, actionsClassName}: HeaderProps
+  const HEADER_CLASS = "flex items-start justify-between gap-4 pb-5"
+  const HEADER_DESCRIPTION_CLASS = "mt-2 flex max-w-2xl font-mono text-[13px] leading-relaxed text-muted-foreground"
+  const HEADER_ACTION_LINK_CLASS = "inline-flex h-9 items-center justify-center gap-2 px-3 text-[12px] font-medium transition"
+  const HEADER_ACTION_DEFAULT_CLASS = "bg-card border-input text-muted-foreground hover:bg-muted hover:text-foreground"
+  const HEADER_ACTION_FALLBACK_CLASS = "flex h-9 items-center justify-center gap-2 rounded-[10px] px-3 font-mono text-[11px]"
+  const HEADER_PENDING_CLASS = "flex h-9 items-center gap-2 rounded-[10px] border border-border bg-card px-3 py-1.5 font-mono text-[11px] text-muted-foreground"
+  const HEADER_PENDING_DOT_CLASS = "h-1.5 w-1.5 rounded-full bg-foreground"
 
-setup
-  const handleIconClick = () => {
-    if (toggleFn) toggleFn()
-  }
+props { title, subtitle, description, icon, isVisible = true, toggleFn, pending, pendingLabel, actions = [], className, actionsClassName, children }: HeaderProps
 
-div(className={cn("flex items-start justify-between gap-4 pb-5", className)})
+div(className={cn(HEADER_CLASS, className)})
   div(className="flex flex-col gap-3 min-w-0 flex-1")
     h1(className="font-semibold text-4xl tracking-tighter text-foreground") #{title}
     if subtitle || toggleFn
@@ -45,29 +50,30 @@ div(className={cn("flex items-start justify-between gap-4 pb-5", className)})
         if subtitle
           span(className="group-hover:opacity-50") #{subtitle}
         if toggleFn
-          Icon(name={icon ?? "overview"} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out cursor-pointer" onClick={handleIconClick})
+          button(type="button" className="cursor-pointer" aria-label="Toggle header details" aria-expanded={isVisible} onClick={toggleFn})
+            Icon(name={icon ?? "overview"} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out")
     if description
-      p(className={cn("text-muted-foreground mt-2 max-w-2xl text-[13px] leading-relaxed font-mono", isVisible === false ? "hidden" : "flex")}) #{description}
-    slot
-  if pending !== undefined || (actions && actions.length > 0)
+      p(className={cn(HEADER_DESCRIPTION_CLASS, !isVisible && "hidden")}) #{description}
+    | #{children}
+  if pending !== undefined || actions.length > 0
     div(className="flex flex-wrap gap-3 items-center shrink-0")
       if pending !== undefined
-        div(className="px-3 py-1.5 rounded-[10px] bg-card border border-border text-[11px] font-mono text-muted-foreground flex items-center gap-2 h-9")
-          div(className={"w-1.5 h-1.5 rounded-full " + (pending ? "bg-foreground animate-pulse" : "bg-foreground")})
+        div(className={HEADER_PENDING_CLASS})
+          div(className={cn(HEADER_PENDING_DOT_CLASS, pending && "animate-pulse")})
           span #{pending ? (pendingLabel ?? "Saving...") : "Saved"}
-      if actions && actions.length > 0
+      if actions.length > 0
         ButtonGroup(variant="default" size="sm" className={cn("flex", actionsClassName)})
           each action in actions key action.id
             if action.href
-              a(href={action.href} className={cn("inline-flex items-center justify-center text-[12px] font-medium transition gap-2 px-3 h-9", action.className ?? "bg-card border-input text-muted-foreground hover:text-foreground hover:bg-muted")} target={action.href.startsWith("http") ? "_blank" : undefined} rel={action.href.startsWith("http") ? "noreferrer" : undefined} onClick={action.onClick})
+              a(href={action.href} className={cn(HEADER_ACTION_LINK_CLASS, action.className ?? HEADER_ACTION_DEFAULT_CLASS)} target={action.href.startsWith("http") ? "_blank" : undefined} rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined} onClick={action.onClick})
                 if action.icon
                   Icon(name={action.icon})
                 if action.label
                   span #{action.label}
             elseif action.onClick
-              Button(variant={action.variant ?? "outline"} size={action.size ?? "sm"} icon={action.icon} label={action.label} onClick={action.onClick} className={`hover:bg-input/50 ` + action.className})
+              Button(variant={action.variant ?? "outline"} size={action.size ?? "sm"} icon={action.icon} label={action.label} onClick={action.onClick} className={cn("hover:bg-input/50", action.className)})
             else
-              div(className={cn("flex items-center justify-center rounded-[10px] text-[11px] font-mono gap-2 px-3 h-9", action.className ?? "bg-card border-border text-muted-foreground")})
+              div(className={cn(HEADER_ACTION_FALLBACK_CLASS, action.className ?? "bg-card border-border text-muted-foreground")})
                 if action.icon
                   Icon(name={action.icon})
                 if action.label

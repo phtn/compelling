@@ -1,33 +1,69 @@
 import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import type { IconName } from "@/lib/icons/types"
+import type { Octane } from "octane/jsx-runtime"
 
 module
-  interface ButtonProps {
-    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
-    size?: "sm" | "md" | "lg" | "icon";
-    className?: string;
-    disabled?: boolean;
-    type?: "button" | "submit" | "reset";
-    icon?: IconName;
-    iconPosition?: "left" | "right";
-    onClick?: VoidFunction;
-    label?: string;
-    style?: HTMLButtonElement['style']
+  export type ButtonVariant = "default" | "primary" | "secondary" | "outline" | "ghost" | "mist"
+  export type ButtonSize = "xs" | "sm" | "md" | "lg" | "icon"
+
+  type ButtonType = "button" | "submit" | "reset"
+  type ButtonIconPosition = "left" | "right"
+
+  export interface ButtonProps {
+    variant?: ButtonVariant
+    size?: ButtonSize
+    className?: string
+    disabled?: boolean
+    type?: ButtonType
+    icon?: IconName
+    iconPosition?: ButtonIconPosition
+    onClick?: (event: MouseEvent) => void
+    label?: string | number
+    style?: Octane.JSX.IntrinsicElements["button"]["style"]
+    "aria-label"?: string
+    children?: unknown
   }
 
-props {variant, size, className, disabled, type, icon, iconPosition, onClick, label, style}: ButtonProps
+  const BUTTON_BASE_CLASS = "group inline-flex min-w-10 shrink-0 items-center justify-center rounded-xl font-mono font-medium transition disabled:pointer-events-none disabled:opacity-50"
+  const BUTTON_CONTENT_CLASS = "transition-all duration-300 group-active:scale-96 group-active:opacity-96"
+
+  const BUTTON_VARIANT_CLASSES = {
+    default: "bg-card border-border text-muted-foreground",
+    primary: "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] text-[#121212] border border-[#D4D4D4] shadow-[inset_0_1px_0_#FFFFFF33,0_3px_4px_-1px_#00000015] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border",
+    secondary: "bg-secondary text-secondary-foreground border border-secondary",
+    outline: "bg-transparent border-input text-muted-foreground",
+    ghost: "bg-transparent border-transparent hover:bg-secondary/50 text-muted-foreground",
+    mist: "bg-muted border-border text-muted-foreground",
+  } as const satisfies Record<ButtonVariant, string>
+
+  const BUTTON_SIZE_CLASSES = {
+    xs: "px-1 h-8 text-2xs gap-1 rounded-md",
+    sm: "px-2 h-9 text-xs gap-1 rounded-lg",
+    md: "px-2.5 h-10 text-sm gap-1.5",
+    lg: "px-3 h-11 text-[12px] gap-1.5",
+    icon: "px-2.5 h-10 text-sm gap-1.5",
+  } as const satisfies Record<ButtonSize, string>
+
+  const BUTTON_ICON_SIZES = {
+    xs: 12,
+    sm: 14,
+    md: 14,
+    lg: 14,
+    icon: 16,
+  } as const satisfies Record<ButtonSize, number>
+
+props { variant = "default", size = "md", className, disabled, type = "button", icon, iconPosition = "left", onClick, label, style, "aria-label": ariaLabel, children }: ButtonProps
 
 setup
-  const base = "inline-flex items-center justify-center rounded-xl font-mono font-medium transition disabled:opacity-50 disabled:pointer-events-none shrink-0 min-w-10"
-  const variantClass = variant === "primary" ? "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] text-[#121212] border border-[#D4D4D4] shadow-[inset_0_1px_0_#FFFFFF33,0_3px_4px_-1px_#00000015] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border" : variant === "secondary" ? "bg-secondary text-secondary-foreground border border-secondary" : variant === "outline" ? "bg-transparent border-input text-muted-foreground" : variant === "ghost" ? "bg-transparent border-transparent hover:bg-secondary/50 text-muted-foreground" : variant === "mist" ? "bg-muted border-border text-muted-foreground" : "bg-card border-border text-muted-foreground"
-  const sizeClass = size === "sm" ? "px-2 h-9 text-[10px] gap-1 rounded-lg" : size === "lg" ? "px-3 h-11 text-[12px] gap-1.5" : "px-2.5 h-10 text-sm gap-1.5"
+  const buttonClassName = cn(BUTTON_BASE_CLASS, BUTTON_VARIANT_CLASSES[variant], BUTTON_SIZE_CLASSES[size], className)
+  const iconSize = BUTTON_ICON_SIZES[size]
 
-button(type={type ?? "button"} disabled={disabled} className={cn(base, variantClass, sizeClass, className)} onClick={onClick} style={style})
-  if icon && iconPosition !== "right"
-    Icon(name={icon} size={size === "icon" ? 16 : 14})
-  if label
-    span #{label}
-  slot
+button(type={type} disabled={disabled} className={buttonClassName} onClick={onClick} style={style} aria-label={ariaLabel})
+  if icon && iconPosition === "left"
+    Icon(name={icon} size={iconSize} className={BUTTON_CONTENT_CLASS})
+  if label !== undefined
+    span(className={BUTTON_CONTENT_CLASS}) #{label}
+  | #{children}
   if icon && iconPosition === "right"
-    Icon(name={icon} size={14})
+    Icon(name={icon} size={iconSize} className={BUTTON_CONTENT_CLASS})

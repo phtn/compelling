@@ -1,22 +1,42 @@
 import { cn } from "@/lib/utils"
 
 module
-  interface ButtonGroupProps {
-    orientation?: "horizontal" | "vertical"
+  export type ButtonGroupOrientation = "horizontal" | "vertical"
+  export type ButtonGroupVariant = "default" | "segmented"
+  export type ButtonGroupSize = "sm" | "md" | "lg"
+
+  export interface ButtonGroupProps {
+    orientation?: ButtonGroupOrientation
     attached?: boolean
-    variant?: "default" | "segmented"
-    size?: "sm" | "md" | "lg"
+    variant?: ButtonGroupVariant
+    size?: ButtonGroupSize
     className?: string
-    children?: HTMLElement
+    children?: unknown
   }
+
+  const BUTTON_GROUP_BASE_CLASS = "inline-flex shrink-0 items-center overflow-hidden p-1"
+
+  const BUTTON_GROUP_ORIENTATION_CLASSES = {
+    horizontal: "flex-row",
+    vertical: "flex-col",
+  } as const satisfies Record<ButtonGroupOrientation, string>
+
+  const BUTTON_GROUP_SIZE_CLASSES = {
+    sm: "[&>*]:h-9 [&>*]:text-[11px]",
+    md: "[&>*]:h-10 [&>*]:text-[13px]",
+    lg: "[&>*]:h-11 [&>*]:text-[14px]",
+  } as const satisfies Record<ButtonGroupSize, string>
+
+  const BUTTON_GROUP_ATTACHED_CLASSES = {
+    horizontal: "divide-x divide-border [&>*]:rounded-none [&>*]:border-0 [&>*:first-child]:rounded-l-[11px] [&>*:last-child]:rounded-r-[11px]",
+    vertical: "divide-y divide-border [&>*]:rounded-none [&>*]:border-0 [&>*:first-child]:rounded-t-[11px] [&>*:last-child]:rounded-b-[11px]",
+  } as const satisfies Record<ButtonGroupOrientation, string>
 
 props { orientation = "horizontal", attached = true, variant = "default", size = "md", className, children }: ButtonGroupProps
 
 setup
-  const base = "inline-flex items-center shrink-0 overflow-hidden p-1"
-  const orientationClass = orientation === "vertical" ? "flex-col" : "flex-row"
-  const variantClass = variant === "segmented" ? "bg-[#F1F1F1] dark:bg-muted rounded-xl border border-[#E2E2E2] dark:border-border" : attached ? "rounded-xl border border-border overflow-hidden divide-x divide-border has-[>button]:gap-0" : "gap-1"
-  const sizeClass = size === "sm" ? "[&>*]:h-9 [&>*]:text-[11px]" : size === "lg" ? "[&>*]:h-11 [&>*]:text-[14px]" : "[&>*]:h-10 [&>*]:text-[13px]"
+  const variantClass = variant === "segmented" ? "rounded-xl border border-[#E2E2E2] bg-[#F1F1F1] dark:border-border dark:bg-muted" : attached ? "has-[>button]:gap-0 overflow-hidden rounded-xl border border-border" : "gap-1"
+  const buttonGroupClassName = cn(BUTTON_GROUP_BASE_CLASS, BUTTON_GROUP_ORIENTATION_CLASSES[orientation], variantClass, BUTTON_GROUP_SIZE_CLASSES[size], attached && BUTTON_GROUP_ATTACHED_CLASSES[orientation], className)
 
-div(className={cn(base, orientationClass, variantClass, sizeClass, attached && orientation === "horizontal" && "[&>*]:rounded-none [&>*]:border-0 first:[&>*]:rounded-l-[11px] last:[&>*]:rounded-r-[11px]", attached && orientation === "vertical" && "[&>*]:rounded-none [&>*]:border-0 first:[&>*]:rounded-t-[11px] last:[&>*]:rounded-b-[11px]", className)})
-  div #{children}
+div(className={buttonGroupClassName})
+  | #{children}

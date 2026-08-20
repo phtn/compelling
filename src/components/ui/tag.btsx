@@ -1,37 +1,65 @@
 import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import type { IconName } from "@/lib/icons/types"
+import type { Octane } from "octane/jsx-runtime"
 
 module
-  interface TagProps {
-    href?: string;
-    target?: '_blank' | '_self' | '_parent' | '_top';
-    rel?: string;
-    variant?: "default" | "primary" | "secondary" | "outline" | "ghost" | "mist";
-    size?: "sm" | "md" | "lg";
-    className?: string;
-    icon?: IconName;
-    iconPosition?: "left" | "right";
-    label?: string;
-    onClick?: VoidFunction;
-    onRemove?: VoidFunction;
-    style?: HTMLAnchorElement['style'];
+  export type TagVariant = "default" | "primary" | "secondary" | "outline" | "ghost" | "mist"
+  export type TagSize = "sm" | "md" | "lg"
+
+  type TagTarget = "_blank" | "_self" | "_parent" | "_top"
+  type TagIconPosition = "left" | "right"
+
+  export interface TagProps {
+    href?: string
+    target?: TagTarget
+    rel?: string
+    variant?: TagVariant
+    size?: TagSize
+    className?: string
+    icon?: IconName
+    iconPosition?: TagIconPosition
+    label?: string
+    onClick?: (event: MouseEvent) => void
+    onRemove?: (event: MouseEvent) => void
+    style?: Octane.JSX.IntrinsicElements["a"]["style"]
+    children?: unknown
   }
 
-props {href='#', target='_blank', rel='noreferrer', variant, size, className, icon, iconPosition, label, onClick, onRemove, style}: TagProps
+  const TAG_BASE_CLASS = "inline-flex shrink-0 items-center justify-center rounded-lg border font-display font-medium tracking-tighter transition"
+
+  const TAG_VARIANT_CLASSES = {
+    default: "bg-card border-border text-muted-foreground",
+    primary: "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] dark:bg-[linear-gradient(in_oklab_180deg,oklab(22.2%_0_0)_0%,oklab(21.3%_0_0)_100%)] text-[#121212] border-[#D1D1D1] dark:border-border/50 shadow-[inset_0_1px_0_#FFFFFF65,0_3px_4px_-1px_#00000015] dark:shadow-[inset_0_1px_0_#bababa30,0_3px_4px_-1px_#00000095] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border",
+    secondary: "bg-secondary text-secondary-foreground border border-border/50",
+    outline: "bg-transparent border-input text-muted-foreground",
+    ghost: "bg-transparent border-transparent text-muted-foreground",
+    mist: "bg-muted border-border text-muted-foreground",
+  } as const satisfies Record<TagVariant, string>
+
+  const TAG_SIZE_CLASSES = {
+    sm: "px-2 h-9 text-[10px] gap-1",
+    md: "px-2.5 h-10 text-sm gap-1.5",
+    lg: "px-3 h-10 text-[12px] gap-1.5",
+  } as const satisfies Record<TagSize, string>
+
+props { href = "#", target = "_blank", rel = "noopener noreferrer", variant = "default", size = "md", className, icon, iconPosition = "left", label, onClick, onRemove, style, children }: TagProps
 
 setup
-  const base = "inline-flex items-center justify-center rounded-lg font-display font-medium tracking-tighter transition shrink-0 border"
-  const variantClass = variant === "primary" ? "bg-[linear-gradient(in_oklab_180deg,oklab(92.2%_0_0)_0%,oklab(91.3%_0_0)_100%)] dark:bg-[linear-gradient(in_oklab_180deg,oklab(22.2%_0_0)_0%,oklab(21.3%_0_0)_100%)] text-[#121212] border-[#D1D1D1] dark:border-border/50 shadow-[inset_0_1px_0_#FFFFFF65,0_3px_4px_-1px_#00000015] dark:shadow-[inset_0_1px_0_#bababa30,0_3px_4px_-1px_#00000095] rounded-[12px] font-semibold tracking-[-0.28px] font-[Inter,system-ui,sans-serif] hover:opacity-90 dark:bg-muted dark:text-foreground dark:border-border" : variant === "secondary" ? "bg-secondary text-secondary-foreground border border-border/50" : variant === "outline" ? "bg-transparent border-input text-muted-foreground" : variant === "ghost" ? "bg-transparent border-transparent text-muted-foreground" : variant === "mist" ? "bg-muted border-border text-muted-foreground" : "bg-card border-border text-muted-foreground"
-  const sizeClass = size === "sm" ? "px-2 h-9 text-[10px] gap-1" : size === "lg" ? "px-3 h-10 text-[12px] gap-1.5" : "px-2.5 h-10 text-sm gap-1.5"
+  const tagClassName = cn(TAG_BASE_CLASS, TAG_VARIANT_CLASSES[variant], TAG_SIZE_CLASSES[size], onClick && "cursor-pointer hover:bg-muted hover:text-foreground hover:border-input", className)
+  const handleRemove = (event: MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    onRemove?.(event)
+  }
 
-a(href={href} target="_blank" rel="noopener noreferrer" className={cn(base, variantClass, sizeClass, onClick && "cursor-pointer hover:bg-muted hover:text-foreground hover:border-input", className)} onClick={onClick} style={style})
-  if icon && iconPosition !== "right"
+a(href={href} target={target} rel={rel} className={tagClassName} onClick={onClick} style={style})
+  if icon && iconPosition === "left"
     Icon(name={icon} size={12})
-  if label
+  if label !== undefined
     span #{label}
-  slot
+  | #{children}
   if icon && iconPosition === "right"
     Icon(name={icon} size={12})
   if onRemove
-    button(className="ml-1 -mr-1 h-4 w-4 rounded-xs inline-flex items-center justify-center hover:bg-foreground/10 transition text-[10px]" onClick={onRemove} aria-label="Remove tag") ×
+    button(type="button" className="ml-1 -mr-1 h-4 w-4 rounded-xs inline-flex items-center justify-center hover:bg-foreground/10 transition text-[10px]" onClick={handleRemove} aria-label="Remove tag") ×

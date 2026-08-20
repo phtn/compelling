@@ -1,12 +1,20 @@
+import { cn } from "@/lib/utils"
+
 module
-  interface BrandProps {
-    imageUrl: string;
+  export interface BrandProps {
+    imageUrl: string
+    imageAlt?: string
+    className?: string
   }
 
-props { imageUrl }: BrandProps
-div(className="flex items-center gap-3")
+  const BRAND_CLASS = "flex items-center gap-3"
+  const BRAND_IMAGE_CLASS = "size-16"
+
+props { imageUrl, imageAlt = "Compelling", className }: BrandProps
+
+div(className={cn(BRAND_CLASS, className)})
   div(className="flex items-center gap-5")
-    img(src={imageUrl} className="size-16")
+    img(src={imageUrl} alt={imageAlt} className={BRAND_IMAGE_CLASS})
     div
       div(className="font-semibold text-orange-400 dark:text-orange-300 text-sm tracking-tight leading-none opacity-100") Compelling
       div(className="font-semibold text-foreground text-base md:text-lg tracking-tight leading-none") Demos & Guides
