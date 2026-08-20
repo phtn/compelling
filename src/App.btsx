@@ -11,6 +11,7 @@ import TgpuDemo from "./demos/tgpu.btsx"
 import Brand from "./components/ui/brand.btsx"
 import Button from "./components/ui/button.btsx"
 import ButtonGroup from "./components/ui/button-group.btsx"
+import PrimaryButton from "./components/ui/primary-button.btsx"
 import Tag from "./components/ui/tag.btsx"
 import SidebarItem from "./components/ui/sidebar/sidebar-item.btsx"
 import { navGroups } from "./components/ui/sidebar/navs"
@@ -82,7 +83,7 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
           Tag(href={nav.href} target="_self" variant={path === nav.href ? "secondary" : "ghost"} label={nav.label} onClick={navigate(nav.href)})
       div(className="flex items-center gap-2")
         Button(size='icon' icon='theme' variant='ghost' onClick={toggleTheme} aria-label="Toggle theme")
-        Tag(label="Docs" variant="primary" href="https://beast-docs.vercel.app")
+        PrimaryButton(label="Docs" tone='dark' size="sm" onClick={navigate('https://beast-docs.vercel.app')} target="_blank" rel="noopener noreferrer")
 
   div(className="flex w-full min-h-[calc(100vh-64px)]")
     if sidebarSide === "left" && sidebarOpen
