@@ -7,7 +7,7 @@
       "dependencies": {
         "@typegpu/noise": "^0.12.0",
         "@typegpu/three": "^0.12.0",
-        "beast-tsrx": "^0.2.4",
+        "beast-tsrx": "^0.2.7",
         "clsx": "^2.1.1",
         "octane": "0.1.37",
         "tailwind-merge": "^3.6.0",
@@ -20,6 +20,7 @@
         "@types/node": "^26.2.0",
         "@types/three": "^0.185.4",
         "@webgpu/types": "^0.1.72",
+        "prettier": "^3.6.2",
         "tailwindcss": "^4.1.8",
         "typescript": "^5.9.3",
         "vite": "^8.0.16",
@@ -141,7 +142,7 @@
 
     "acorn": ["acorn@8.18.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ=="],
 
-    "beast-tsrx": ["beast-tsrx@0.2.4", "", { "dependencies": { "entities": "^7.0.1" }, "peerDependencies": { "octane": "0.1.37", "vite": "^8.0.16" }, "optionalPeers": ["octane", "vite"], "bin": { "beast": "dist/cli.js" } }, "sha512-GjDTp31umoJjlAQVuEz4Ng0ATwCub4Lg1XjgescdhlZl98IbXl1aeN3zJHbIQmLDOnP3nUy2uiLUAbcB9hORYQ=="],
+    "beast-tsrx": ["beast-tsrx@0.2.7", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.13", "@jridgewell/remapping": "^2.3.5", "entities": "^7.0.1" }, "peerDependencies": { "@octanejs/rsbuild-plugin": "0.1.32", "@octanejs/rspack-plugin": "0.1.32", "@rsbuild/core": "^2.0.0", "@rspack/core": "^2.0.0", "octane": "0.1.37", "vite": "^8.0.16" }, "optionalPeers": ["@octanejs/rsbuild-plugin", "@octanejs/rspack-plugin", "@rsbuild/core", "@rspack/core", "octane", "vite"], "bin": { "beast": "dist/cli.js" } }, "sha512-2UJB5RnsDfJq4DSb54xCQxswjNKlK/9g+Uf29mAqI3ZS6xygBtNkBB1EQvhdoSu2SKqrq7lqbkojmT5eLVcqYA=="],
 
     "clsx": ["clsx@2.1.1", "", {}, "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="],
 
@@ -210,6 +211,8 @@
     "picomatch": ["picomatch@4.0.5", "", {}, "sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A=="],
 
     "postcss": ["postcss@8.5.26", "", { "dependencies": { "nanoid": "^3.3.17", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ=="],
+
+    "prettier": ["prettier@3.9.6", "", { "bin": { "prettier": "bin/prettier.cjs" } }, "sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g=="],
 
     "rolldown": ["rolldown@1.2.4", "", { "dependencies": { "@oxc-project/types": "=0.144.0", "@rolldown/pluginutils": "^1.0.0" }, "optionalDependencies": { "@rolldown/binding-android-arm64": "1.2.4", "@rolldown/binding-darwin-arm64": "1.2.4", "@rolldown/binding-darwin-x64": "1.2.4", "@rolldown/binding-freebsd-x64": "1.2.4", "@rolldown/binding-linux-arm-gnueabihf": "1.2.4", "@rolldown/binding-linux-arm64-gnu": "1.2.4", "@rolldown/binding-linux-arm64-musl": "1.2.4", "@rolldown/binding-linux-ppc64-gnu": "1.2.4", "@rolldown/binding-linux-s390x-gnu": "1.2.4", "@rolldown/binding-linux-x64-gnu": "1.2.4", "@rolldown/binding-linux-x64-musl": "1.2.4", "@rolldown/binding-openharmony-arm64": "1.2.4", "@rolldown/binding-win32-arm64-msvc": "1.2.4", "@rolldown/binding-win32-x64-msvc": "1.2.4" }, "bin": { "rolldown": "./bin/cli.mjs" } }, "sha512-rSr7irW0K7QRWzjdJXqZowkcRdDtjRduh43rBltnVKd0VFq839l1lJoDvGJb6gl7+4rTTCrPWu+YfujUL8Ug7w=="],
 

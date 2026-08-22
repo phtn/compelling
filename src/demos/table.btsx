@@ -1,0 +1,16 @@
+import { useState } from "octane";
+import Header from "@/components/ui/Header.btsx";
+props {}:{}
+
+setup
+  const [value, setValue] = useState("");
+  const handleInput = (v: string) => {
+    setValue(v.target.value);
+  };
+
+
+div.bg-background
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6 gap-4")
+    label input
+    input(onInput={handleInput} className="bg-input" placeholder="fuck")
+    span #{value}

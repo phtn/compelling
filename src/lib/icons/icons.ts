@@ -127,9 +127,9 @@ export const icons = {
   },
   search: {
     symbol:
-      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12m5-1 3 3"/>',
-    viewBox: '0 0 24 24',
-    set: 'tabler'
+      '<path fill="currentColor" fill-rule="evenodd" d="M1.5 6.5a5 5 0 1 1 10 0 5 5 0 0 1-10 0m5-6.5a6.5 6.5 0 1 0 4.04 11.6l3.43 3.43.53.53 1.06-1.06-.53-.53-3.43-3.43A6.5 6.5 0 0 0 6.5 0" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
   },
   'pen-bold': {
     symbol:

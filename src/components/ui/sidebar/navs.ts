@@ -97,13 +97,13 @@ export const navGroups: NavGroup[] = [
         tags: ['streaming', 'edge', 'cache']
       },
       {
-        href: '/tgpu',
+        href: '/table',
         icon: 'mechanics',
-        label: 'TypeGPU',
-        title: 'TypeGPU — WebGPU',
-        description: 'WebGPU rendering with zero-cost threading.',
+        label: 'Table',
+        title: 'Tanstack Table = Nuqs - shadcn filters',
+        description: 'Data table with Tanstack Table and Nuqs filters.',
         value: '09',
-        tags: ['WebGPU']
+        tags: ['table']
       }
     ]
   },

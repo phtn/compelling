@@ -1,0 +1,6 @@
+{
+  "plugins": ["./scripts/prettier-plugin-btsx.mjs"],
+  "singleQuote": true,
+  "semi": false,
+  "trailingComma": "none"
+}

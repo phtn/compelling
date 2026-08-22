@@ -12,14 +12,14 @@ module
     onNavigate: (event: MouseEvent) => void
   }
 
-  const SIDEBAR_ITEM_CLASS = "flex w-full items-center gap-3 rounded-[12px] border py-[3px] pl-[3px] pr-[10px] text-left transition-colors"
-  const SIDEBAR_ITEM_SELECTED_CLASS = "border-[#E2E2E2] bg-[#F1F1F1] dark:border-border/50 dark:bg-muted"
-  const SIDEBAR_ITEM_DEFAULT_CLASS = "border-transparent bg-transparent hover:bg-[#F1F1F1] dark:hover:bg-muted"
-  const SIDEBAR_ICON_CONTAINER_CLASS = "flex size-8 shrink-0 items-center justify-center rounded-[8px]"
-  const SIDEBAR_ICON_CLASS = "m-0 text-[#7B7B7B] dark:text-[#a1a1a1]"
-  const SIDEBAR_LABEL_CLASS = "flex-1 truncate font-sans text-sm font-medium leading-5 tracking-[-0.28px] text-[#7B7B7B] md:text-[14px] dark:text-[#a1a1a1]"
-  const SIDEBAR_VALUE_CLASS = "ml-auto shrink-0 text-right font-mono text-2xs leading-none tabular-nums text-[#7B7B7B] dark:text-[#a1a1a1]"
-  const SIDEBAR_SELECTED_TEXT_CLASS = "text-[#171717] dark:text-[#ededed]"
+  const SIDEBAR_ITEM_CLASS = "flex w-full items-center gap-3 rounded-[12px] border py-1 pl-1 pr-[8px] text-left transition"
+  const SIDEBAR_ITEM_SELECTED_CLASS = "bg-secondary hover:bg-muted hover:border-input border-border/50"
+  const SIDEBAR_ITEM_DEFAULT_CLASS = "border-transparent bg-transparent hover:bg-sidebar"
+  const SIDEBAR_ICON_CONTAINER_CLASS = "flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-transparent"
+  const SIDEBAR_ICON_CLASS = "m-0 text-muted-foreground"
+  const SIDEBAR_LABEL_CLASS = "flex-1 font-sans font-medium text-muted-foreground text-sm md:text-[14px] leading-5 tracking-[-0.28px] truncate"
+  const SIDEBAR_VALUE_CLASS = "ml-auto shrink-0 text-right font-mono text-2xs leading-none tabular-nums text-muted-foreground"
+  const SIDEBAR_SELECTED_TEXT_CLASS = "text-primary"
 
 props { href, icon, label, value, path, onNavigate }: SidebarItemProps
 
@@ -27,7 +27,9 @@ setup
   const isExternal = href.startsWith("http")
   const isSelected = path === href
   const itemClassName = cn(SIDEBAR_ITEM_CLASS, isSelected ? SIDEBAR_ITEM_SELECTED_CLASS : SIDEBAR_ITEM_DEFAULT_CLASS)
-  const iconContainerClassName = cn(SIDEBAR_ICON_CONTAINER_CLASS, isSelected ? "bg-[#FCFCFC] text-[#121212] shadow-[0_0_4px_rgba(18,18,18,0.10)] dark:bg-card dark:text-foreground" : "bg-transparent text-[#7B7B7B] dark:text-muted-foreground")
+  const iconContainerClassName = cn(SIDEBAR_ICON_CONTAINER_CLASS,
+    ~ "text-muted-foreground",
+    ~ {"bg-secondary hover:bg-muted text-primary shadow-[0_0_3px_rgba(24,24,24,0.10)]": isSelected} )
 
   const handleClick = (event: MouseEvent) => {
     if (!isExternal) {
@@ -38,6 +40,6 @@ setup
 
 a(href={href} className={itemClassName} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} aria-current={isSelected ? "page" : undefined} onClick={handleClick})
   div(className={iconContainerClassName})
-    Icon(name={icon} size={20} className={cn(SIDEBAR_ICON_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)})
+    Icon(name={icon} size={18} className={cn(SIDEBAR_ICON_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)})
   span(className={cn(SIDEBAR_LABEL_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)}) #{label}
   // span(className={cn(SIDEBAR_VALUE_CLASS, isSelected && SIDEBAR_SELECTED_TEXT_CLASS)}) #{value}
