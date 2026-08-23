@@ -383,7 +383,7 @@ div.bg-background
             div(className="col-span-2 row-start-1 flex min-w-0 items-center justify-center sm:col-auto sm:row-auto")
               ButtonGroup(size="lg" className="max-w-full")
                 each c, i in COLORS key c
-                  Button(size='icon' label='●' onClick={() => setColor(c)} className={cn(`min-w-12 border border-border/0 bg-[${c}] text-foreground/0`, {'bg-border/40 border border-border/30 text-muted-foreground': color === c, 'text-muted': color === c && i === COLORS.length - 1}) } variant="outline" label='●' aria-label={"Use color " + c} style={"background: " + c})
+                  Button(size='icon' label='●' onClick={() => setColor(c)} className={cn(`min-w-11 md:min-w-12 border border-border/0 bg-[${c}] text-foreground/0`, {'bg-border/40 border border-border/30 text-muted-foreground': color === c, 'text-muted': color === c && i === COLORS.length - 1}) } variant="outline" label='●' aria-label={"Use color " + c} style={"background: " + c})
             div(className="flex min-w-0 items-center justify-self-end sm:justify-self-auto")
               ButtonGroup(size="lg" className="max-w-full")
                 each s in [2,6, 10, 14] key s
