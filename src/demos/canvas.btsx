@@ -362,8 +362,8 @@ div.bg-background
         Frame(title={tool} className="relative border-0 md:border"
           ~ // subtitle={strokes.length + " ST \u00b7 " + pointsCount + " PT \u00b7 " + deltaKb + " KB"}
           ~ titlebar={false} )
-          Icon(name='person' onClick={undefined} className="size-6 absolute top-1 right-8" )
-          Icon(name='clear' onClick={clearAll} className="size-6 absolute top-1 right-1.5 text-[#ee705d]" )
+          Icon(name='person' onClick={undefined} className="size-5 absolute top-1 right-8 text-muted-foreground" )
+          Icon(name='clear' onClick={clearAll} className="size-5 absolute top-1 right-1.5 text-muted-foreground md:hover:text-[#ee705d]" )
 
           div(className="relative bg-white keep-white w-full h-[clamp(240px,calc(100dvh-216px),500px)] md:h-[500px] overflow-hidden" ref={containerRef} style="")
             canvas(className="block w-full h-full touch-none bg-background" ref={canvasRef} width={1400} height={800} style="width:100%;height:100%;cursor:crosshair" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerLeave} onPointerCancel={handlePointerLeave})
@@ -387,7 +387,7 @@ div.bg-background
             div(className="flex min-w-0 items-center justify-self-end sm:justify-self-auto")
               ButtonGroup(size="lg" className="max-w-full")
                 each s in [2,6, 10, 14] key s
-                  Button(size='sm' onClick={() => setSize(s)} className={cn('min-w-12 px-2 border border-border/0 text-base!', {'px-2 bg-border/20 border border-border/30': size === s})} variant="outline" label={s})
+                  Button(size='sm' onClick={() => setSize(s)} className={cn('min-w-10 md:min-w-12 px-2 border border-border/0 text-base!', {'px-2 bg-border/20 border border-border/30': size === s})} variant="outline" label={s})
           div(className="flex flex-col gap-2 border-t border-border/50 bg-background p-3 sm:flex-row sm:items-center")
             div(className="min-w-0 sm:w-52")
               div(className="text-[10px] font-mono tracking-wide text-muted-foreground") HOURLY ID · #{shortIdentity}
