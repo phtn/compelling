@@ -24,6 +24,18 @@ export interface CanvasRoom {
   maxUsers: number
 }
 
+export interface CanvasPointer {
+  sessionId: Id<'canvasSessions'>
+  nickname: string
+  x: number
+  y: number
+}
+
+export interface CanvasPresenceConnection {
+  roomToken: string
+  sessionToken: string
+}
+
 interface StoredCanvasIdentity {
   sessionId: Id<'canvasSessions'>
   resumeSecret: string
@@ -48,6 +60,9 @@ const generateResumeSecret = () => {
     ''
   )
 }
+
+export const createCanvasPresenceConnectionId = () =>
+  `canvas-${generateResumeSecret()}`
 
 const readStoredIdentity = (): StoredCanvasIdentity | null => {
   try {
@@ -110,3 +125,46 @@ export const watchCanvasRoom = (
   onUpdate: (room: CanvasRoom) => void,
   onError: (error: Error) => void
 ) => getClient().onUpdate(api.canvasSessions.listCurrent, {}, onUpdate, onError)
+
+export const heartbeatCanvasPresence = (
+  session: CanvasSession,
+  connectionId: string
+): Promise<CanvasPresenceConnection> =>
+  getClient().mutation(api.canvasPresence.heartbeat, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret,
+    connectionId
+  })
+
+export const updateCanvasPointer = (
+  session: CanvasSession,
+  x: number,
+  y: number
+) =>
+  getClient().mutation(api.canvasPresence.updatePointer, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret,
+    x,
+    y
+  })
+
+export const clearCanvasPointer = (session: CanvasSession) =>
+  getClient().mutation(api.canvasPresence.clearPointer, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret
+  })
+
+export const disconnectCanvasPresence = (sessionToken: string) =>
+  getClient().mutation(api.canvasPresence.disconnect, { sessionToken })
+
+export const watchCanvasPointers = (
+  roomToken: string,
+  onUpdate: (pointers: CanvasPointer[]) => void,
+  onError: (error: Error) => void
+) =>
+  getClient().onUpdate(
+    api.canvasPresence.listPointers,
+    { roomToken },
+    onUpdate,
+    onError
+  )

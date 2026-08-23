@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as canvasPresence from "../canvasPresence.js";
 import type * as canvasSessions from "../canvasSessions.js";
 import type * as crons from "../crons.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  canvasPresence: typeof canvasPresence;
   canvasSessions: typeof canvasSessions;
   crons: typeof crons;
 }>;
@@ -48,4 +50,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  presence: import("@convex-dev/presence/_generated/component.js").ComponentApi<"presence">;
+};
