@@ -13,7 +13,7 @@ div
     div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-card border border-input text-muted-foreground text-[11px] font-mono tracking-wide")
       span(className="size-2 rounded-xs bg-orange-300 animate-pulse")
       span  BEAST &rarr; OCTANE &rarr; VITE
-    h1(className="text-[40px] sm:text-[56px] font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
+    h1(className="text-2xl sm:text-4xl font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
       span Compelling
       span(className="block text-muted-foreground") beast examples.
     p(className="text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mt-4") Powered by OctaneJS and Vite.
@@ -27,15 +27,15 @@ div
 
 
   // GRID
-  section(className="w-full px-3 md:px-4 lg:px-5 xl:px-6 pb-12")
+  section(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pb-12")
     div(className="grid lg:grid-cols-2 gap-px bg-border/50 border border-border/50 rounded-xl overflow-hidden")
       each nav in navs key nav.href
-        a(className="group bg-background p-6 hover:bg-card transition flex flex-col gap-4" href={nav.href})
+        a(className="group bg-background p-4 sm:p-5  md:p-6 hover:bg-card transition flex flex-col gap-4" href={nav.href})
           // TITLE
           div
             div.flex.items-start.justify-between
-              h3(className="font-sans font-semibold text-foreground group-hover:text-foreground text-base tracking-tighter transition") #{nav.title}
-              span(className="px-2 py-1 rounded-full bg-border/5 text-[10px] font-mono text-blue-500") #{nav.href}
+              h3(className="font-sans font-semibold text-foreground group-hover:text-foreground text-lg tracking-tighter transition") #{nav.title}
+              Icon(name="arrow-right" className="text-muted-foreground")
             p(className="text-sm text-muted-foreground mt-4 leading-relaxed min-h-14") #{nav.description}
 
           // TAGS
@@ -43,15 +43,14 @@ div
             div.flex.flex-wrap.mt-1.border.border-border.rounded-lg.w-fit.divide-x.overflow-hidden(className="divide-border/50")
               each tag in nav.tags key tag
                 span(className="px-2 py-1 rounded-xs bg-card text-[11px] font-mono text-muted-foreground") #{tag}
-            Icon(name="arrow-right")
 
-  section(className="w-full px-6 pb-12")
-    div(className="bg-card border border-border rounded-xl p-6 sm:p-8")
-      h2(className="text-[14px] font-medium tracking-[-0.01em] text-foreground flex items-center gap-2")
+  section(className="w-full px-2 md:px-6 pb-12")
+    div(className="bg-card border border-border rounded-xl p-0 pb-4 sm:p-8")
+      h2(className="text-[14px] font-medium tracking-[-0.01em] text-foreground flex items-center gap-2 p-2")
         span(className="w-1 h-4 bg-primary rounded-xs inline-block")
         span How routing works
-      p(className="text-muted-foreground text-[13px] mt-2 max-w-2xl leading-relaxed font-mono") Vite SPA routing with history API. App state tracks window.location.pathname, pushState on navigation, popstate for back/forward. No external router, no page reloads. Direct hits fallback to index.html via Vite appType spa.
-      div(className="grid sm:grid-cols-3 gap-px bg-border border border-border rounded-xs overflow-hidden mt-6")
+      p(className="text-muted-foreground text-[13px] mt-2 max-w-2xl leading-relaxed font-mono p-2") Vite SPA routing with history API. App state tracks window.location.pathname, pushState on navigation, popstate for back/forward. No external router, no page reloads. Direct hits fallback to index.html via Vite appType spa.
+      div(className="grid sm:grid-cols-3 gap-px bg-border border-x-0 md:border-x border border-border rounded-xs overflow-hidden mt-6")
         div(className="bg-background p-4")
           div(className="font-medium text-[13px] text-foreground") / → Home
           div(className="text-muted-foreground text-[12px] mt-1 font-mono") Landing + overview

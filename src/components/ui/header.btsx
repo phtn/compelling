@@ -46,12 +46,12 @@ div(className={cn(HEADER_CLASS, className)})
   div(className="flex flex-col gap-3 min-w-0 flex-1")
     h1(className="font-semibold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl tracking-tighter text-foreground") #{title}
     if subtitle || toggleFn
-      div(className="group flex items-center gap-1.5 h-5 text-2xs opacity-70 hover:opacity-100 tracking-widest uppercase text-muted-foreground")
+      div(className="group flex items-center gap-1 md:gap-1.5 h-5 text-2xs opacity-70 hover:opacity-100 tracking-widest uppercase text-muted-foreground")
         if subtitle
           span(className="group-hover:opacity-50") #{subtitle}
         if toggleFn
           button(type="button" className="cursor-pointer" aria-label="Toggle header details" aria-expanded={isVisible} onClick={toggleFn})
-            Icon(name={icon ?? "overview"} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out")
+            Icon(name={icon ?? "mechanics"} className="text-blue-500 group-hover:rotate-60 transition-all duration-500 ease-in-out size-3.5 md:size-4")
     if description
       p(className={cn(HEADER_DESCRIPTION_CLASS, !isVisible && "hidden")}) #{description}
     | #{children}

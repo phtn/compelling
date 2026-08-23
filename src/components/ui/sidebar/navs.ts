@@ -18,7 +18,15 @@ export const navGroups: NavGroup[] = [
   {
     title: 'General',
     items: [
-      { href: '/', icon: 'overview', label: 'Overview', title: '', description: '', value: '00', tags: [] },
+      {
+        href: '/',
+        icon: 'overview',
+        label: 'Overview',
+        title: '',
+        description: '',
+        value: '00',
+        tags: []
+      },
       {
         href: '/canvas',
         icon: 'canvas',
@@ -27,7 +35,7 @@ export const navGroups: NavGroup[] = [
         description:
           'Superior reactivity and fine-grained state sync. Only re-renders changed pixels, not entire canvas. WebSocket delta sync, presence cursors, 60fps strokes.',
         value: '01',
-        tags: ['useState', 'useEffect', 'delta sync', 'ResizeObserver']
+        tags: ['useState/Effect', 'ResizeObserver']
       },
       {
         href: '/form',
@@ -37,7 +45,7 @@ export const navGroups: NavGroup[] = [
         description:
           'Composable async flows and cancellation. Debounced 300ms, cancelOnUpdate, race handling. No manual subscriptions.',
         value: '02',
-        tags: ['derive + cancel', 'AbortController', 'optimistic UI']
+        tags: ['AbortController', 'optimistic UI']
       },
       {
         href: '/grid',
@@ -47,7 +55,7 @@ export const navGroups: NavGroup[] = [
         description:
           'Zero-config performance. Built-in virtualization + masonry, ResizeObserver remeasure, 10k+ items, overscan, dynamic heights.',
         value: '03',
-        tags: ['virtualize', 'ResizeObserver', 'columns']
+        tags: ['virtualized']
       },
       {
         href: '/shell',
@@ -57,16 +65,17 @@ export const navGroups: NavGroup[] = [
         description:
           'Seamless SSR without hydration mismatches. Same component server + client. suspend/resume, hydration when idle/visible/interaction.',
         value: '04',
-        tags: ['Hydrate', 'Suspense', 'lazy']
+        tags: ['Hydration', 'Suspense']
       },
       {
         href: '/timeline',
         icon: 'timeline',
         label: 'Timeline',
         title: 'Timeline — Time as Dimension',
-        description: 'Every signal gets .timeline(). Scrub, fork, diff. Structural sharing, branch from any point.',
+        description:
+          'Every signal gets .timeline(). Scrub, fork, diff. Structural sharing, branch from any point.',
         value: '05',
-        tags: ['timeline', 'fork', 'structural sharing']
+        tags: ['structural sharing']
       },
       {
         href: '/worker',
@@ -76,31 +85,33 @@ export const navGroups: NavGroup[] = [
         description:
           'SharedArrayBuffer auto-proxy, 120fps physics without blocking. Gravity slider updates worker instantly.',
         value: '06',
-        tags: ['SharedArrayBuffer', 'Atomics', '~0ms']
+        tags: ['SharedArrayBuffer', 'Atomics']
       },
       {
         href: '/motion',
         icon: 'mechanics',
         label: 'Motion',
         title: 'Motion — Animation Orchestrator',
-        description: 'Interruptible springs, velocity preserved, mode:"interrupt". No Framer 40kb.',
+        description:
+          'Interruptible springs, velocity preserved, mode:"interrupt". No Framer 40kb.',
         value: '07',
-        tags: ['spring', 'interrupt', 'onPan']
+        tags: ['spring', 'onPan']
       },
       {
         href: '/streaming',
         icon: 'play',
         label: 'Streaming',
         title: 'Streaming — Edge at CDN',
-        description: 'Streams progressively from edge — yield skeleton then each card. Keyed cache at CDN.',
+        description:
+          'Streams progressively from edge — yield skeleton then each card. Keyed cache at CDN.',
         value: '08',
-        tags: ['streaming', 'edge', 'cache']
+        tags: ['streaming']
       },
       {
         href: '/table',
         icon: 'mechanics',
         label: 'Table',
-        title: 'Tanstack Table = Nuqs - shadcn filters',
+        title: 'Tanstack Table + Nuqs + shadcn filters',
         description: 'Data table with Tanstack Table and Nuqs filters.',
         value: '09',
         tags: ['table']
@@ -128,7 +139,15 @@ export const navGroups: NavGroup[] = [
         value: '↗',
         tags: ['']
       },
-      { href: 'https://tsrx.dev', icon: 'mechanics', label: 'tsrx', title: '', description: '', value: '↗', tags: [''] }
+      {
+        href: 'https://tsrx.dev',
+        icon: 'mechanics',
+        label: 'tsrx',
+        title: '',
+        description: '',
+        value: '↗',
+        tags: ['']
+      }
     ]
   }
 ]

@@ -10,7 +10,7 @@ setup
 
 
 div.bg-background
-  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6 gap-4")
+  div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6 space-x-4")
     label input
-    input(onInput={handleInput} className="bg-input" placeholder="fuck")
+    input(onInput={handleInput} className="bg-input" placeholder="")
     span #{value}

@@ -142,6 +142,42 @@ export const icons = {
       '<path fill="currentColor" fill-rule="evenodd" d="M35.72 75a3.996 3.996 0 0 1-3.996-3.996v-56.25a5 5 0 0 1 1.095-3.124L38.924 4a1.025 1.025 0 0 1 1.6 0l6.104 7.63a5 5 0 0 1 1.096 3.124v56.242A4.004 4.004 0 0 1 43.719 75zm11.996-19H31.725v6h15.99z" clip-rule="evenodd"/>',
     viewBox: '0 0 80 80',
     set: 'glyphs'
+  },
+  image: {
+    symbol:
+      '<path fill="currentColor" d="m16 8.44.56.56-.56.56v2.94l-.01.26a2.5 2.5 0 0 1-2.23 2.23l-.26.01h-11l-.26-.01a2.5 2.5 0 0 1-2.23-2.23L0 12.5v-1.69l-.06-.06.06-.06V1h16zm-8 .12 2.06 2.06L9 11.68 6.32 9H3.8l-2.3 2.31v1.19a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.06L11 5.56zm-6.5.63L3.19 7.5h3.75l3.53-3.53h1.06l2.97 2.97V2.5h-13z" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
+  },
+  switch: {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M6 3.5h4a4.5 4.5 0 1 1 0 9H6a4.5 4.5 0 1 1 0-9M0 8a6 6 0 0 1 6-6h4a6 6 0 0 1 0 12H6a6 6 0 0 1-6-6m10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
+  },
+  'user-settings': {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M2.5 3.25C2.5 1.45 3.96 0 5.75 0h.5C8.05 0 9.5 1.46 9.5 3.25v.5C9.5 5.55 8.04 7 6.25 7h-.5A3.25 3.25 0 0 1 2.5 3.75zM5.75 1.5C4.78 1.5 4 2.28 4 3.25v.5c0 .97.78 1.75 1.75 1.75h.5C7.22 5.5 8 4.72 8 3.75v-.5c0-.97-.78-1.75-1.75-1.75zM1.5 13.17c.82-1.68 2.21-2.67 4-2.67V9C2.97 9 1.08 10.49.07 12.69l-.07.15V16h5.5v-1.5h-4zm8.6-2.95c.36-.19.7-.52.86-.97h.08c.17.45.5.78.87.97l.18.1c.34.22.8.35 1.27.27l.04.07A1.8 1.8 0 0 0 13 12v.1c-.02.41.1.87.4 1.24l-.04.07c-.47-.08-.93.05-1.27.27l-.18.1c-.37.19-.7.52-.87.97h-.08c-.17-.45-.5-.78-.87-.97l-.18-.1c-.34-.22-.8-.35-1.27-.27l-.04-.07A1.8 1.8 0 0 0 9 12v-.1a1.8 1.8 0 0 0-.4-1.24l.04-.07c.47.08.93-.05 1.27-.27zm4.3 1.19.56-.54-1-1.74-.75.22a.6.6 0 0 1-.44-.08l-.3-.17a.6.6 0 0 1-.28-.34L12 8h-2l-.19.76a.6.6 0 0 1-.29.34l-.29.17a.6.6 0 0 1-.44.08l-.75-.22-1 1.74.56.54q.17.16.15.42v.34q.02.25-.15.42l-.56.54 1 1.74.75-.22a.6.6 0 0 1 .44.08l.3.17q.2.12.28.34L10 16h2l.19-.76a.6.6 0 0 1 .29-.34l.29-.17q.21-.14.45-.08l.74.22 1-1.74-.56-.54a.6.6 0 0 1-.15-.42v-.34q-.02-.25.15-.42" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
+  },
+  logs: {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M9 2h6v1.5H9zm0 10h6v1.5H9zm.75-5H9v1.5h6V7zM1 12h2v1.5H1zm.75-10H1v1.5h2V2zM1 7h2v1.5H1zm4.75 5H5v1.5h2V12zM5 2h2v1.5H5zm.75 5H5v1.5h2V7z" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
+  },
+  support: {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M14.5 8c0 1.1-.28 2.15-.77 3.06L11.34 9.7a3.7 3.7 0 0 0 0-3.4l2.4-1.36q.74 1.38.76 3.06m-3.44-5.73a6.5 6.5 0 0 0-6.12 0L6.3 4.66a3.7 3.7 0 0 1 3.4 0zM9.7 11.34l1.36 2.4a6.5 6.5 0 0 1-6.12 0l1.36-2.4a3.7 3.7 0 0 0 3.4 0M4.66 9.7a3.7 3.7 0 0 1 0-3.4l-2.4-1.36a6.5 6.5 0 0 0 0 6.12zM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-5.5 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
+  },
+  performance: {
+    symbol:
+      '<path fill="currentColor" fill-rule="evenodd" d="M9 1.58A6.5 6.5 0 0 0 3.4 12.6l.53.53-1.06 1.06-.53-.53A8 8 0 0 1 9.97.24zm4.83 3.54a6.5 6.5 0 0 1-1.23 7.48l-.53.53 1.06 1.06.53-.53a8 8 0 0 0 1.15-9.87zM8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 1.5a2.5 2.5 0 0 0 1.98-4.03l3.47-4.33a8 8 0 0 0-1.2-.91L8.76 5.6A2.5 2.5 0 1 0 8 10.5" clip-rule="evenodd" shape-rendering="geometricprecision" transform-origin="0 0"/>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
   }
 }
 

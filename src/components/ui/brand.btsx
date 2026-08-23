@@ -16,7 +16,7 @@ div(className={cn(BRAND_CLASS, className)})
   div(className="flex items-center gap-4")
     img(src={imageUrl} alt={imageAlt} className={BRAND_IMAGE_CLASS})
     div
-      div(className="font-semibold text-orange-400 dark:text-orange-300 text-base md:text-lg tracking-tight leading-4 opacity-100") Beast
-      div(className="font-semibold text-foreground text-base md:text-lg tracking-tight leading-3") Demo
+      div(className="font-semibold text-orange-400 dark:text-orange-300 text-xl tracking-tight leading-4 opacity-100 px-2") Beast
+      div(className="font-semibold text-foreground text-2xl tracking-tighter leading-4") Demo
     div(className="hidden sm:block h-3 w-px bg-border/30 mx-0.5")
     div(className="hidden lg:block text-[12px] font-mono text-muted-foreground tracking-[-0.01em]") Beast

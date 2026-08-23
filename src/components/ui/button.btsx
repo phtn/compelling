@@ -17,6 +17,7 @@ module
     disabled?: boolean
     type?: ButtonType
     icon?: IconName
+    iconStyle?: string
     iconPosition?: ButtonIconPosition
     onClick?: (event: MouseEvent) => void
     label?: string | number
@@ -53,7 +54,7 @@ module
     icon: 16,
   } as const satisfies Record<ButtonSize, number>
 
-props { variant = "default", size = "md", className, disabled, type = "button", icon, iconPosition = "left", onClick, label, style, "aria-label": ariaLabel, children }: ButtonProps
+props { variant = "default", size = "md", className, disabled, type = "button", icon, iconPosition = "left", onClick, label, style, "aria-label": ariaLabel, children, iconStyle }: ButtonProps
 
 setup
   const buttonClassName = cn(BUTTON_BASE_CLASS, BUTTON_VARIANT_CLASSES[variant], BUTTON_SIZE_CLASSES[size], className)
@@ -61,7 +62,7 @@ setup
 
 button(type={type} disabled={disabled} className={buttonClassName} onClick={onClick} style={style} aria-label={ariaLabel})
   if icon && iconPosition === "left"
-    Icon(name={icon} size={iconSize} className={BUTTON_CONTENT_CLASS})
+    Icon(name={icon} size={iconSize} className={cn(BUTTON_CONTENT_CLASS, iconStyle)})
   if label !== undefined
     span(className={BUTTON_CONTENT_CLASS}) #{label}
   | #{children}

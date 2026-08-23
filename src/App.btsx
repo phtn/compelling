@@ -126,6 +126,21 @@ component LeftSidebar
           div(className="text-[12px] font-medium text-foreground leading-none")
           div(className="text-[11px] font-mono text-muted-foreground") v0.1.1
 
+component Footer
+  footer(className="border-t border-border/30 mt-auto w-full")
+    div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
+      div(className="flex items-center gap-3")
+        div
+          div(className="font-mono text-xs text-border") ©2026 Beast Demos
+      div(className="flex items-center gap-4 text-[12px] font-mono text-muted-foreground")
+        a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") docs
+        span(className="text-input") /
+        a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") octane
+        span(className="text-input") /
+        a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") tsrx
+        a(href="https://github.com/phtn/beast" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 ml-0 pl-4 border-l border-input")
+          span(className="text-muted-foreground") beast
+
 div(className="min-h-screen text-foreground selection:bg-primary selection:text-primary-foreground antialiased")
   Topbar(path={path} toggleTheme={toggleTheme})
   div(className="flex w-full min-h-[calc(100vh-64px)]")
@@ -172,24 +187,10 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
                   a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
                   a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
                   a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
-          footer(className="border-t border-border/30 mt-auto w-full")
-            div(className="w-full px-6 py-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between")
-              div(className="flex items-center gap-3")
-                div
-                  div(className="text-[13px] font-medium tracking-[-0.01em] text-foreground") Beast Demos
-                  div(className="text-[12px] font-mono text-muted-foreground") ©2026 Beast
-              div(className="flex items-center gap-4 text-[12px] font-mono text-muted-foreground")
-                a(href="https://beast-docs.vercel.app" target="_blank" rel="noreferrer" className="hover:text-foreground transition") beast docs
-                span(className="text-muted-foreground") /
-                a(href="https://octanejs.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") octane
-                span(className="text-muted-foreground") /
-                a(href="https://tsrx.dev" target="_blank" rel="noreferrer" className="hover:text-foreground transition") tsrx
-                a(href="https://github.com/phtn/beast" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 ml-2 pl-4 border-l border-border")
-                  span(className="w-1.5 h-1.5 rounded-xs bg-accent-2 inline-block")
-                  span(className="text-muted-foreground") beast lang
+          Footer
       else
         fragment
-          ButtonGroup(className="w-screen flex-nowrap justify-evenly border-0 overflow-scroll whitespace-nowrap bg-border/10 rounded-xs")
+          ButtonGroup(className="w-screen hidden _flex-nowrap justify-evenly border-0 overflow-scroll whitespace-nowrap bg-border/10 rounded-xs")
             each nav in navGroups[0].items key nav.href
               Tag(size='sm' onClick={navigate(nav.href)} className={path === nav.href ? 'bg-border/20 border border-border/30' : `border border-border/0`} variant="outline" attached={true} label={ nav.label})
               // a(href="/" className={path === "/" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/"); }}) Overvie
