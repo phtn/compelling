@@ -1,13 +1,4 @@
 import Home from "./pages/home.btsx"
-import CanvasDemo from "./demos/canvas.btsx"
-import FormDemo from "./demos/form.btsx"
-import GridDemo from "./demos/grid.btsx"
-import ShellDemo from "./demos/shell.btsx"
-import TimelineDemo from "./demos/timeline.btsx"
-import WorkerDemo from "./demos/worker.btsx"
-import MotionDemo from "./demos/motion.btsx"
-import StreamingDemo from "./demos/streaming.btsx"
-import TableDemo from "./demos/table.btsx"
 import Brand from "./components/ui/brand.btsx"
 import Button from "./components/ui/button.btsx"
 import ButtonGroup from "./components/ui/button-group.btsx"
@@ -17,10 +8,19 @@ import SidebarItem from "./components/ui/sidebar/sidebar-item.btsx"
 import { navGroups } from "./components/ui/sidebar/navs"
 import Icon from "./lib/icons/index.btsx"
 import { cn } from "./lib/utils"
-import { useEffect, useState } from "octane"
+import { lazy, Suspense, useEffect, useState } from "octane"
 import { applyTheme, getStoredTheme, getSystemTheme } from "./lib/theme"
 
 setup
+  const CanvasDemo = lazy(() => import("./demos/canvas.btsx"))
+  const FormDemo = lazy(() => import("./demos/form.btsx"))
+  const GridDemo = lazy(() => import("./demos/grid.btsx"))
+  const ShellDemo = lazy(() => import("./demos/shell.btsx"))
+  const TimelineDemo = lazy(() => import("./demos/timeline.btsx"))
+  const WorkerDemo = lazy(() => import("./demos/worker.btsx"))
+  const MotionDemo = lazy(() => import("./demos/motion.btsx"))
+  const StreamingDemo = lazy(() => import("./demos/streaming.btsx"))
+  const TableDemo = lazy(() => import("./demos/table.btsx"))
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [sidebarSide, setSidebarSide] = useState<"left" | "right">("left")
   const [path, setPath] = useState(typeof window !== "undefined" ? window.location.pathname : "/")
@@ -153,37 +153,38 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
             a(href="/grid" className={path === "/grid" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
             a(href="/shell" className={path === "/shell" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
           main(className="flex-1 w-full min-w-0")
-          if path === "/"
-            Home()
-          elseif path === "/canvas"
-            CanvasDemo()
-          elseif path === "/form"
-            FormDemo()
-          elseif path === "/grid"
-            GridDemo()
-          elseif path === "/shell"
-            ShellDemo()
-          elseif path === "/timeline"
-            TimelineDemo()
-          elseif path === "/worker"
-            WorkerDemo()
-          elseif path === "/motion"
-            MotionDemo()
-          elseif path === "/streaming"
-            StreamingDemo()
-          elseif path === "/table"
-            TableDemo()
-          else
-            div(className="w-full px-6 py-24")
-              div(className="max-w-[640px]")
-                div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-card border border-border/50 text-[11px] font-mono tracking-wide text-muted-foreground") 404 — NOT_FOUND
-                h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page does not exist.
-                p(className="text-[14px] text-muted-foreground mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
-                div(className="flex flex-wrap gap-2 mt-6")
-                  a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] cursor-pointer hover:bg-primary transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
-                  a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
-                  a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
-                  a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+            Suspense(fallback="Loading demo…")
+              if path === "/"
+                Home()
+              elseif path === "/canvas"
+                CanvasDemo()
+              elseif path === "/form"
+                FormDemo()
+              elseif path === "/grid"
+                GridDemo()
+              elseif path === "/shell"
+                ShellDemo()
+              elseif path === "/timeline"
+                TimelineDemo()
+              elseif path === "/worker"
+                WorkerDemo()
+              elseif path === "/motion"
+                MotionDemo()
+              elseif path === "/streaming"
+                StreamingDemo()
+              elseif path === "/table"
+                TableDemo()
+              else
+                div(className="w-full px-6 py-24")
+                  div(className="max-w-[640px]")
+                    div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-card border border-border/50 text-[11px] font-mono tracking-wide text-muted-foreground") 404 — NOT_FOUND
+                    h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page does not exist.
+                    p(className="text-[14px] text-muted-foreground mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
+                    div(className="flex flex-wrap gap-2 mt-6")
+                      a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] cursor-pointer hover:bg-primary transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+                      a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+                      a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+                      a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
           Footer
       else
         fragment
@@ -196,37 +197,38 @@ div(className="min-h-screen text-foreground selection:bg-primary selection:text-
               // a(href="/grid" className={path === "/grid" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
               // a(href="/shell" className={path === "/shell" ? "px-3 py-1.5 rounded-xs bg-accent-1 text-foreground text-[12px] font-medium border border-accent-1 whitespace-nowrap" : "px-3 py-1.5 rounded-xs bg-card border border-border text-muted-foreground text-[12px] font-mono whitespace-nowrap"} onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
           main(className="flex-1 w-full min-w-0")
-            if path === "/"
-              Home()
-            elseif path === "/canvas"
-              CanvasDemo()
-            elseif path === "/form"
-              FormDemo()
-            elseif path === "/grid"
-              GridDemo()
-            elseif path === "/shell"
-              ShellDemo()
-            elseif path === "/timeline"
-              TimelineDemo()
-            elseif path === "/worker"
-              WorkerDemo()
-            elseif path === "/motion"
-              MotionDemo()
-            elseif path === "/streaming"
-              StreamingDemo()
-            elseif path === "/table"
-              TableDemo()
-            else
-              div(className="w-full px-6 py-24")
-                div(className="max-w-[640px]")
-                div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-card border border-border text-[11px] font-mono tracking-wide text-muted-foreground") 404 — NOT_FOUND
-                h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page does not exist.
-                p(className="text-[14px] text-muted-foreground mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
-                div(className="flex flex-wrap gap-2 mt-6")
-                  a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] cursor-pointer hover:bg-primary transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
-                  a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
-                  a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
-                  a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
+            Suspense(fallback="Loading demo…")
+              if path === "/"
+                Home()
+              elseif path === "/canvas"
+                CanvasDemo()
+              elseif path === "/form"
+                FormDemo()
+              elseif path === "/grid"
+                GridDemo()
+              elseif path === "/shell"
+                ShellDemo()
+              elseif path === "/timeline"
+                TimelineDemo()
+              elseif path === "/worker"
+                WorkerDemo()
+              elseif path === "/motion"
+                MotionDemo()
+              elseif path === "/streaming"
+                StreamingDemo()
+              elseif path === "/table"
+                TableDemo()
+              else
+                div(className="w-full px-6 py-24")
+                  div(className="max-w-[640px]")
+                  div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-xs bg-card border border-border text-[11px] font-mono tracking-wide text-muted-foreground") 404 — NOT_FOUND
+                  h1(className="text-[32px] font-semibold tracking-[-0.03em] mt-4 leading-none") The page does not exist.
+                  p(className="text-[14px] text-muted-foreground mt-3 leading-relaxed max-w-[480px]") The route you requested could not be found. Check the URL or try one of the demos below.
+                  div(className="flex flex-wrap gap-2 mt-6")
+                    a(href="/canvas" className="px-4 py-2 rounded-xs bg-accent-1 text-foreground font-medium text-[13px] cursor-pointer hover:bg-primary transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/canvas"); }}) Canvas
+                    a(href="/form" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/form"); }}) Form
+                    a(href="/grid" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/grid"); }}) Grid
+                    a(href="/shell" className="px-4 py-2 rounded-xs bg-card border border-input text-foreground font-medium text-[13px] cursor-pointer hover:bg-muted transition" onClick={(e: MouseEvent) => { e.preventDefault(); navigate("/shell"); }}) Shell
 
           Footer
     if sidebarSide === "right" && sidebarOpen
