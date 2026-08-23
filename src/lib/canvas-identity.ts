@@ -24,11 +24,42 @@ export interface CanvasRoom {
   maxUsers: number
 }
 
+export interface CanvasStrokePoint {
+  x: number
+  y: number
+}
+
+export type CanvasStrokeColor =
+  | '#e7e7e7'
+  | '#d7d0fe'
+  | 'oklch(0.9 0.072 338.8)'
+  | '#ffecba'
+  | 'oklch(0.68 0.16 319.98)'
+  | '#3a9df6'
+  | '#5cffad'
+  | '#fe7672'
+  | '#525152'
+
+export type CanvasStrokeTool = 'pen-bold' | 'pencil-bold' | 'eraser'
+
+export interface CanvasLiveStroke {
+  strokeId: string
+  color: CanvasStrokeColor
+  size: number
+  tool: CanvasStrokeTool
+  points: CanvasStrokePoint[]
+}
+
+export interface CanvasStroke extends CanvasLiveStroke {
+  sessionId: Id<'canvasSessions'>
+}
+
 export interface CanvasPointer {
   sessionId: Id<'canvasSessions'>
   nickname: string
   x: number
   y: number
+  liveStroke?: CanvasLiveStroke
 }
 
 export interface CanvasPresenceConnection {
@@ -139,13 +170,15 @@ export const heartbeatCanvasPresence = (
 export const updateCanvasPointer = (
   session: CanvasSession,
   x: number,
-  y: number
+  y: number,
+  liveStroke?: CanvasLiveStroke
 ) =>
   getClient().mutation(api.canvasPresence.updatePointer, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret,
     x,
-    y
+    y,
+    ...(liveStroke === undefined ? {} : { liveStroke })
   })
 
 export const clearCanvasPointer = (session: CanvasSession) =>
@@ -166,5 +199,49 @@ export const watchCanvasPointers = (
     api.canvasPresence.listPointers,
     { roomToken },
     onUpdate,
+    onError
+  )
+
+export const commitCanvasStroke = (
+  session: CanvasSession,
+  stroke: CanvasLiveStroke
+) =>
+  getClient().mutation(api.canvasStrokes.commit, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret,
+    ...stroke
+  })
+
+export const undoLastCanvasStroke = (session: CanvasSession) =>
+  getClient().mutation(api.canvasStrokes.undoLast, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret
+  })
+
+export const clearCanvasStrokes = (session: CanvasSession) =>
+  getClient().mutation(api.canvasStrokes.clear, {
+    sessionId: session.sessionId,
+    resumeSecret: session.resumeSecret
+  })
+
+export const watchCanvasStrokes = (
+  session: CanvasSession,
+  onUpdate: (strokes: CanvasStroke[]) => void,
+  onError: (error: Error) => void
+) =>
+  getClient().onUpdate(
+    api.canvasStrokes.list,
+    { hourStartedAt: session.expiresAt - 60 * 60 * 1000 },
+    (strokes) =>
+      onUpdate(
+        strokes.map((stroke) => ({
+          strokeId: stroke.strokeId,
+          sessionId: stroke.sessionId,
+          color: stroke.color,
+          size: stroke.size,
+          tool: stroke.tool,
+          points: stroke.points
+        }))
+      ),
     onError
   )

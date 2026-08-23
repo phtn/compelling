@@ -7,14 +7,14 @@ import Callout from "@/components/ui/callout.btsx"
 import Button from "@/components/ui/button.btsx"
 import ButtonGroup from "@/components/ui/button-group.btsx"
 import Input from "@/components/ui/input.btsx"
-import { acquireCanvasSession, clearCanvasPointer, createCanvasPresenceConnectionId, disconnectCanvasPresence, heartbeatCanvasPresence, updateCanvasNickname, updateCanvasPointer, watchCanvasPointers, watchCanvasRoom } from "@/lib/canvas-identity"
-import type { CanvasPointer, CanvasRoom, CanvasSession } from "@/lib/canvas-identity"
+import { acquireCanvasSession, clearCanvasPointer, clearCanvasStrokes, commitCanvasStroke, createCanvasPresenceConnectionId, disconnectCanvasPresence, heartbeatCanvasPresence, undoLastCanvasStroke, updateCanvasNickname, updateCanvasPointer, watchCanvasPointers, watchCanvasRoom, watchCanvasStrokes } from "@/lib/canvas-identity"
+import type { CanvasLiveStroke, CanvasPointer, CanvasRoom, CanvasSession, CanvasStroke, CanvasStrokeColor, CanvasStrokeTool } from "@/lib/canvas-identity"
 
 module
   interface Point { x: number; y: number }
-  interface Stroke { id: string; points: Point[]; color: string; size: number; tool: string; userId: string }
-  const TOOLS = ["pen-bold", "pencil-bold", "eraser"]
-  const COLORS = ["#e7e7e7","#d7d0fe", 'oklch(0.9 0.072 338.8)',"#ffecba", "oklch(0.68 0.16 319.98)",  '#3a9df6', '#5cffad',"#fe7672", "#525152"]
+  interface Stroke { id: string; points: Point[]; color: CanvasStrokeColor; size: number; tool: CanvasStrokeTool; userId: string }
+  const TOOLS: CanvasStrokeTool[] = ["pen-bold", "pencil-bold", "eraser"]
+  const COLORS: CanvasStrokeColor[] = ["#e7e7e7","#d7d0fe", 'oklch(0.9 0.072 338.8)',"#ffecba", "oklch(0.68 0.16 319.98)",  '#3a9df6', '#5cffad',"#fe7672", "#525152"]
   const uid = () => Math.random().toString(36).slice(2, 9)
   const nicknameSlice = (value: string) => Array.from(value).slice(0, 24).join("")
   const initialsFor = (nickname: string) => nickname.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase() ?? "").join("") || "?"
@@ -22,14 +22,26 @@ module
   const HOUR_MS = 60 * 60 * 1000
   const POINTER_THROTTLE_MS = 100
   const PRESENCE_HEARTBEAT_MS = 5000
+  const MAX_LIVE_STROKE_POINTS = 512
+  const MAX_COMMITTED_STROKE_POINTS = 2048
   const POINTER_COLORS = ["#d7d0fe", "#ffecba", "#fe7672", "#5cffad", "#3a9df6", "oklch(0.68 0.16 319.98)"]
   const pointerColorFor = (sessionId: string) => {
     let hash = 0
     for (const character of sessionId) hash = (hash * 31 + character.charCodeAt(0)) >>> 0
     return POINTER_COLORS[hash % POINTER_COLORS.length]!
   }
-
-props {}: {}
+  const toStroke = (stroke: CanvasStroke): Stroke => ({ id: stroke.strokeId, points: stroke.points, color: stroke.color, size: stroke.size, tool: stroke.tool, userId: String(stroke.sessionId) })
+  const samplePoints = (points: Point[], maximum: number) => {
+    if (points.length <= maximum) return points
+    const sampled: Point[] = []
+    const lastIndex = points.length - 1
+    for (let index = 0; index < maximum; index++) {
+      sampled.push(points[Math.round((index / (maximum - 1)) * lastIndex)]!)
+    }
+    return sampled
+  }
+  const toLiveStroke = (stroke: Stroke): CanvasLiveStroke => ({ strokeId: stroke.id, points: samplePoints(stroke.points, MAX_LIVE_STROKE_POINTS), color: stroke.color, size: stroke.size, tool: stroke.tool })
+  const toCommittedStroke = (stroke: Stroke): CanvasLiveStroke => ({ strokeId: stroke.id, points: samplePoints(stroke.points, MAX_COMMITTED_STROKE_POINTS), color: stroke.color, size: stroke.size, tool: stroke.tool })
 
 setup
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -39,10 +51,11 @@ setup
   const pendingPointerRef = useRef<Point | null>(null)
   const lastPointerRef = useRef<Point | null>(null)
   const lastPointerSentAtRef = useRef(0)
+  const currentStrokeRef = useRef<Stroke | null>(null)
   const [strokes, setStrokes] = useState<Stroke[]>([])
   const [current, setCurrent] = useState<Stroke | null>(null)
-  const [tool, setTool] = useState("pen")
-  const [color, setColor] = useState("#525152")
+  const [tool, setTool] = useState<CanvasStrokeTool>("pen-bold")
+  const [color, setColor] = useState<CanvasStrokeColor>("#525152")
   const [size, setSize] = useState(4)
   const [renderCount, setRenderCount] = useState(0)
   const [lastDelta, setLastDelta] = useState(0)
@@ -60,6 +73,8 @@ setup
   const shortIdentity = identity ? String(identity.sessionId).slice(-8).toUpperCase() : "--------"
   const activeUserCount = room?.users.length ?? (identity ? 1 : 0)
   const peerPointers = useMemo(() => pointers.filter((pointer) => pointer.sessionId !== identity?.sessionId), [pointers, identity])
+  const committedStrokeIds = useMemo(() => new Set(strokes.map((stroke) => stroke.id)), [strokes])
+  const peerLiveStrokes = useMemo(() => peerPointers.flatMap((pointer) => pointer.liveStroke && !committedStrokeIds.has(pointer.liveStroke.strokeId) ? [{ id: pointer.liveStroke.strokeId, points: pointer.liveStroke.points, color: pointer.liveStroke.color, size: pointer.liveStroke.size, tool: pointer.liveStroke.tool, userId: String(pointer.sessionId) }] : []), [peerPointers, committedStrokeIds])
   const getPos = (e: PointerEvent) => {
     const canvas = canvasRef.current
     if (!canvas) return { x: 0, y: 0 }
@@ -73,7 +88,8 @@ setup
     if (!point || !identity) return
     lastPointerRef.current = point
     lastPointerSentAtRef.current = Date.now()
-    void updateCanvasPointer(identity, point.x, point.y)
+    const liveStroke = currentStrokeRef.current
+    void updateCanvasPointer(identity, point.x, point.y, liveStroke ? toLiveStroke(liveStroke) : undefined)
   }
   const queuePointer = (point: Point) => {
     pendingPointerRef.current = {
@@ -95,29 +111,44 @@ setup
   }
   const handlePointerDown = (e: PointerEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || !identity) return
     canvas.setPointerCapture(e.pointerId)
     const p = getPos(e)
-    queuePointer(p)
-    const s: Stroke = { id: uid(), points: [p], color: tool === "eraser" ? "#ffffff" : color, size: tool === "highlighter" ? size * 3 : size, tool, userId: identity ? String(identity.sessionId) : "local" }
+    const s: Stroke = { id: uid(), points: [p], color, size, tool, userId: String(identity.sessionId) }
+    currentStrokeRef.current = s
     setCurrent(s)
     setIsDrawing(true)
+    queuePointer(p)
   }
   const handlePointerMove = (e: PointerEvent) => {
     const p = getPos(e)
     queuePointer(p)
-    if (!isDrawing || !current) return
-    setCurrent({ ...current, points: [...current.points, p] })
-    setLastDelta(current.points.length * 8 + Math.floor(Math.random() * 20))
+    const activeStroke = currentStrokeRef.current
+    if (!isDrawing || !activeStroke) return
+    const nextStroke = { ...activeStroke, points: [...activeStroke.points, p] }
+    currentStrokeRef.current = nextStroke
+    setCurrent(nextStroke)
+    setLastDelta(nextStroke.points.length * 16)
   }
   const handlePointerUp = (e: PointerEvent) => {
-    if (!current) return
+    const finishedStroke = currentStrokeRef.current
+    if (!finishedStroke) return
     const canvas = canvasRef.current
     if (canvas) canvas.releasePointerCapture(e.pointerId)
-    if (current.points.length > 1) {
-      setStrokes((prev) => [...prev, current])
-      setLastDelta(current.points.length * 16)
+    if (finishedStroke.points.length > 1 && identity) {
+      setStrokes((prev) => [...prev.filter((stroke) => stroke.id !== finishedStroke.id), finishedStroke])
+      setLastDelta(finishedStroke.points.length * 16)
+      void commitCanvasStroke(identity, toCommittedStroke(finishedStroke)).then(() => {
+        const pointer = lastPointerRef.current
+        if (pointer && currentStrokeRef.current === null) void updateCanvasPointer(identity, pointer.x, pointer.y)
+      }).catch((error: unknown) => {
+        setStrokes((prev) => prev.filter((stroke) => stroke.id !== finishedStroke.id))
+        setIdentityError(errorMessage(error))
+      })
+    } else if (identity && lastPointerRef.current) {
+      void updateCanvasPointer(identity, lastPointerRef.current.x, lastPointerRef.current.y)
     }
+    currentStrokeRef.current = null
     setCurrent(null)
     setIsDrawing(false)
     setRenderCount((c) => c + 1)
@@ -130,6 +161,7 @@ setup
     let active = true
     let unsubscribeRoom: (() => void) | undefined
     let unsubscribePointers: (() => void) | undefined
+    let unsubscribeStrokes: (() => void) | undefined
     let renewalTimer: number | undefined
     let heartbeatTimer: number | undefined
     let presenceSessionToken: string | undefined
@@ -137,6 +169,7 @@ setup
     setIdentityStatus("loading")
     setIdentityError("")
     setPointers([])
+    setStrokes([])
     acquireCanvasSession().then((session) => {
       if (!active) return
       setIdentity(session)
@@ -145,6 +178,11 @@ setup
       setIdentityStatus("ready")
       unsubscribeRoom = watchCanvasRoom(
         (nextRoom) => { if (active) setRoom(nextRoom) },
+        (error) => { if (active) setIdentityError(errorMessage(error)) },
+      )
+      unsubscribeStrokes = watchCanvasStrokes(
+        session,
+        (nextStrokes) => { if (active) setStrokes(nextStrokes.map(toStroke)) },
         (error) => { if (active) setIdentityError(errorMessage(error)) },
       )
       const sendHeartbeat = async () => {
@@ -192,10 +230,12 @@ setup
       active = false
       unsubscribeRoom?.()
       unsubscribePointers?.()
+      unsubscribeStrokes?.()
       if (heartbeatTimer !== undefined) window.clearInterval(heartbeatTimer)
       if (presenceSessionToken) void disconnectCanvasPresence(presenceSessionToken)
       pendingPointerRef.current = null
       lastPointerRef.current = null
+      currentStrokeRef.current = null
       if (pointerTimerRef.current !== undefined) {
         window.clearTimeout(pointerTimerRef.current)
         pointerTimerRef.current = undefined
@@ -255,13 +295,34 @@ setup
     }
     ctx.globalAlpha = 1
     strokes.forEach(drawStroke)
+    peerLiveStrokes.forEach(drawStroke)
     if (current) drawStroke(current)
-  }, [strokes, current])
-  const undo = () => setStrokes((p) => p.slice(0, -1))
+  }, [strokes, peerLiveStrokes, current])
+  const undo = () => {
+    if (!identity) return
+    const ownStroke = strokes.findLast((stroke) => stroke.userId === String(identity.sessionId))
+    if (!ownStroke) return
+    setStrokes((previous) => previous.filter((stroke) => stroke.id !== ownStroke.id))
+    void undoLastCanvasStroke(identity).catch((error: unknown) => {
+      setStrokes((previous) => previous.some((stroke) => stroke.id === ownStroke.id) ? previous : [...previous, ownStroke])
+      setIdentityError(errorMessage(error))
+    })
+  }
   const clearAll = () => {
+    const previousStrokes = strokes
     setStrokes([])
+    currentStrokeRef.current = null
     setCurrent(null)
+    setIsDrawing(false)
     setLastDelta(0)
+    if (identity) {
+      void clearCanvasStrokes(identity).catch((error: unknown) => {
+        setStrokes(previousStrokes)
+        setIdentityError(errorMessage(error))
+      })
+      const pointer = lastPointerRef.current
+      if (pointer) void updateCanvasPointer(identity, pointer.x, pointer.y)
+    }
   }
   const saveNickname = async () => {
     if (!identity || nicknameStatus === "saving") return
@@ -286,14 +347,14 @@ setup
   const [showInfo, setShowInfo] = useState(false)
   const toggleInfo = useCallback(() => setShowInfo((s) => !s), [])
   const info = {
-    title: "Why Octane wins",
-    text: "React re-renders the whole canvas tree on mousemove; Svelte needs manual hints. Octane tracks strokes.delta granularly \u2014 only current.points invalidates.",
+    title: "Realtime drawing",
+    text: "Convex presence carries cursors and in-progress strokes at a throttled cadence. Completed strokes are stored once, reactively shared, and restored after refresh for the rest of the hour.",
   }
 
 div.bg-background
   div(className="w-full px-0 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-0 md:py-6")
     Header(title="Canvas" subtitle="GRANULAR REACTIVITY" icon='mechanics'
-      ~ description="Only re-renders changed pixels via Octane's fine-grained reactivity. Delta sync sends 16 bytes per point, not full canvas. Presence cursors, WebSocket deltas, 60fps pointer capture."
+      ~ description="Local ink follows the pointer immediately while Convex broadcasts live peer strokes and cursors. Completed strokes persist in the hourly room and reload after refresh."
       ~ isVisible={showInfo} toggleFn={toggleInfo} actions={[]} className='hidden md:flex')
 
     div(className="grid grid-cols-12 gap-4")
@@ -370,10 +431,10 @@ div.bg-background
             div(className="size-2 rounded-xs bg-border")
             span(className="text-foreground font-medium font-mono") #{identityStatus === "ready" ? "Connected" : identityStatus === "loading" ? "Connecting" : "Offline"}
           div(className="text-[11px] font-mono text-muted-foreground mt-2") Last delta: #{deltaKb} KB · #{pointsCount} pts
-          div(className="text-[11px] font-mono text-muted-foreground") Renders: #{renderCount} · users: #{activeUserCount} · cursors: #{peerPointers.length}
+          div(className="text-[11px] font-mono text-muted-foreground") Renders: #{renderCount} · users: #{activeUserCount} · cursors: #{peerPointers.length} · live strokes: #{peerLiveStrokes.length}
           div(className="w-full h-1 bg-border rounded-xs mt-3 overflow-hidden")
             div(className="h-1 bg-accent-1" style={"width:" + Math.min(100, renderCount * 4) + "%"})
-          div(className="text-[11px] text-muted-foreground leading-relaxed font-mono mt-2") Tip: Drag on canvas. Highlighter is translucent. Active users come from the hourly Convex room.
+          div(className="text-[11px] text-muted-foreground leading-relaxed font-mono mt-2") Tip: Drag on the canvas. Peers see the stroke while it is being drawn, and completed ink remains for the current hour.
         div(className="rounded-xs mt-4")
           div(className="flex items-center justify-between")
             div(className="text-[11px] font-mono tracking-wide text-muted-foreground") ACTIVE USERS — #{activeUserCount}

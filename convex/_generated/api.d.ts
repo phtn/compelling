@@ -10,6 +10,7 @@
 
 import type * as canvasPresence from "../canvasPresence.js";
 import type * as canvasSessions from "../canvasSessions.js";
+import type * as canvasStrokes from "../canvasStrokes.js";
 import type * as crons from "../crons.js";
 
 import type {
@@ -21,6 +22,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   canvasPresence: typeof canvasPresence;
   canvasSessions: typeof canvasSessions;
+  canvasStrokes: typeof canvasStrokes;
   crons: typeof crons;
 }>;
 
