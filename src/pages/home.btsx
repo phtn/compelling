@@ -12,7 +12,7 @@ div
   section(className="w-full px-4 lg:px-5 xl:px-6 py-6")
     div(className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-card border border-input font-mono text-muted-foreground text-[11px] tracking-wide")
       span(className="size-2 rounded-xs bg-orange-300 animate-pulse")
-      span  BEAST &rarr; OCTANE &rarr; VITE
+      span  BEAST v0.2.7
     h1(className="text-2xl sm:text-4xl font-semibold tracking-[-0.04em] leading-[0.95] mt-6 text-foreground max-w-[720px]")
       span Compelling
       span(className="block text-muted-foreground") beast examples.

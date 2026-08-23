@@ -14,7 +14,7 @@ module
     children?: unknown
   }
 
-  const BUTTON_GROUP_BASE_CLASS = "inline-flex shrink-0 items-center overflow-hidden p-1"
+  const BUTTON_GROUP_BASE_CLASS = "inline-flex shrink-0 items-center overflow-hidden"
 
   const BUTTON_GROUP_ORIENTATION_CLASSES = {
     horizontal: "flex-row",
@@ -24,7 +24,7 @@ module
   const BUTTON_GROUP_SIZE_CLASSES = {
     sm: "[&>*]:h-9 [&>*]:text-[11px]",
     md: "[&>*]:h-10 [&>*]:text-[13px]",
-    lg: "[&>*]:h-11 [&>*]:text-[14px]",
+    lg: "[&>*]:h-12 [&>*]:text-base",
   } as const satisfies Record<ButtonGroupSize, string>
 
   const BUTTON_GROUP_ATTACHED_CLASSES = {
@@ -35,7 +35,7 @@ module
 props { orientation = "horizontal", attached = true, variant = "default", size = "md", className, children }: ButtonGroupProps
 
 setup
-  const variantClass = variant === "segmented" ? "rounded-xl border border-[#E2E2E2] bg-[#F1F1F1] dark:border-border dark:bg-muted" : attached ? "has-[>button]:gap-0 overflow-hidden rounded-xl border border-border" : "gap-1"
+  const variantClass = variant === "segmented" ? "rounded-xl border border-[#E2E2E2] bg-muted dark:border-border" : attached ? "has-[>button]:gap-0 overflow-hidden rounded-xl border border-border" : "gap-1"
   const buttonGroupClassName = cn(BUTTON_GROUP_BASE_CLASS, BUTTON_GROUP_ORIENTATION_CLASSES[orientation], variantClass, BUTTON_GROUP_SIZE_CLASSES[size], attached && BUTTON_GROUP_ATTACHED_CLASSES[orientation], className)
 
 div(className={buttonGroupClassName})

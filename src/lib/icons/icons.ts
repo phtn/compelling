@@ -196,6 +196,12 @@ export const icons = {
       '<g transform="scale(0.667)"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8 12h8m5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></g>',
     viewBox: '0 0 16 16',
     set: 'svg'
+  },
+  person: {
+    symbol:
+      '<g transform="scale(0.667)"><path d="M19.652 19.405c.552-.115.882-.693.607-1.187-.606-1.087-1.56-2.043-2.78-2.771C15.907 14.509 13.98 14 12 14s-3.907.508-5.479 1.447c-1.22.728-2.174 1.684-2.78 2.771-.275.494.055 1.072.607 1.187a37.5 37.5 0 0 0 15.303 0" fill="currentColor"/><circle cx="12" cy="8" r="5"/></g>',
+    viewBox: '0 0 16 16',
+    set: 'svg'
   }
 }
 

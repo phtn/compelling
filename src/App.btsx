@@ -98,7 +98,7 @@ component Topbar
   header(className="sticky top-0 z-40 backdrop-blur-3xl border-b border-border/30 w-full")
     div(className="w-full px-4 flex items-center justify-between h-[64px] gap-4")
       Brand(imageUrl="https://res.cloudinary.com/dx0heqhhe/image/upload/v1787232482/compelling-beast_han49i.svg")
-        div(className="flex items-center")
+        div(className="hidden md:flex items-center")
           button(className="size-6 aspect-square rounded-none rounded-s-md border border-r-0 border-input grid place-items-center text-muted-foreground/70 hover:text-foreground hover:border-input transition" onClick={setSideFn} aria-label="Move to right")
             Icon(name="arrow-right" className="" size={14})
           button(className="size-6 aspect-square rounded-none rounded-e-md border border-input grid place-items-center text-muted-foreground/70 hover:text-foreground hover:border-input transition" onClick={toggleSidebar} aria-label="Close sidebar")
@@ -107,7 +107,7 @@ component Topbar
         each nav in navs key nav.href
           Tag(href={nav.href} target="_self" variant={path === nav.href ? "secondary" : "ghost"} label={nav.label} onClick={navigate(nav.href)})
       div(className="flex items-center gap-2")
-        Button(size='icon' icon='theme' variant='ghost' onClick={toggleTheme} aria-label="Toggle theme")
+        Button(size='icon' icon='theme' iconStyle='md:size-5 size-6' variant='ghost' onClick={toggleTheme} aria-label="Toggle theme")
         Button(size='icon' icon='chevron-down' variant='secondary' onClick={toggleTheme} aria-label="more" className="hidden")
         PrimaryButton(label="Docs" tone='dark' size="sm" type='a' href='https://beast-docs.vercel.app' target="_blank" rel="noopener noreferrer" className="hidden md:flex")
 

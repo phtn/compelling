@@ -7,18 +7,18 @@ module
     className?: string
     children?: unknown
     extra?: unknown
+    titlebar?: boolean
   }
 
-  const FRAME_CLASS = "flex flex-col overflow-hidden rounded-xl border border-border/50 bg-card"
+  const FRAME_CLASS = "flex flex-col overflow-hidden rounded-xl border border-border/50"
 
-props { title, subtitle, className, children, extra }: FrameProps
+props { title, subtitle, className, children, extra, titlebar=true }: FrameProps
 
-div(className={cn(FRAME_CLASS, className)})
+div(className={cn(FRAME_CLASS, className, {'bg-card': titlebar})})
   if title
-    div(className="h-12 bg-background border-b border-border/50 flex items-center justify-between px-3 shrink-0")
+    div(className={cn("h-12 border-b border-border/50 flex items-center justify-between px-3 shrink-0", {'border-b-0': !titlebar} )})
       div(className="flex items-center gap-1")
-        div(className="w-2 h-2 rounded-xs bg-muted-foreground/40")
-        span(className="text-[11px] font-mono tracking-wide text-muted-foreground ml-2 capitalize") #{title}
+        span(className="text-sm font-mono tracking-wide text-muted-foreground ml-2 capitalize") #{title}
       div #{extra}
       if subtitle
         span(className="text-[11px] font-mono text-muted-foreground/70") #{subtitle}
