@@ -31,7 +31,7 @@ export const navGroups: NavGroup[] = [
         href: '/canvas',
         icon: 'canvas',
         label: 'Canvas',
-        title: 'Real-Time Collaborative Canvas',
+        title: 'Multiplayer Canvas',
         description:
           'Superior reactivity and fine-grained state sync. Only re-renders changed pixels, not entire canvas. WebSocket delta sync, presence cursors, 60fps strokes.',
         value: '01',

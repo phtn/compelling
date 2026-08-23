@@ -40,7 +40,7 @@ element property type.
 | `Brand` | `imageUrl` | `imageAlt="Compelling"`; accepts `className` |
 | `Button` | none | `variant="default"`, `size="md"`, `type="button"`, `iconPosition="left"` |
 | `ButtonGroup` | none | horizontal, attached, default variant, medium size |
-| `PrimaryButton` | none | `size="sm"`, `tone="light"`, `type="button"` |
+| `PrimaryButton` | none | `size="sm"`, `tone="light"`, `type="button"`; `type="a"` renders a link |
 | `Tag` | none | anchor with `href="#"`, `target="_blank"`, safe external `rel` |
 | `Header` | `title` | details visible, empty actions; children render below the description |
 | `Frame` | none | header renders only when `title` is present |
@@ -91,13 +91,16 @@ Button(variant="ghost" size="icon" icon="theme" aria-label="Toggle theme" onClic
 export interface PrimaryButtonProps {
   size?: "sm" | "lg"
   tone?: "light" | "dark"
-  type?: "button" | "submit" | "reset"
+  type?: "button" | "submit" | "reset" | "a"
+  href?: string
+  target?: "_blank" | "_self" | "_parent" | "_top"
+  rel?: string
   disabled?: boolean
   label?: string | number
   icon?: IconName
   iconPosition?: "left" | "right"
   className?: string
-  style?: Octane.JSX.IntrinsicElements["button"]["style"]
+  style?: Octane.JSX.IntrinsicElements["button"]["style"] | Octane.JSX.IntrinsicElements["a"]["style"]
   onClick?: (event: MouseEvent) => void
   "aria-label"?: string
   "aria-pressed"?: boolean
@@ -105,11 +108,13 @@ export interface PrimaryButtonProps {
 }
 ```
 
-This is always a native `button`. It does not accept `href`, `target`, or `rel`; use
-`Tag` or a styled anchor for navigation.
+This renders a native `button` by default. Set `type="a"` to render an anchor and
+provide `href`; links opened with `target="_blank"` default to a safe `rel`. Disabled
+anchors omit `href`, expose `aria-disabled`, and suppress click handling.
 
 ```btsx
 PrimaryButton(size="lg" tone="dark" label="Add to cart" onClick={addToCart})
+PrimaryButton(type="a" href="/docs" target="_self" label="Read docs")
 ```
 
 ### `Tag`
@@ -462,8 +467,8 @@ each item in group.items key item.href
 - Use `className` for the outer element and the component-specific override prop for
   an inner control (`inputClassName`, `triggerClassName`, `contentClassName`, and so
   on).
-- Do not invent passthrough props. In particular, `PrimaryButton` has no link props,
-  and `attached` exists only on `ButtonGroup`.
+- Do not invent passthrough props. `PrimaryButton` link props apply only when
+  `type="a"`, and `attached` exists only on `ButtonGroup`.
 - Preserve accessible names for icon-only buttons, unlabeled switches, and lists.
 
 ## Composed example

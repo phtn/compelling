@@ -13,7 +13,7 @@ module
 props { imageUrl, imageAlt = "Compelling", className }: BrandProps
 
 div(className={cn(BRAND_CLASS, className)})
-  div(className="flex items-center gap-4")
+  a(className="flex items-center gap-4" href="/")
     img(src={imageUrl} alt={imageAlt} className={BRAND_IMAGE_CLASS})
     div
       div(className="font-semibold text-orange-400 dark:text-orange-300 text-xl tracking-tight leading-4 opacity-100 px-2") Beast
