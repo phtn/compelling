@@ -1,5 +1,4 @@
 import { useState } from "octane";
-import Header from "@/components/ui/Header.btsx";
 props {}:{}
 
 setup
