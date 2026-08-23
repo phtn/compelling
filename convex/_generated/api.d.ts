@@ -8,13 +8,19 @@
  * @module
  */
 
+import type * as canvasSessions from "../canvasSessions.js";
+import type * as crons from "../crons.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  canvasSessions: typeof canvasSessions;
+  crons: typeof crons;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
