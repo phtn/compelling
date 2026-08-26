@@ -37,7 +37,7 @@ module
   ] as const
   const CONNECTIVITY = [
     { label: "HDMI inputs", value: "7 × HDMI 2.1" },
-    { label: "Pre-outs", value: "11.4 channels" },
+    { label: "Pre-outs", value: "9.4 channels" },
     { label: "Wireless", value: "Wi-Fi, AirPlay 2, Bluetooth" },
     { label: "Multi-room", value: "HEOS built in" },
   ] as const
@@ -166,7 +166,7 @@ div.bg-background
                 p(className="mt-5 max-w-xl text-[13px] leading-relaxed text-muted-foreground font-mono") Built for immersive cinema experience.
 
                 div(className="mt-7 grid gap-2 sm:grid-cols-2")
-                  div(className="relative flex items-start gap-2 rounded-xl border border-border/20 bg-background/60 p-3 overflow-hidden")
+                  div(className="relative flex items-start gap-2 rounded-xl border border-border/50 bg-background/60 p-3 overflow-hidden")
                     div(className="absolute -left-9 -top-1 -rotate-54 grid size-16 shrink-0 place-items-center rounded-md bg-emerald-500/5 text-[10px] text-emerald-600")
                       p(className='absolute right-2 bottom-1 rotate-54 text-sm') &rarr;
                     span(className='size-6 opacity-0' )
@@ -181,10 +181,10 @@ div.bg-background
                 div(className="mt-8 pt-6 lg:mt-auto")
                   div(className="flex flex-wrap items-end justify-between gap-3")
                     div
-                      div(className="flex items-baseline gap-2")
+                      div(className="flex items-baseline gap-4")
                         span(className="text-3xl font-semibold tracking-[-0.04em] text-foreground") $4,499
-                        span(className="text-sm font-mono text-muted-foreground line-through") $4,999
-                      div(className="mt-1 text-[10px] font-mono text-muted-foreground") or $375/mo for 12 months
+                        span(className="text-base font-mono text-muted-foreground line-through") $4,999
+                      div(className="mt-1 text-xs font-mono text-muted-foreground") or $375/mo for 12 months
                     // span(className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-mono font-medium text-emerald-500") SAVE 10%
                   div(className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2")
                     PrimaryButton(size="lg" tone="dark" className="w-full" onClick={addToCart} label="Add to cart")
@@ -200,19 +200,19 @@ div.bg-background
                   each fact in PRODUCT_FACTS key fact.label
                     div(className="rounded-xl border border-border/50 bg-card p-3 sm:p-4")
                       div(className="text-[9px] font-mono tracking-[0.14em] text-muted-foreground uppercase") #{fact.label}
-                      div(className="mt-2 text-sm font-semibold text-foreground") #{fact.value}
+                      div(className="mt-2 text-sm font-semibold text-foreground tracking-tight") #{fact.value}
                       div(className="mt-1 text-[10px] leading-relaxed font-mono text-muted-foreground") #{fact.note}
                 div(className="mt-3 grid gap-3 lg:grid-cols-2")
                   div(className="rounded-xl border border-border/50 bg-card p-4")
-                    div(className="text-[11px] font-semibold text-foreground") Connectivity
+                    div(className="font-semibold text-foreground text-sm tracking-tight") Connectivity
                     dl(className="mt-3 divide-y divide-border/50")
                       each item in CONNECTIVITY key item.label
                         div(className="flex items-start justify-between gap-4 py-2 first:pt-0 last:pb-0")
                           dt(className="text-[10px] font-mono text-muted-foreground") #{item.label}
                           dd(className="text-right text-[10px] font-mono font-medium text-foreground") #{item.value}
                   div(className="rounded-xl border border-border/50 bg-card p-4")
-                    div(className="text-[11px] font-semibold text-foreground") In the box
-                    ul(className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2" role="list")
+                    div(className="font-semibold text-foreground text-sm tracking-tight") In the box
+                    ul(className="mt-3 grid gap-2.5 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1" role="list")
                       each item in INCLUDED_ITEMS key item
                         li(className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground")
                           span(className="size-1.5 shrink-0 rounded-full bg-foreground/40")
@@ -278,7 +278,7 @@ div.bg-background
                     td.py-1.text-foreground.text-right 140W/ch
                   tr(className="border-b border-border")
                     td(className="py-1 text-muted-foreground") Channels
-                    td.py-1.text-foreground.text-right 11.4
+                    td.py-1.text-foreground.text-right 9.4
                   tr
                     td(className="py-1 text-muted-foreground") HDMI
                     td.py-1.text-foreground.text-right 7× 8K
