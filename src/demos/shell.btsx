@@ -150,7 +150,7 @@ div.bg-background
         span(className="font-medium text-[13px]") #{toastMsg}
 
     div.grid.grid-cols-12.gap-4
-      div(className="col-span-12 lg:col-span-8 flex flex-col gap-2")
+      div(className="col-span-12 lg:col-span-8 flex flex-col gap-6")
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
           // Product Card
           Frame(title="Flagship" subtitle="R SERIES · 9.4CH · 4.9/5 · 189 reviews")
@@ -270,17 +270,17 @@ div.bg-background
         //         div(className="text-[11px] font-mono text-muted-foreground mt-2") Active Q#{activeQA + 1} — click buttons to switch
         //       div(className="mt-2 text-[11px] font-mono text-muted-foreground") Event capture via initializeHydrationEventCapture(document) — no lost clicks.
 
-      div(className="col-span-12 lg:col-span-4 flex flex-col gap-4 sticky top-[72px] h-fit")
+      div(className="col-span-12 lg:col-span-4 flex flex-col gap-6 sticky top-[72px] h-fit")
         Hydrate(when={media("(min-width: 1024px)")} split={false} onHydrated={() => setHydrated((h) => ({ ...h, media: true }))})
-          div(className="bg-card border border-border rounded-xs p-4")
+          div(className="bg-muted/80 rounded-lg p-4")
             div.flex.items-center.justify-between
-              div(className="text-[11px] font-mono tracking-wide text-muted-foreground") SIDEBAR — media("(min-width: 1024px)")
+              div(className="text-[11px] font-mono tracking-wide text-muted-foreground") SIDEBAR
               span(class={"px-2 py-1 rounded-xs text-[11px] font-mono font-medium " + (hydrated.media ? "bg-primary text-primary-foreground" : "bg-border text-muted-foreground")}) #{hydrated.media ? "hydrated" : "not hydrated"}
             div(className="mt-3 space-y-2 text-[11px] font-mono")
-              div(className="bg-background border border-border rounded-xs p-3 flex items-center justify-between")
+              div(className="bg-background border border-border rounded-sm p-3 flex items-center justify-between")
                 span(className="text-muted-foreground") Specs hydration
                 span.text-foreground #{hydrated.media ? "visible" : "hidden on mobile"}
-              div(className="bg-background border border-border rounded-xs p-3")
+              div(className="bg-background border border-border rounded-sm p-3")
                 div.font-medium.text-foreground Technical specs
                 div(className="text-muted-foreground mt-1") Only hydrates on ≥1024px. Saves JS on mobile.
                 table(className="w-full mt-2 text-[11px]")
@@ -295,7 +295,7 @@ div.bg-background
                     td.py-1.text-foreground.text-right 7× 8K
             div(className="text-[11px] font-mono text-muted-foreground mt-2") media query gate.
 
-        div(className="bg-card border border-border rounded-xs p-4")
+        div(className="bg-muted/80 rounded-lg p-4")
           div(className="text-[11px] font-mono tracking-wide text-muted-foreground") HYDRATION TIMELINE
           div.mt-3.space-y-2
             div.flex.items-center.gap-3
@@ -325,24 +325,16 @@ div.bg-background
               span(className="text-[11px] font-mono text-foreground") media
           div(className="mt-3 text-[11px] font-mono text-muted-foreground leading-relaxed") Scroll to trigger visible, idle fires after main thread idle, click Q&A to trigger interaction. All gates use the same component code.
 
-        div(className="bg-card border border-border rounded-xs p-4")
-          div(className="text-[11px] font-mono tracking-wide text-muted-foreground") CODE — UNIVERSAL
-          pre(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono leading-relaxed overflow-x-auto mt-2 text-muted-foreground")
-            code const reviews = await suspend(fetchReviews)
-          div(className="text-[11px] font-mono text-muted-foreground mt-2") In Octane, Hydrate(when={"{"}idle(){"}"}) + Suspense + use(promise) replace Next.js getServerProps boundaries.
-
         Hydrate(when={never()} split={false})
-          div(className="bg-card border border-border rounded-xs p-4 opacity-60")
+          div(className="bg-muted rounded-lg p-4 opacity-60")
             div(className="text-[11px] font-mono tracking-wide text-muted-foreground") NEVER — static
             div(className="text-[13px] text-muted-foreground mt-2 font-mono") Footer is static, never hydrates. Zero JS shipped.
             div(className="mt-2 text-[11px] font-mono text-muted-foreground") Hydrate(when={"{"}never(){"}"})
 
         Callout(title={info.title} text={info.text})
-    div(className="w-full px-0")
-      div(className="bg-card border border-border rounded-xs p-6 mt-4")
+    div(className="hidden w-full px-0")
+      div(className="bg-sidebar rounded-lg p-6 mt-4")
         div(className="flex flex-wrap items-center gap-2 text-[11px] font-mono tracking-wide text-muted-foreground")
-          span(className="px-2 py-1 rounded-xs bg-background border border-border") ACTIVITY & ERROR
-          span Demo of Octane's other shell primitives
         div(className="grid sm:grid-cols-3 gap-2 mt-3")
           Activity(mode="visible")
             div(className="bg-background border border-border rounded-xs p-3 text-[11px] font-mono")
