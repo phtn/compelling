@@ -42,8 +42,14 @@ setup
 div(className={cn(INPUT_ROOT_CLASS, className)})
   if leftIcon
     div(className={INPUT_ICON_CONTAINER_CLASS})
-      Icon(name={leftIcon} size={18} className="m-0 text-[#7B7B7B]")
-  input(type={type} value={inputValue} placeholder={placeholder} disabled={disabled} className={resolvedInputClassName} onInput={handleInput} onKeyDown={onKeyDown})
+      Icon(name={leftIcon} size={18} 
+        ~ className="m-0 text-[#7B7B7B]")
+  input(type={type} value={inputValue} 
+    ~ placeholder={placeholder} 
+    ~ disabled={disabled} 
+    ~ className={resolvedInputClassName} 
+    ~ onInput={handleInput} 
+    ~ onKeyDown={onKeyDown})
   if type === "search"
     kbd(className={INPUT_SEARCH_HINT_CLASS}) /
   | #{rightSlot}

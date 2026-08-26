@@ -1,8 +1,46 @@
+# Building reusable Beast UI components
+
+Read this reference when creating a reusable UI component from scratch. Inspect adjacent components and project utilities first, then use the architecture below as the default quality bar. Adapt capabilities to the component; do not force link polymorphism, icons, pending state, or every variant onto components that do not need them.
+
+If the user specifies a design system or React-facing library, also read [octane-bindings.md](octane-bindings.md) before choosing imports or primitives.
+
+Form-related components must use `@octanejs/tanstack-form`; read [octane-tanstack-form.md](octane-tanstack-form.md). Table and data-grid components must use `@octanejs/tanstack-table`; read [octane-tanstack-table.md](octane-tanstack-table.md). Leaf presentation components may remain headless, but they must compose with the binding instead of owning a parallel state system.
+
+## Architecture
+
+1. Define the semantic contract before template markup.
+2. Export reusable variant and prop types from `module`.
+3. Use a discriminated union when one component intentionally supports different native elements. Use `never` for props that are invalid in the other mode.
+4. Reuse `JSX.IntrinsicElements[...]` types for native `style`, `value`, `download`, referrer policy, and ARIA contracts instead of recreating DOM types.
+5. Type public children as `OctaneNode`. Internal presentation helpers may accept `unknown` when they only render content.
+6. Encode variant maps with `as const satisfies Record<Union, ...>` so every declared variant is covered.
+7. Keep styling constants and pure helpers in `module`; keep render-derived state and event handlers in `setup`.
+8. Extract small local components for repeated presentation such as spinners or icon/label content.
+9. Preserve native semantics, focus behavior, accessibility state, and safe external-link behavior in every branch.
+10. Compose project classes through its existing utility, such as `cn`, and use the project's icon component and icon-name type rather than inventing parallel systems.
+
+## Interaction and accessibility invariants
+
+- Default a button-capable component to `type="button"` so it does not submit forms accidentally.
+- Treat pending and disabled behavior deliberately. Prevent interactions, expose `aria-disabled`/`aria-busy`, and ensure the visual state matches behavior.
+- For anchors that cannot be activated, remove `href`, prevent the click, and choose tab behavior intentionally.
+- Add `noopener noreferrer` to `_blank` anchors without discarding user-supplied `rel` tokens.
+- Keep icon-only controls accessible through `aria-label` or visible text.
+- Mark decorative overlays and spinners `aria-hidden` unless they carry meaningful status text.
+- Keep native-element-only props on the correct union branch.
+- Pass through IDs, titles, tab indices, styles, relevant form attributes, and relevant ARIA attributes when they are part of the public contract.
+- Honor reduced-motion preferences for transitions and animation.
+
+## Canonical reference implementation
+
+Use this `PrimaryButton` as the reference shape for a polished, typed, polymorphic control:
+
+```btsx
 import { cn } from "@/lib/utils"
 import Icon from "@/lib/icons/index.btsx"
 import type { IconName } from "@/lib/icons/types"
 import type { JSX } from "octane/jsx-runtime"
-import type {OctaneNode} from 'octane'
+import type { OctaneNode } from "octane"
 
 module
   export type PrimaryButtonSize = "sm" | "lg"
@@ -151,3 +189,13 @@ else
   button(id={id} title={title} type={type} disabled={disabled} form={form} name={name} value={value} tabIndex={tabIndex} className={buttonClassName} style={style} onClick={handleClick} aria-label={ariaLabel} aria-describedby={ariaDescribedBy} aria-pressed={ariaPressed} aria-disabled={pending || undefined} aria-busy={pending || undefined})
     Content(size={size} tone={tone} label={resolvedLabel} icon={icon} iconPosition={iconPosition} pending={pending})
       | #{children}
+```
+
+## Adaptation rules
+
+- Preserve the discriminated-union pattern only when a component intentionally renders more than one native semantic element.
+- Remove unsupported props instead of advertising passthrough behavior the template does not implement.
+- Prefer project tokens and existing variants over copying the example's visual classes literally.
+- Use the project's loading/status language and accessibility conventions.
+- Keep pure helpers testable and keep template branches small enough that semantic differences remain obvious.
+- Verify every branch with the installed Beast/Octane compiler, TSRX-aware typecheck, and the relevant production build.

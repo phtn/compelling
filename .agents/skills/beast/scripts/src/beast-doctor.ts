@@ -1,14 +1,21 @@
 #!/usr/bin/env node
 /**
- * Beast Doctor — bounded, deterministic checker for Beast projects.
- * Parses BTSX/TSRX without executing or importing target code.
- * Mirrors gleamability's security posture: masked lexical fallback, 4MiB bound, no network.
+ * Beast Doctor — bounded, deterministic lexical checker for Beast projects.
+ * Reads source without executing or importing target code: 4 MiB per file, no network.
  */
-import { readFile, readdir, stat } from "node:fs/promises";
+import { open, readFile, readdir, stat } from "node:fs/promises";
 import { resolve, relative, extname, join } from "node:path";
 
 const MAX_BYTES = 4 * 1024 * 1024;
 const BTSX_EXTS = new Set([".btsx", ".tsrx", ".tsx", ".ts"]);
+const IGNORED_DIRECTORIES = new Set([
+  ".beast",
+  ".git",
+  "build",
+  "coverage",
+  "dist",
+  "node_modules",
+]);
 
 interface FileReport {
   file: string;
@@ -32,6 +39,14 @@ interface Signals {
   hasBtsxSyntax: boolean;
   hasOctaneApi: boolean;
   hasVitePlugin: boolean;
+  hasRspackPlugin: boolean;
+  hasRsbuildPlugin: boolean;
+}
+
+interface LogicalLine {
+  content: string;
+  indent: number;
+  line: number;
 }
 
 function parseArgs(argv: string[]) {
@@ -70,8 +85,6 @@ async function collectFiles(targets: string[]): Promise<string[]> {
 }
 
 async function walk(dir: string, out: string[]) {
-  // skip ignored
-  if (dir.includes("node_modules") || dir.includes(".git") || dir.includes("dist") || dir.includes(".beast")) return;
   let entries;
   try {
     entries = await readdir(dir, { withFileTypes: true });
@@ -80,51 +93,51 @@ async function walk(dir: string, out: string[]) {
   }
   for (const e of entries) {
     const p = join(dir, e.name);
-    if (e.isDirectory()) await walk(p, out);
+    if (e.isDirectory() && !IGNORED_DIRECTORIES.has(e.name)) await walk(p, out);
     else if (e.isFile() && BTSX_EXTS.has(extname(p))) out.push(p);
   }
 }
 
-function analyzeContent(content: string): { diagnostics: Diagnostic[]; signals: Signals } {
+function analyzeContent(content: string, file: string): { diagnostics: Diagnostic[]; signals: Signals } {
   const diagnostics: Diagnostic[] = [];
+  const isBtsx = extname(file) === ".btsx";
   const signals: Signals = {
     hasBeastImport: /from\s+["']beast-tsrx/.test(content) || /beastOctane/.test(content),
-    hasProps: /^\s*props\s*\{/m.test(content),
-    hasBtsxSyntax: /^\s*(if|each|switch|try|fragment|style)\b/m.test(content),
+    hasProps: isBtsx && /^\s*props\s*\{/m.test(content),
+    hasBtsxSyntax: isBtsx && /^\s*(component|each|fragment|if|module|props|setup|style|switch|try)\b/m.test(content),
     hasOctaneApi: /use(State|Effect|Memo|Callback|Ref|Id|Transition|DeferredValue)|createRoot|hydrateRoot|createPortal/.test(content),
-    hasVitePlugin: /beastOctane\(\)/.test(content),
+    hasVitePlugin: /beast-tsrx\/vite/.test(content) && /beastOctane\s*\(/.test(content),
+    hasRspackPlugin: /beast-tsrx\/rspack/.test(content) && /beastOctane\s*\(/.test(content),
+    hasRsbuildPlugin: /beast-tsrx\/rsbuild/.test(content) && /beastOctane\s*\(/.test(content),
   };
 
-  // Lightweight lexical checks — mirrors parser error categories without importing compiler
-  const lines = content.split("\n");
+  if (!isBtsx) return { diagnostics, signals };
+
+  const lines = createLogicalLines(content, diagnostics);
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]!;
-    const trimmed = line.trim();
+    const trimmed = line.content.trim();
     if (trimmed === "fragment" || trimmed === "style") {
       const next = lines[i + 1];
-      if (!next || next.trim() === "" || next.search(/\S/) <= line.search(/\S/)) {
-        diagnostics.push({ code: "empty-body", message: `Empty ${trimmed} at line ${i + 1}`, line: i + 1, column: 1 });
+      if (!next || next.indent <= line.indent) {
+        diagnostics.push({ code: "empty-body", message: `Empty ${trimmed} at line ${line.line}`, line: line.line, column: line.indent + 1 });
       }
     }
-    if (/^\s*props\s*\{\s*\}\s*:/.test(line)) {
-      diagnostics.push({ code: "empty-props", message: `Empty props at line ${i + 1}`, line: i + 1, column: 1 });
+    if (/^props\s*\{\s*\}\s*:/.test(line.content)) {
+      diagnostics.push({ code: "empty-props", message: `Empty props at line ${line.line}`, line: line.line, column: line.indent + 1 });
     }
-    if (/div\(\{\s*\w+\s*\}\)/.test(line) && !/div\(\{\s*\.\.\./.test(line)) {
-      diagnostics.push({ code: "non-spread-braces", message: `Bare object in spread position at line ${i + 1}`, line: i + 1, column: 1 });
+    if (/\(\{\s*[A-Za-z_$][\w$]*\s*\}\)/.test(line.content) && !/\(\{\s*\.\.\./.test(line.content)) {
+      diagnostics.push({ code: "non-spread-braces", message: `Bare object in spread position at line ${line.line}`, line: line.line, column: line.indent + 1 });
     }
   }
 
-  // Indentation check: child should be > parent
   for (let i = 1; i < lines.length; i++) {
     const prev = lines[i - 1]!;
     const cur = lines[i]!;
-    if (cur.trim() === "" || cur.trim().startsWith("#") || prev.trim() === "") continue;
-    const prevIndent = prev.search(/\S/);
-    const curIndent = cur.search(/\S/);
-    if (curIndent > prevIndent && curIndent - prevIndent !== 2 && curIndent !== -1 && prevIndent !== -1) {
-      // Only flag suspicious jumps >2 when previous line is a known parent
-      if (/^\s*(main|div|p|h1|a|ul|li|fragment|if|each|switch|try|component)\b/.test(prev)) {
-        diagnostics.push({ code: "indentation", message: `Indentation should be +2 at line ${i + 1}`, line: i + 1, column: curIndent + 1 });
+    if (cur.indent > prev.indent && cur.indent - prev.indent !== 2) {
+      // Two spaces is the project convention; only flag jumps after a template parent.
+      if (/^(?:[A-Za-z][\w$:.-]*|[.#][\w-]+|fragment|if\b|each\b|switch\b|try|component\b)/.test(prev.content)) {
+        diagnostics.push({ code: "indentation", message: `Conventional child indentation is +2 spaces at line ${cur.line}`, line: cur.line, column: cur.indent + 1 });
       }
     }
   }
@@ -132,16 +145,55 @@ function analyzeContent(content: string): { diagnostics: Diagnostic[]; signals: 
   return { diagnostics, signals };
 }
 
+function createLogicalLines(content: string, diagnostics: Diagnostic[]): LogicalLine[] {
+  const logical: LogicalLine[] = [];
+  for (const [index, physical] of content.split("\n").entries()) {
+    const leading = physical.match(/^[ \t]*/)?.[0] ?? "";
+    const line = index + 1;
+    if (leading.includes("\t")) {
+      diagnostics.push({ code: "tab-indentation", message: `Tabs are not valid BTSX indentation at line ${line}`, line, column: 1 });
+      continue;
+    }
+    const body = physical.slice(leading.length).trimEnd();
+    if (body.length === 0 || body.startsWith("//")) continue;
+    if (body.startsWith("~")) {
+      const previous = logical.at(-1);
+      if (previous === undefined || leading.length <= previous.indent) {
+        diagnostics.push({ code: "orphan-continuation", message: `Continuation must be indented beneath a preceding logical line at line ${line}`, line, column: leading.length + 1 });
+        continue;
+      }
+      const payload = body.slice(1).trim();
+      if (payload.length === 0 || payload.startsWith("//")) continue;
+      previous.content += ` ${payload}`;
+      continue;
+    }
+    logical.push({ content: body, indent: leading.length, line });
+  }
+  return logical;
+}
+
+async function readBoundedText(file: string, size: number): Promise<string> {
+  if (size <= MAX_BYTES) return await readFile(file, "utf8");
+  const handle = await open(file, "r");
+  try {
+    const buffer = Buffer.allocUnsafe(MAX_BYTES);
+    const { bytesRead } = await handle.read(buffer, 0, MAX_BYTES, 0);
+    return buffer.subarray(0, bytesRead).toString("utf8");
+  } finally {
+    await handle.close();
+  }
+}
+
 async function analyzeFile(file: string): Promise<FileReport> {
   try {
     const s = await stat(file);
     const size = s.size;
     const truncated = size > MAX_BYTES;
-    const content = truncated ? (await readFile(file, "utf8")).slice(0, MAX_BYTES) : await readFile(file, "utf8");
-    const { diagnostics, signals } = analyzeContent(content);
+    const content = await readBoundedText(file, size);
+    const { diagnostics, signals } = analyzeContent(content, file);
     return { file: relative(process.cwd(), file), exists: true, size, truncated, diagnostics, signals };
   } catch {
-    return { file: relative(process.cwd(), file), exists: false, size: 0, truncated: false, diagnostics: [{ code: "missing", message: "File not found" }], signals: { hasBeastImport: false, hasProps: false, hasBtsxSyntax: false, hasOctaneApi: false, hasVitePlugin: false } };
+    return { file: relative(process.cwd(), file), exists: false, size: 0, truncated: false, diagnostics: [{ code: "missing", message: "File not found" }], signals: { hasBeastImport: false, hasProps: false, hasBtsxSyntax: false, hasOctaneApi: false, hasVitePlugin: false, hasRspackPlugin: false, hasRsbuildPlugin: false } };
   }
 }
 
@@ -157,7 +209,19 @@ async function main() {
     try {
       const s = await stat(abs);
       const dir = s.isDirectory() ? abs : resolve(abs, "..");
-      for (const extra of ["vite.config.ts", "package.json", "tsconfig.json"]) {
+      for (const extra of [
+        "vite.config.ts",
+        "vite.config.js",
+        "vite.config.mts",
+        "rspack.config.ts",
+        "rspack.config.js",
+        "rspack.config.mjs",
+        "rsbuild.config.ts",
+        "rsbuild.config.js",
+        "octane.config.ts",
+        "package.json",
+        "tsconfig.json",
+      ]) {
         const p = join(dir, extra);
         try {
           await stat(p);
@@ -176,8 +240,8 @@ async function main() {
     for (const d of r.diagnostics.slice(0, 5)) console.log(`  ${d.code}: ${d.message}${d.line ? ` [${d.line}:${d.column}]` : ""}`);
   }
   const beastFiles = reports.filter((r) => r.signals.hasBtsxSyntax || r.signals.hasProps).length;
-  const viteFiles = reports.filter((r) => r.signals.hasVitePlugin).length;
-  console.log(`\nSignals: ${beastFiles} BTSX files, ${viteFiles} Vite Beast plugins, ${reports.filter((r) => r.signals.hasOctaneApi).length} Octane APIs`);
+  const buildConfigs = reports.filter((r) => r.signals.hasVitePlugin || r.signals.hasRspackPlugin || r.signals.hasRsbuildPlugin).length;
+  console.log(`\nSignals: ${beastFiles} BTSX files, ${buildConfigs} Beast build configs, ${reports.filter((r) => r.signals.hasOctaneApi).length} Octane APIs`);
 
   if (jsonPath) {
     const json = JSON.stringify({ targets, reports, scanned: reports.length, top }, null, 2);

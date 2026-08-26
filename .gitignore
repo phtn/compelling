@@ -6,3 +6,9 @@ dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Machine-local user configuration and runtime state
+/.config/
+/.mpd/
+/.zcompdump*
+/.zshrc

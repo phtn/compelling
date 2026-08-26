@@ -28,6 +28,20 @@ module
     { q: "Can I use Dirac Live without extra hardware?", a: "Included mic + app. Full-room correction in ~10 min. Optional Dirac Live Bass Control upgrade.", helpful: 31 },
     { q: "How does it compare to separates?", a: "For < 300W peaks, this matches separates. Above that, pair front L/R pre-outs to an external amp.", helpful: 18 },
   ]
+  const PRODUCT_FEATURES = ["Dolby Atmos", "IMAX Enhanced", "Dirac Live", "HEOS"] as const
+  const PRODUCT_FACTS = [
+    { label: "Amplification", value: "140W × 11", note: "Discrete power stages" },
+    { label: "Processing", value: "9.4 channels", note: "Dolby Atmos + DTS:X Pro" },
+    { label: "Video", value: "8K / 60Hz", note: "4K / 120Hz, VRR + ALLM" },
+    { label: "Room correction", value: "Dirac Live", note: "Audyssey MultEQ XT32" },
+  ] as const
+  const CONNECTIVITY = [
+    { label: "HDMI inputs", value: "7 × HDMI 2.1" },
+    { label: "Pre-outs", value: "11.4 channels" },
+    { label: "Wireless", value: "Wi-Fi, AirPlay 2, Bluetooth" },
+    { label: "Multi-room", value: "HEOS built in" },
+  ] as const
+  const INCLUDED_ITEMS = ["Calibration microphone", "Backlit remote", "AM/FM antennas", "2-year warranty"] as const
   function fetchReviews(): Promise<Review[]> {
     return new Promise((res) => setTimeout(() => res(REVIEWS), 1800))
   }
@@ -125,52 +139,87 @@ div.bg-background
         span(className="font-medium text-[13px]") #{toastMsg}
 
     div.grid.grid-cols-12.gap-4
-      div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
+      div(className="col-span-12 lg:col-span-8 flex flex-col gap-2")
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
-          Frame(title="Storefront · load() — immediate" subtitle={hydrated.load ? "hydrated \u2713 \u00b7 " + elapsed + "s" : "hydrating\u2026 \u00b7 " + elapsed + "s"})
-            div(className="p-6 sm:p-8 flex flex-col lg:flex-row gap-6")
-              div.flex-1.space-y-10
-                div(className="inline-flex items-center gap-2 text-[11px] font-mono tracking-wide text-muted-foreground")
-                  span.px-1.5.py-1.rounded-xs.bg-primary.text-primary-foreground.font-medium FLAGSHIP
-                  span 11.4CH · 140W · HDMI 2.1
-                h2(className="text-[24px] font-semibold tracking-[-0.02em] leading-none mt-3 text-foreground") Denon AVC-X3800H 9.4
-                p(className="text-muted-foreground text-[13px] leading-relaxed mt-2 font-mono") The reference powerhouse with HDAM, Dirac Live, 8K passthrough. Server-rendered shell — same code, no mismatch.
-                div.flex.flex-wrap.mt-4.border.border-border.rounded-md.w-fit.overflow-hidden.divide-x.divide-border
-                  each f in ["Dolby Atmos", "IMAX Enhanced", "Dirac Live", "HEOS"] key f
-                    span(className="px-2 py-1 bg-background text-[11px] font-mono text-muted-foreground") #{f}
-                div.flex.items-end.gap-3.mt-5
+          // Product Card
+          Frame(title="Flagship" subtitle="R SERIES · 9.4CH · 4.9/5 · 189 reviews")
+            div(className="grid lg:grid-cols-5")
+              div(className="order-1 lg:order-2 lg:col-span-2 relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px] overflow-hidden bg-muted")
+                img(className="absolute inset-0 size-full object-cover grayscale opacity-85" src="https://picsum.photos/seed/denon/800/700" alt="Denon AVC-X3800H AV receiver")
+                div(className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent")
+                div(className="absolute left-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-2.5 py-1 text-[10px] font-mono tracking-wide text-white backdrop-blur-md sm:left-4 sm:top-4")
+                  span(className="size-1.5 rounded-full bg-emerald-400")
+                  span FLAGSHIP · 4.9 ★
+                div(className="absolute w-full inset-x-1 bottom-0 flex items-end justify-between gap-3 bg-linear-to-t from-border/40 to-background/20 p-0 text-white backdrop-blur-md sm:inset-x-0 sm:bottom-0 sm:p-4")
                   div
-                    div(className="text-3xl font-semibold tracking-tight text-foreground") $4,499
-                  PrimaryButton( size='lg' onClick={addToCart} label="Add to Cart ")
-                  PrimaryButton( size='lg' tone='dark' onClick={() => setShowDetail(!showDetail)} label={showDetail ? "Hide" : "Details"})
+                    div(className="text-[10px] font-mono tracking-[0.16em] text-white/60") TODAY'S DEAL
+                    div(className="mt-1 text-sm font-bold") Save $500
+                  div(className="shrink-0 text-right font-mono text-[11px]")
+                    div(className="text-white/60") ENDS IN
+                    div(className="mt-1 text-sm font-medium") 04:21:33
 
-              div(className="w-full lg:w-72 h-fit space-y-14 rounded-xs overflow-hidden relative")
-                img.w-full.h-full.object-cover.h-72.opacity-80.rounded-xl.grayscale(src="https://picsum.photos/seed/denon/600/400" alt="Denon")
-                div.absolute.inset-0.bg-gradient-to-t.from-black.via-transparent.to-transparent
-                div(className="absolute -bottom-6 left-3 right-3 bg-background/80 backdrop-blur border border-input rounded-xl p-3 flex items-center justify-between")
-                  div
-                    div(className="text-[11px] font-mono tracking-wide text-muted-foreground") TODAY'S DEAL
-                    div(className="text-[13px] font-medium text-foreground") Save $500 — ends midnight
-                  div(className="text-[11px] font-mono text-foreground") 04:21:33
-                div(className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground mt-10")
-                  span.flex.items-center.gap-1.whitespace-nowrap
-                    span.size-2.rounded-xs.bg-border
-                    span in-stock · ships today · 2-day delivery
-                  span(className="text-muted-foreground") ·
+              div(className="order-2 lg:order-1 lg:col-span-3 flex min-w-0 flex-col p-4 sm:p-6 xl:p-8")
+                div(className="flex flex-wrap gap-1.5")
+                  each feature in PRODUCT_FEATURES key feature
+                    span(className="rounded-full border border-input bg-background px-2.5 py-1 text-[10px] font-mono text-muted-foreground") #{feature}
+                h2(className="mt-7 text-2xl sm:text-3xl font-semibold tracking-[-0.035em] leading-[1.05] text-foreground") Denon AVC-X3800H 9.4
+                p(className="mt-5 max-w-xl text-[13px] leading-relaxed text-muted-foreground font-mono") Built for immersive cinema experience.
+
+                div(className="mt-7 grid gap-2 sm:grid-cols-2")
+                  div(className="relative flex items-start gap-2 rounded-xl border border-border/20 bg-background/60 p-3 overflow-hidden")
+                    div(className="absolute -left-9 -top-1 -rotate-54 grid size-16 shrink-0 place-items-center rounded-md bg-emerald-500/5 text-[10px] text-emerald-600")
+                      p(className='absolute right-2 bottom-1 rotate-54 text-sm') &rarr;
+                    span(className='size-6 opacity-0' )
+                    div
+                      div(className="text-[11px] font-medium text-foreground") In stock and ready to ship
+                      div(className="text-[10px] font-mono text-muted-foreground") Dispatches in 2 hours
+                  div(className="flex items-start gap-2 rounded-xl border border-border/50 bg-background/60 p-3")
+                    span(className="grid size-7 shrink-0 place-items-center rounded-full bg-blue-500/15 text-[10px] text-blue-500") →
+                    div
+                      div(className="text-[11px] font-medium text-foreground") Free shipping
+                      div(className="text-[10px] font-mono text-muted-foreground") 5-year warranty
+                div(className="mt-8 pt-6 lg:mt-auto")
+                  div(className="flex flex-wrap items-end justify-between gap-3")
+                    div
+                      div(className="flex items-baseline gap-2")
+                        span(className="text-3xl font-semibold tracking-[-0.04em] text-foreground") $4,499
+                        span(className="text-sm font-mono text-muted-foreground line-through") $4,999
+                      div(className="mt-1 text-[10px] font-mono text-muted-foreground") or $375/mo for 12 months
+                    // span(className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-mono font-medium text-emerald-500") SAVE 10%
+                  div(className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2")
+                    PrimaryButton(size="lg" tone="dark" className="w-full" onClick={addToCart} label="Add to cart")
+                    PrimaryButton(size="lg" className="w-full" onClick={() => setShowDetail(!showDetail)} aria-pressed={showDetail} label={showDetail ? "Hide details" : "View details"})
             if showDetail
-              div(className="px-6 pb-6 grid sm:grid-cols-3 gap-px bg-border border-t border-border rounded-xs overflow-hidden mt-4")
-                div.bg-background.p-3
-                  div(className="font-medium text-foreground text-[12px]") Power
-                  div(className="text-muted-foreground text-[11px] font-mono") 140W × 11.4, HDAM discrete
-                div.bg-background.p-3
-                  div(className="font-medium text-foreground text-[12px]") HDMI
-                  div(className="text-muted-foreground text-[11px] font-mono") 7× 8K, eARC, VRR passthrough
-                div.bg-background.p-3
-                  div(className="font-medium text-foreground text-[12px]") Room EQ
-                  div(className="text-muted-foreground text-[11px] font-mono") Dirac Live included
+              div(className="border-t border-border/50 bg-background/45 p-4 sm:p-6 xl:p-8")
+                div(className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end")
+                  div
+                    div(className="text-[10px] font-mono tracking-[0.16em] text-muted-foreground") PRODUCT DETAILS
+                    h3(className="mt-1 text-lg font-semibold tracking-[-0.02em] text-foreground") Receiver upgrade
+                  p(className="max-w-md text-[11px] leading-relaxed text-muted-foreground font-mono") A cinema-grade signal path with room correction amplification.
+                div(className="mt-5 grid grid-cols-2 gap-2 xl:grid-cols-4")
+                  each fact in PRODUCT_FACTS key fact.label
+                    div(className="rounded-xl border border-border/50 bg-card p-3 sm:p-4")
+                      div(className="text-[9px] font-mono tracking-[0.14em] text-muted-foreground uppercase") #{fact.label}
+                      div(className="mt-2 text-sm font-semibold text-foreground") #{fact.value}
+                      div(className="mt-1 text-[10px] leading-relaxed font-mono text-muted-foreground") #{fact.note}
+                div(className="mt-3 grid gap-3 lg:grid-cols-2")
+                  div(className="rounded-xl border border-border/50 bg-card p-4")
+                    div(className="text-[11px] font-semibold text-foreground") Connectivity
+                    dl(className="mt-3 divide-y divide-border/50")
+                      each item in CONNECTIVITY key item.label
+                        div(className="flex items-start justify-between gap-4 py-2 first:pt-0 last:pb-0")
+                          dt(className="text-[10px] font-mono text-muted-foreground") #{item.label}
+                          dd(className="text-right text-[10px] font-mono font-medium text-foreground") #{item.value}
+                  div(className="rounded-xl border border-border/50 bg-card p-4")
+                    div(className="text-[11px] font-semibold text-foreground") In the box
+                    ul(className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2" role="list")
+                      each item in INCLUDED_ITEMS key item
+                        li(className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground")
+                          span(className="size-1.5 shrink-0 rounded-full bg-foreground/40")
+                          span #{item}
 
         Hydrate(when={idle({ timeout: 1500 })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, idle: true }))})
-          Frame(title="Reviews · idle({ timeout: 1500 })" subtitle={hydrated.idle ? "hydrated \u2713" : "waiting for idle\u2026"})
+          Frame(title="Customer Reviews" subtitle={hydrated.idle ? "hydrated \u2713" : "waiting for idle\u2026"})
             div.p-6
               div.flex.items-center.justify-between
                 div
@@ -184,7 +233,7 @@ div.bg-background
               div(className="mt-3 text-[11px] font-mono text-muted-foreground") Hydrate when idle → server sends seeded HTML, client hydrates without blocking main thread.
 
         Hydrate(when={visible({ rootMargin: "200px" })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, visible: true }))})
-          Frame(title="Related · visible({ rootMargin: \"200px\" })" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
+          Frame(title="Related" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
             div.p-6
               h3(className="text-[14px] font-medium tracking-[-0.01em] text-foreground") You may also like
               p(className="text-[11px] font-mono text-muted-foreground mt-1") Hydrates only when scrolled into view — saves JS until needed.

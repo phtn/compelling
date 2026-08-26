@@ -45,7 +45,11 @@ through `import`, `setup`, attributes, and nesting unchanged.
 | Client ownership | Root mount/update/unmount, server-DOM adoption, dormant-boundary activation and event replay, synchronous/test scheduling, cross-container portals, and non-reconciling behavior ownership | Executable Happy DOM lifecycle suite |
 | Server and static rendering | Hydratable/static buffered output, scoped CSS/head channels, Node and Web progressive streams, await-everything output, aborts, deadlines, and complete Node preludes | Executable renderer lifecycle suite |
 | Public entry points | Every tracked name is present in the pinned `octane`, hydration, behavior, server, and static module namespaces | Machine-readable Core API inventory test |
-| Client bundling | Mixed BTSX/TSRX Vite application production build | project integration test |
+| Vite application lifecycle | Mixed BTSX/TSRX production build plus a BTSX SSR render, server-DOM adoption, interaction replay, and compiler-split deferred chunk | Executable project integration tests |
+| Rspack application lifecycle | Mixed BTSX/TSRX client build with a compiler-split deferred chunk plus an executable Node-target SSR render | Executable bundler integration test |
+| Rsbuild application lifecycle | Mixed compiler-only build plus routed browser and Node environments whose generated handler SSR-renders a BTSX route | Executable bundler integration tests |
+| Source-map pipeline | Declaration, multiline source-body, template-node, branch, and attribute anchors compose through Octane to original BTSX in Vite and Rspack output | Compiler mapping assertions plus emitted Vite and Rspack map tests |
+| Standalone watch lifecycle | Debounced and serialized project rebuilds, ignored output events, stale cleanup, compile-error reporting, and recovery after a valid edit | Executable project API and CLI watcher tests |
 
 Every golden output is compared byte for byte and compiled with the pinned
 Octane compiler. The focused lifecycle suites execute the non-template entry
@@ -108,27 +112,17 @@ public entry point.
 
 ## Next additions
 
-### 1. Close application-integration gaps
+### 1. Add framework-specific adapters
 
-The Vite path has client production coverage, but still needs full lifecycle
-fixtures for server transforms, rendering, hydration, and compiler-split
-deferred hydration.
-After that, add Beast adapters or documented precompile workflows for Octane's
-Rspack and Rsbuild integrations. Framework-specific adapters should follow
-only when the core bundler contracts are stable.
-
-### 2. Improve compiler tooling
-
-Add Beast-to-TSRX source maps and a standalone watch mode. These are not Octane
-runtime capabilities, but they are required for complete diagnostics and a
-non-Vite development workflow.
+Vite, Rspack, and Rsbuild now cover the core bundler contracts. Add
+framework-specific adapters only where their routing or server ownership needs
+more than the normal Rsbuild application plugin.
 
 ## Recommended order
 
-The smallest dependency-aware sequence is:
-
-1. Rspack/Rsbuild integration and SSR/deferred-split application lifecycles.
-2. Source maps and standalone watch mode.
+The remaining work is framework-specific: add adapters as concrete routing or
+server-ownership requirements emerge beyond the normal Rsbuild application
+plugin.
 
 [Quick start]: https://octanejs.dev/docs
 [Core APIs]: https://octanejs.dev/docs/core-apis

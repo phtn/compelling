@@ -18,8 +18,8 @@ div(className={cn(FRAME_CLASS, className, {'bg-card': titlebar})})
   if title
     div(className={cn("h-12 border-b border-border/50 flex items-center justify-between px-3 shrink-0", {'border-b-0': !titlebar} )})
       div(className="flex items-center gap-1")
-        span(className="text-sm font-mono tracking-wide text-muted-foreground ml-2 capitalize") #{title}
+        span(className="text-sm font-medium font-sans text-muted-foreground ml-2 capitalize") #{title}
       div #{extra}
       if subtitle
-        span(className="text-[11px] font-mono text-muted-foreground/70") #{subtitle}
+        span(className="font-mono text-muted-foreground/80 text-xs px-2") #{subtitle}
   div(className="w-full") #{children}
