@@ -88,7 +88,7 @@ component RelatedGrid
           div(className="text-sm font-semibold text-foreground tracking-tight") #{rel.title}
           div.flex.items-center.justify-between.mt-1
             span(className="text-base font-mono text-muted-foreground") $#{rel.price.toLocaleString()}
-            span(className="text-[11px] font-mono text-muted-foreground") ★ #{rel.rating}
+            span(className="text-xs text-muted-foreground") ★  #{rel.rating}
 
 component QAList
   props { data }: { data: Promise<QA[]> }
@@ -158,9 +158,10 @@ div.bg-background
               div(className="order-1 lg:order-2 lg:col-span-2 relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px] overflow-hidden bg-muted")
                 img(className="absolute inset-0 size-full object-cover grayscale opacity-85" src="https://picsum.photos/seed/denon/800/700" alt="Denon AVC-X3800H AV receiver")
                 div(className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent")
-                div(className="absolute left-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/45 px-2.5 py-1 text-[10px] font-mono tracking-wide text-white backdrop-blur-md sm:left-4 sm:top-4")
-                  span(className="size-1.5 rounded-full bg-emerald-400")
-                  span FLAGSHIP · 4.9 ★
+                div(className="absolute right-3 top-3 flex items-center justify-end text-[10px] tracking-wide text-white sm:left-4 sm:top-4")
+                  div(className=' rounded-full border border-white/20 bg-black/45 px-2.5 py-1 backdrop-blur-md space-x-1')
+                    span(className="text-emerald-400") ★
+                    span 4.9
                 div(className="absolute w-full inset-x-1 bottom-0 flex items-end justify-between gap-3 bg-linear-to-t from-border/40 to-background/20 p-0 text-white backdrop-blur-md sm:inset-x-0 sm:bottom-0 sm:p-4")
                   div
                     div(className="text-[10px] font-mono tracking-[0.16em] text-white/60") TODAY'S DEAL
@@ -244,7 +245,7 @@ div.bg-background
               div(className="mt-3 text-[11px] font-mono text-muted-foreground") Hydrate when idle → server sends seeded HTML, client hydrates without blocking main thread.
 
         Hydrate(when={visible({ rootMargin: "200px" })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, visible: true }))})
-          Frame(title="Related" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
+          Frame(title="Related Items" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
             div.p-6
               h3(className="text-[14px] font-medium tracking-[-0.01em] text-foreground") You may also like
               p(className="text-[11px] font-mono text-muted-foreground my-1") Hydrates only when scrolled into view — saves JS until needed.
