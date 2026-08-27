@@ -85,7 +85,7 @@ div.bg-background
     Header(title="Animation" subtitle="ANIMATION ORCHESTRATOR" icon='mechanics' description="Springs that interrupt and preserve velocity. mode:'interrupt' cancels old targets — no AnimatePresence, no 40kb Framer." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
-        Frame(title={"Expandable " + (isOpen ? "400" : "100") + "px \u00b7 " + (isDragging ? "dragging" : isOpen ? "open" : "closed")} subtitle={stiffness.toFixed(2) + " stiff \u00b7 " + damping.toFixed(2) + " damp \u00b7 rest " + restCount})
+        Frame(title={(isOpen ? "400" : "100") + "px " + (isDragging ? "dragging" : isOpen ? "|" : "/")} subtitle={stiffness.toFixed(2) + "stf \u00b7 " + damping.toFixed(2) + " dmp" })
           div(className="flex p-6 flex flex-col items-center")
             article(ref={cardRef} className="w-full max-w-[560px] bg-background border border-border rounded-xs overflow-hidden select-none touch-none cursor-grab active:cursor-grabbing" style={cardStyle} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onClick={toggleOpenDrag})
               div(className="h-2 bg-accent-1")

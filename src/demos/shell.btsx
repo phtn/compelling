@@ -133,8 +133,7 @@ setup
 
   const actions = [
     {id: "cart", label: "Cart (" + cartCount + ")", onClick: addToCart, className: ""},
-    {id: "force", label: "Force hydrate all", onClick: forceHydrateAll, className: ""},
-    {id: "elapsed", label: elapsed + "s since shell", className: ""}]
+    {id: "elapsed", label: elapsed + "s", className: ""}]
 
   const info = {
     title: "Why Octane wins",
@@ -153,7 +152,7 @@ div.bg-background
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-6")
         Hydrate(when={load()} split={false} onHydrated={() => setHydrated((h) => ({ ...h, load: true }))})
           // Product Card
-          Frame(title="Flagship" subtitle="R SERIES · 9.4CH · 4.9/5 · 189 reviews")
+          Frame(title="Flagship" subtitle="X Series · 9.4ch")
             div(className="grid lg:grid-cols-5")
               div(className="order-1 lg:order-2 lg:col-span-2 relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[440px] overflow-hidden bg-muted")
                 img(className="absolute inset-0 size-full object-cover grayscale opacity-85" src="https://picsum.photos/seed/denon/800/700" alt="Denon AVC-X3800H AV receiver")
@@ -200,7 +199,7 @@ div.bg-background
                     // span(className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-mono font-medium text-emerald-500") SAVE 10%
                   div(className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2")
                     PrimaryButton(size="lg" tone="dark" className="w-full" onClick={addToCart} label="Add to cart")
-                    PrimaryButton(size="lg" className="w-full" onClick={() => setShowDetail(!showDetail)} aria-pressed={showDetail} label={showDetail ? "Hide details" : "View details"})
+                    PrimaryButton(size="lg" className="w-full mt-2 md:mt-0" onClick={() => setShowDetail(!showDetail)} aria-pressed={showDetail} label={showDetail ? "Hide details" : "View details"})
             if showDetail
               div(className="border-t border-border/50 bg-background/45 p-4 sm:p-6 xl:p-8")
                 div(className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end")
@@ -242,10 +241,10 @@ div.bg-background
               ErrorBoundary(fallback="Reviews failed to load.")
                 Suspense(fallback="Loading reviews… (suspended 1.8s)")
                   ReviewList(data={reviewsPromise})
-              div(className="mt-3 text-[11px] font-mono text-muted-foreground") Hydrate when idle → server sends seeded HTML, client hydrates without blocking main thread.
+              div(className="mt-3 text-2xs font-mono text-muted-foreground") #{' \u2713'} Hydrates when idle without blocking main thread → server sends seeded HTML.
 
         Hydrate(when={visible({ rootMargin: "200px" })} split={false} onHydrated={() => setHydrated((h) => ({ ...h, visible: true }))})
-          Frame(title="Related Items" subtitle={hydrated.visible ? "hydrated \u2713" : "waiting for visible\u2026"})
+          Frame(title="Related Items" subtitle={hydrated.visible ? "Hydrated \u2713" : "waiting for visible\u2026"})
             div.p-6
               h3(className="text-[14px] font-medium tracking-[-0.01em] text-foreground") You may also like
               p(className="text-[11px] font-mono text-muted-foreground my-1") Hydrates only when scrolled into view — saves JS until needed.

@@ -116,7 +116,7 @@ setup
 
   const actions = [
     {id: "running", label: running ? "Running" : "Paused", onClick: () => setRunning(!running), className: "" + (running ? "bg-accent-1 text-foreground border-accent-1" : "bg-card border-input text-muted-foreground")},
-    {id: "shared", label: shared ? "SharedArrayBuffer" : "Clone", onClick: () => setShared(!shared), className: "" + (shared ? "bg-accent-2 text-foreground border-accent-2" : "bg-card border-input text-muted-foreground")}]
+    ]
 
   const info = {
     title: "Why Octane wins",
@@ -128,7 +128,7 @@ div.bg-background
     Header(title="Worker Thread" subtitle="ZERO-COST REACTIVITY" icon='mechanics' description="Signals auto-proxied to worker via SharedArrayBuffer + Atomics — no postMessage boilerplate. Slider updates worker instantly at 120fps." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
-        Frame(title={"Worker \u00b7 " + particles.length + " particles"} subtitle={fps + " fps \u00b7 " + gravity.toFixed(1) + "g \u00b7 " + (shared ? "SharedArrayBuffer" : "structuredClone")})
+        Frame(title={ particles.length + " particles"} subtitle={fps + " fps \u00b7 " + gravity.toFixed(1) + "g"})
           div(className="relative p-0")
             canvas(className="block w-full h-[420px] bg-background border-0" ref={canvasRef} width={800} height={500} style="width:100%;height:420px")
           div(className="p-3 bg-background border-t border-border space-y-3")

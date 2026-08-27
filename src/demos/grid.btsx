@@ -117,7 +117,7 @@ div.bg-background
     Header(title="Masonry Grid" subtitle="GRID VIRTUALIZATION" icon='mechanics' description="10,000 items, dynamic heights, ResizeObserver remeasure. Built-in virtualize renders only the viewport + overscan — column masonry without fixed-size assumptions." isVisible={showInfo} toggleFn={toggleInfo} actions={actions})
     div.grid.grid-cols-12.gap-4
       div(className="col-span-12 lg:col-span-9")
-        Frame(title={'Virtualized '+ columns + ' columns | gap ' + gap + 'px'} subtitle={visibleCount + ' rendered — est. ' + totalHeight.toLocaleString() + 'px'} )
+        Frame(title={''+ columns + ' cols \u00b7 gap ' + gap + 'px'} subtitle={visibleCount + ' r ' + totalHeight.toLocaleString() + 'px'} )
           div(ref={containerRef} className="relative h-[640px] overflow-auto bg-background p-1")
             div(style={"column-count:" + columns + ";column-gap:" + gap + "px"})
               each item in visible key item.id

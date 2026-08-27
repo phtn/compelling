@@ -84,11 +84,11 @@ setup
 
 div.bg-background
   div(className="w-full px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-6")
-    Header(title="Time-Travel" subtitle="TEMPORAL REACTIVITY" icon='mechanics' description="Immutable snapshots, bidirectional travel, branching — no Redux DevTools. timeline(content, {compress:true}) gives undo/redo/fork/scrub with structural sharing." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "compress", label: compress ? "Compress on" : "Compress off", onClick: () => setCompress(!compress), className: "" + (compress ? "bg-input/10" : "")}, {id: "fork", label: "Fork Branch", onClick: fork, className: ""}]})
+    Header(title="Time-Travel" subtitle="TEMPORAL REACTIVITY" icon='mechanics' description="Immutable snapshots, bidirectional travel, branching — no Redux DevTools. timeline(content, {compress:true}) gives undo/redo/fork/scrub with structural sharing." isVisible={showInfo} toggleFn={toggleInfo} actions={[{id: "compress", label: compress ? "ON" : "OFF", onClick: () => setCompress(!compress), className: "" + (compress ? "bg-input/10" : "")}, {id: "fork", label: "Fork", onClick: fork, className: ""}]})
 
     div(className="grid grid-cols-12 gap-4")
       div(className="col-span-12 lg:col-span-8 flex flex-col gap-4")
-        Frame(title={"Timeline \u00b7 " + history.length + " snapshots"} subtitle={"pos " + pos + " \u00b7 branch " + branchDepth + " \u00b7 " + branches + " branches \u00b7 " + (compress ? "compress on" : "compress off")})
+        Frame(title={history.length + " snapshots"} subtitle={"s" + pos + " b" + branchDepth + " " + branches + "bs " + (compress ? "c ON" : "compress off")})
           div(className="p-4")
             textarea(className="w-full min-h-[140px] bg-background border border-input rounded-xs p-3 text-[13px] font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-accent-1" value={content} placeholder="Type to create history..." onInput={handleInput})
             div(className="mt-3 flex items-center gap-3")
