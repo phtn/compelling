@@ -8,9 +8,10 @@
     "noEmit": true,
     "skipLibCheck": true,
     "jsx": "preserve",
-    "types": ["vite/client", "@webgpu/types"],
+    "types": ["@webgpu/types", "node"],
     "baseUrl": ".",
     "paths": {
+      "@@/*": ["./*"],
       "@/*": ["./src/*"]
     },
     "plugins": [
@@ -19,7 +20,7 @@
       }
     ]
   },
-  "include": ["src", "vite.config.ts"],
+  "include": ["src"],
   "tsrx": {
     "compiler": "octane"
   }

@@ -7,14 +7,14 @@ const crons = cronJobs()
 crons.cron(
   'reset expired canvas identities',
   '0 * * * *',
-  internal.canvasSessions.removeExpired,
+  internal.canvas.sessions.m.removeExpired,
   {}
 )
 
 crons.cron(
   'reset expired canvas strokes',
   '0 * * * *',
-  internal.canvasStrokes.removeExpired,
+  internal.canvas.strokes.m.removeExpired,
   {}
 )
 

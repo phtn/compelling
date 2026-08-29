@@ -1,49 +1,14 @@
 import { ConvexError, v } from 'convex/values'
-
-import { internalMutation, mutation, query } from './_generated/server'
-
-const HOUR_MS = 60 * 60 * 1000
-const MAX_USERS = 100
-const MAX_NICKNAME_LENGTH = 24
-const RESUME_SECRET_PATTERN = /^[a-f0-9]{32}$/
-
-const canvasSessionValidator = v.object({
-  sessionId: v.id('canvasSessions'),
-  nickname: v.string(),
-  expiresAt: v.number()
-})
-
-const roomUserValidator = v.object({
-  sessionId: v.id('canvasSessions'),
-  nickname: v.string(),
-  joinedAt: v.number()
-})
-
-const currentHourStartedAt = (now: number) =>
-  Math.floor(now / HOUR_MS) * HOUR_MS
-
-const defaultNickname = (sessionId: string) =>
-  `Guest ${sessionId.slice(-6).toUpperCase()}`
-
-const normalizeNickname = (nickname: string, sessionId: string) => {
-  const normalized = nickname.trim().replace(/\s+/g, ' ')
-  if (Array.from(normalized).length > MAX_NICKNAME_LENGTH) {
-    throw new ConvexError({
-      code: 'NICKNAME_TOO_LONG',
-      message: `Nicknames can be at most ${MAX_NICKNAME_LENGTH} characters.`
-    })
-  }
-  return normalized || defaultNickname(sessionId)
-}
-
-const validateResumeSecret = (resumeSecret: string) => {
-  if (!RESUME_SECRET_PATTERN.test(resumeSecret)) {
-    throw new ConvexError({
-      code: 'INVALID_RESUME_SECRET',
-      message: 'The canvas resume secret is invalid.'
-    })
-  }
-}
+import { internalMutation, mutation } from '../../_generated/server'
+import {
+  canvasSessionValidator,
+  currentHourStartedAt,
+  defaultNickname,
+  HOUR_MS,
+  MAX_USERS,
+  normalizeNickname,
+  validateResumeSecret
+} from './v'
 
 export const acquire = mutation({
   args: {
@@ -178,35 +143,6 @@ export const updateNickname = mutation({
       sessionId: session._id,
       nickname,
       expiresAt: session.expiresAt
-    }
-  }
-})
-
-export const listCurrent = query({
-  args: {},
-  returns: v.object({
-    users: v.array(roomUserValidator),
-    expiresAt: v.number(),
-    maxUsers: v.number()
-  }),
-  handler: async (ctx) => {
-    const now = Date.now()
-    const hourStartedAt = currentHourStartedAt(now)
-    const sessions = await ctx.db
-      .query('canvasSessions')
-      .withIndex('by_hourStartedAt', (q) =>
-        q.eq('hourStartedAt', hourStartedAt)
-      )
-      .take(MAX_USERS)
-
-    return {
-      users: sessions.map((session) => ({
-        sessionId: session._id,
-        nickname: session.nickname,
-        joinedAt: session._creationTime
-      })),
-      expiresAt: hourStartedAt + HOUR_MS,
-      maxUsers: MAX_USERS
     }
   }
 })

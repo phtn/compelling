@@ -1,5 +1,4 @@
 import { ConvexClient } from 'convex/browser'
-
 import { api } from '../../convex/_generated/api'
 import type { Id } from '../../convex/_generated/dataModel'
 
@@ -126,7 +125,7 @@ const storeIdentity = (identity: StoredCanvasIdentity) => {
 export const acquireCanvasSession = async (): Promise<CanvasSession> => {
   const storedIdentity = readStoredIdentity()
   const resumeSecret = storedIdentity?.resumeSecret ?? generateResumeSecret()
-  const result = await getClient().mutation(api.canvasSessions.acquire, {
+  const result = await getClient().mutation(api.canvas.sessions.m.acquire, {
     existingSessionId: storedIdentity?.sessionId,
     resumeSecret
   })
@@ -140,7 +139,7 @@ export const updateCanvasNickname = async (
   nickname: string
 ): Promise<CanvasSession> => {
   const updated = await getClient().mutation(
-    api.canvasSessions.updateNickname,
+    api.canvas.sessions.m.updateNickname,
     {
       sessionId: session.sessionId,
       resumeSecret: session.resumeSecret,
@@ -155,13 +154,19 @@ export const updateCanvasNickname = async (
 export const watchCanvasRoom = (
   onUpdate: (room: CanvasRoom) => void,
   onError: (error: Error) => void
-) => getClient().onUpdate(api.canvasSessions.listCurrent, {}, onUpdate, onError)
+) =>
+  getClient().onUpdate(
+    api.canvas.sessions.q.listCurrent,
+    {},
+    onUpdate,
+    onError
+  )
 
 export const heartbeatCanvasPresence = (
   session: CanvasSession,
   connectionId: string
 ): Promise<CanvasPresenceConnection> =>
-  getClient().mutation(api.canvasPresence.heartbeat, {
+  getClient().mutation(api.canvas.presence.heartbeat, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret,
     connectionId
@@ -173,7 +178,7 @@ export const updateCanvasPointer = (
   y: number,
   liveStroke?: CanvasLiveStroke
 ) =>
-  getClient().mutation(api.canvasPresence.updatePointer, {
+  getClient().mutation(api.canvas.presence.updatePointer, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret,
     x,
@@ -182,13 +187,13 @@ export const updateCanvasPointer = (
   })
 
 export const clearCanvasPointer = (session: CanvasSession) =>
-  getClient().mutation(api.canvasPresence.clearPointer, {
+  getClient().mutation(api.canvas.presence.clearPointer, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret
   })
 
 export const disconnectCanvasPresence = (sessionToken: string) =>
-  getClient().mutation(api.canvasPresence.disconnect, { sessionToken })
+  getClient().mutation(api.canvas.presence.disconnect, { sessionToken })
 
 export const watchCanvasPointers = (
   roomToken: string,
@@ -196,7 +201,7 @@ export const watchCanvasPointers = (
   onError: (error: Error) => void
 ) =>
   getClient().onUpdate(
-    api.canvasPresence.listPointers,
+    api.canvas.presence.listPointers,
     { roomToken },
     onUpdate,
     onError
@@ -206,20 +211,20 @@ export const commitCanvasStroke = (
   session: CanvasSession,
   stroke: CanvasLiveStroke
 ) =>
-  getClient().mutation(api.canvasStrokes.commit, {
+  getClient().mutation(api.canvas.strokes.m.commit, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret,
     ...stroke
   })
 
 export const undoLastCanvasStroke = (session: CanvasSession) =>
-  getClient().mutation(api.canvasStrokes.undoLast, {
+  getClient().mutation(api.canvas.strokes.m.undoLast, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret
   })
 
 export const clearCanvasStrokes = (session: CanvasSession) =>
-  getClient().mutation(api.canvasStrokes.clear, {
+  getClient().mutation(api.canvas.strokes.m.clear, {
     sessionId: session.sessionId,
     resumeSecret: session.resumeSecret
   })
@@ -230,7 +235,7 @@ export const watchCanvasStrokes = (
   onError: (error: Error) => void
 ) =>
   getClient().onUpdate(
-    api.canvasStrokes.list,
+    api.canvas.strokes.q.list,
     { hourStartedAt: session.expiresAt - 60 * 60 * 1000 },
     (strokes) =>
       onUpdate(

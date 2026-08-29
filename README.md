@@ -2,16 +2,16 @@
 
 # Compelling Beast Demos
 
-> Eight substantial Beast → Octane — showcases canvas, form, grid, shell, timeline, worker, motion, streaming — on Vite SPA routing.
+> Eight substantial Beast → Octane — showcases canvas, form, grid, shell, timeline, worker, motion, streaming — on Rspack SPA routing.
 
 [![Beast](https://img.shields.io/badge/Beast-BTSX_→_TSRX-111827?style=flat-square)](https://www.npmjs.com/package/beast-tsrx)
 [![Octane](https://img.shields.io/badge/Octane-0.1.37-0ea5e9?style=flat-square)](https://octanejs.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8.x-646cff?style=flat-square&logo=vite&logoColor=white)](https://vite.dev)
+[![Rspack](https://img.shields.io/badge/Rspack-2.x-1389fd?style=flat-square)](https://rspack.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Bun](https://img.shields.io/badge/Bun-1.x-000000?style=flat-square&logo=bun&logoColor=white)](https://bun.sh)
 [![License: ISC](https://img.shields.io/badge/license-ISC-0f766e?style=flat-square)](LICENSE)
 
-**Indentation-first authoring. Native TSRX output. Octane owns rendering. Vite ships it.**
+**Indentation-first authoring. Native TSRX output. Octane owns rendering. Rspack ships it.**
 
 <!-- markdownlint-disable MD051 -->
 
@@ -25,7 +25,7 @@
 
 ---
 
-Compelling is a reference app for the [Beast](https://www.npmjs.com/package/beast-tsrx) compiler and [Octane](https://octanejs.dev). Every route is a `.btsx` file — indentation-based, 2-space, typed `Props` at the top — compiled to readable `.tsrx` by `beast-tsrx` and rendered by Octane. The Vite plugin `beastOctane()` runs the compile in-memory so HMR stays native.
+Compelling is a reference app for the [Beast](https://www.npmjs.com/package/beast-tsrx) compiler and [Octane](https://octanejs.dev). Every route is a `.btsx` file — indentation-based, 2-space, typed `Props` at the top — compiled to readable `.tsrx` by `beast-tsrx` and rendered by Octane. The Rspack adapter `beastOctane()` runs the compile in-memory so HMR stays native.
 
 It exists to answer one question: _what does Octane feel like on real product surfaces, not toy counters?_ Each demo targets a known pain point in React / Vue / Svelte and shows the Octane alternative with measurable UI affordances — granular deltas, cancellable validation, virtualized masonry, suspend/resume hydration, timeline branching, worker proxying, interruptible motion, and edge streaming.
 
@@ -60,7 +60,7 @@ cd compelling
 bun install
 # or: npm install
 
-# dev — Vite with Beast in-memory compile + HMR
+# dev — Rspack with Beast in-memory compile + HMR
 bun run dev
 # → http://localhost:5173
 
@@ -73,7 +73,7 @@ bun run check
 ```
 
 > [!NOTE]
-> `bun run check` runs `tsrx-tsc --noEmit` (TSRX-aware) and `vite build` (71 modules, ~121 kB gz). If both pass, the app is shippable. This mirrors the [Beast Skill](https://github.com/phtn/beast-skill) workflow.
+> `bun run check` runs `tsrx-tsc --noEmit` (TSRX-aware) and `rspack build`. If both pass, the app is shippable. This mirrors the [Beast Skill](https://github.com/phtn/beast-skill) workflow.
 
 ## How it works
 
@@ -81,7 +81,7 @@ bun run check
 flowchart LR
     A["Author .btsx<br/>(indentation, typed Props)"] --> B["Beast compile<br/>BTSX → readable TSRX"]
     B --> C["Octane<br/>(render, suspend, hydrate)"]
-    C --> D["Vite + beastOctane()<br/>(in-memory, HMR)"]
+    C --> D["Rspack + beastOctane()<br/>(in-memory, HMR)"]
     D --> E["Browser<br/>(SPA routes, Geist, light/dark)"]
 ```
 
@@ -123,19 +123,13 @@ export default function CanvasDemo({}: {}) @{
 }
 ```
 
-Vite config is minimal — Beast runs before Octane:
+Rspack config is minimal — Beast runs before Octane:
 
 ```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
-import { beastOctane } from 'beast-tsrx/vite'
+// rspack.config.mjs
+import { beastOctane } from 'beast-tsrx/rspack'
 
-export default defineConfig({
-  plugins: [tailwindcss(), beastOctane()],
-  appType: 'spa',
-  resolve: { alias: { '@': path.resolve('./src') } }
-})
+export default { entry: './src/main.ts', plugins: [beastOctane()] }
 ```
 
 Routing is client-side with `pushState` + `popstate` + global anchor interception — no framework router, eight routes in ~40 lines:
@@ -245,8 +239,8 @@ Landing + summary map + 8 cards. Shows metrics (8 demos, 60 fps target, Vite SPA
 | --- | --- | --- | --- |
 | Language | **Beast BTSX** → TSRX | `beast-tsrx ^0.2.4` | Indentation-first authoring, readable output |
 | Runtime | **Octane** | `0.1.37` | Reactivity, Suspense, Hydrate, Activity |
-| Bundler | **Vite** + `beastOctane()` | `^8.0.16` | In-memory BTSX→TSRX, HMR, SPA |
-| Styling | **Tailwind CSS** | `^4.1.8` via `@tailwindcss/vite` | Utility-first, `@theme inline` tokens |
+| Bundler | **Rspack** + `beastOctane()` | `^2` | In-memory BTSX→TSRX, HMR, SPA |
+| Styling | **Tailwind CSS** | `^4` via PostCSS | Utility-first, `@theme inline` tokens |
 | Fonts | **Geist Sans + Geist Mono** | Google Fonts | Vercel type system |
 | Utils | `clsx` + `tailwind-merge` | `^2.1.1` / `^3.6.0` | `cn()` helper |
 | Package manager | **Bun** | `bun.lock` | Install + scripts |
@@ -258,7 +252,7 @@ Design tokens live in [src/style.css](src/style.css) (`@theme inline`, `@custom-
 ```text
 compelling/
 ├── index.html                  # #app mount + FOUC-safe theme bootstrap
-├── vite.config.ts              # tailwindcss() + beastOctane(), alias @ → src
+├── rspack.config.mjs           # CSS, aliases, HTML, assets, beastOctane()
 ├── tsconfig.json               # @tsrx/typescript-plugin, tsrx.compiler=octane
 ├── src/
 │   ├── main.ts                 # createRoot(App).render — Octane entry
@@ -296,15 +290,15 @@ compelling/
 ├── public/
 │   └── favicon.ico
 ├── .beast/                     # Beast build cache (gitignored)
-└── dist/                       # vite build output (gitignored)
+└── dist/                       # Rspack build output (gitignored)
 ````
 
 ## Scripts
 
 | Script      | Command             | What it does                                                    |
 | ----------- | ------------------- | --------------------------------------------------------------- |
-| `dev`       | `bun run dev`       | Vite dev server — `http://localhost:5173`, HMR, Beast in-memory |
-| `build`     | `bun run build`     | Vite production build → `dist/`                                 |
+| `dev`       | `bun run dev`       | Rspack dev server — `http://localhost:5173`, HMR, Beast in-memory |
+| `build`     | `bun run build`     | Rspack production build → `dist/`                                 |
 | `preview`   | `bun run preview`   | Serve `dist/` locally                                           |
 | `typecheck` | `bun run typecheck` | `tsrx-tsc --noEmit` — TSRX-aware type checking                  |
 | `check`     | `bun run check`     | `typecheck && build` — the ship signal                          |

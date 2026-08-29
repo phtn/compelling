@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemas.convex.dev/convex.schema.json",
+  "node": {
+    "externalPackages": ["@mux/mux-node"]
+  }
+}

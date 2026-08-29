@@ -1,130 +1,12 @@
 import { ConvexError, v } from 'convex/values'
-
-import { internal } from './_generated/api'
-import type { Id } from './_generated/dataModel'
+import { internal } from '../../_generated/api'
+import { internalMutation, mutation } from '../../_generated/server'
 import {
-  internalMutation,
-  mutation,
-  query,
-  type MutationCtx
-} from './_generated/server'
-import schema, {
-  canvasPointValidator,
-  canvasStrokeColorValidator,
-  canvasStrokeToolValidator
-} from './schema'
-
-const HOUR_MS = 60 * 60 * 1000
-const CANVAS_WIDTH = 1400
-const CANVAS_HEIGHT = 800
-const MAX_POINTS_PER_STROKE = 2048
-const MAX_VISIBLE_STROKES = 500
-const DELETE_BATCH_SIZE = 200
-const RESUME_SECRET_PATTERN = /^[a-f0-9]{32}$/
-const STROKE_ID_PATTERN = /^[a-z0-9_-]{1,64}$/i
-
-const strokeInputValidator = v.object({
-  strokeId: v.string(),
-  color: canvasStrokeColorValidator,
-  size: v.number(),
-  tool: canvasStrokeToolValidator,
-  points: v.array(canvasPointValidator)
-})
-
-const currentHourStartedAt = (now: number) =>
-  Math.floor(now / HOUR_MS) * HOUR_MS
-
-const requireCurrentSession = async (
-  ctx: MutationCtx,
-  sessionId: Id<'canvasSessions'>,
-  resumeSecret: string
-) => {
-  if (!RESUME_SECRET_PATTERN.test(resumeSecret)) {
-    throw new ConvexError({
-      code: 'INVALID_RESUME_SECRET',
-      message: 'The canvas resume secret is invalid.'
-    })
-  }
-
-  const now = Date.now()
-  const session = await ctx.db.get('canvasSessions', sessionId)
-  if (
-    session === null ||
-    session.resumeSecret !== resumeSecret ||
-    session.hourStartedAt !== currentHourStartedAt(now) ||
-    session.expiresAt <= now
-  ) {
-    throw new ConvexError({
-      code: 'SESSION_EXPIRED',
-      message: 'This canvas identity has expired.'
-    })
-  }
-  return session
-}
-
-const normalizeStroke = (stroke: {
-  strokeId: string
-  color:
-    | '#e7e7e7'
-    | '#d7d0fe'
-    | 'oklch(0.9 0.072 338.8)'
-    | '#ffecba'
-    | 'oklch(0.68 0.16 319.98)'
-    | '#3a9df6'
-    | '#5cffad'
-    | '#fe7672'
-    | '#525152'
-  size: number
-  tool: 'pen-bold' | 'pencil-bold' | 'eraser'
-  points: Array<{ x: number; y: number }>
-}) => {
-  if (!STROKE_ID_PATTERN.test(stroke.strokeId)) {
-    throw new ConvexError({
-      code: 'INVALID_STROKE_ID',
-      message: 'The stroke ID is invalid.'
-    })
-  }
-  if (
-    !Number.isFinite(stroke.size) ||
-    stroke.size < 1 ||
-    stroke.size > 64
-  ) {
-    throw new ConvexError({
-      code: 'INVALID_STROKE_SIZE',
-      message: 'Stroke size must be between 1 and 64.'
-    })
-  }
-  if (
-    stroke.points.length < 2 ||
-    stroke.points.length > MAX_POINTS_PER_STROKE
-  ) {
-    throw new ConvexError({
-      code: 'INVALID_STROKE_POINTS',
-      message: `A stroke must contain between 2 and ${MAX_POINTS_PER_STROKE} points.`
-    })
-  }
-  if (
-    stroke.points.some(
-      (point) => !Number.isFinite(point.x) || !Number.isFinite(point.y)
-    )
-  ) {
-    throw new ConvexError({
-      code: 'INVALID_STROKE_POINT',
-      message: 'Stroke coordinates must be finite numbers.'
-    })
-  }
-
-  return {
-    strokeId: stroke.strokeId,
-    color: stroke.color,
-    size: stroke.size,
-    tool: stroke.tool,
-    points: stroke.points.map((point) => ({
-      x: Math.max(0, Math.min(CANVAS_WIDTH, point.x)),
-      y: Math.max(0, Math.min(CANVAS_HEIGHT, point.y))
-    }))
-  }
-}
+  DELETE_BATCH_SIZE,
+  normalizeStroke,
+  requireCurrentSession,
+  strokeInputValidator
+} from './v'
 
 export const commit = mutation({
   args: {
@@ -176,21 +58,6 @@ export const commit = mutation({
   }
 })
 
-export const list = query({
-  args: { hourStartedAt: v.number() },
-  returns: v.array(schema.doc('canvasStrokes')),
-  handler: async (ctx, args) => {
-    const strokes = await ctx.db
-      .query('canvasStrokes')
-      .withIndex('by_hourStartedAt', (q) =>
-        q.eq('hourStartedAt', args.hourStartedAt)
-      )
-      .order('desc')
-      .take(MAX_VISIBLE_STROKES)
-    return strokes.reverse()
-  }
-})
-
 export const undoLast = mutation({
   args: {
     sessionId: v.id('canvasSessions'),
@@ -234,10 +101,14 @@ export const clearHourBatch = internalMutation({
       await ctx.db.delete('canvasStrokes', stroke._id)
     }
     if (strokes.length === DELETE_BATCH_SIZE) {
-      await ctx.scheduler.runAfter(0, internal.canvasStrokes.clearHourBatch, {
-        hourStartedAt: args.hourStartedAt,
-        clearBefore: args.clearBefore
-      })
+      await ctx.scheduler.runAfter(
+        0,
+        internal.canvas.strokes.m.clearHourBatch,
+        {
+          hourStartedAt: args.hourStartedAt,
+          clearBefore: args.clearBefore
+        }
+      )
     }
     return strokes.length
   }
@@ -268,10 +139,14 @@ export const clear = mutation({
       await ctx.db.delete('canvasStrokes', stroke._id)
     }
     if (strokes.length === DELETE_BATCH_SIZE) {
-      await ctx.scheduler.runAfter(0, internal.canvasStrokes.clearHourBatch, {
-        hourStartedAt: session.hourStartedAt,
-        clearBefore
-      })
+      await ctx.scheduler.runAfter(
+        0,
+        internal.canvas.strokes.m.clearHourBatch,
+        {
+          hourStartedAt: session.hourStartedAt,
+          clearBefore
+        }
+      )
     }
     return strokes.length
   }
@@ -289,7 +164,11 @@ export const removeExpired = internalMutation({
       await ctx.db.delete('canvasStrokes', stroke._id)
     }
     if (strokes.length === DELETE_BATCH_SIZE) {
-      await ctx.scheduler.runAfter(0, internal.canvasStrokes.removeExpired, {})
+      await ctx.scheduler.runAfter(
+        0,
+        internal.canvas.strokes.m.removeExpired,
+        {}
+      )
     }
     return strokes.length
   }

@@ -1,15 +1,15 @@
 import { Presence } from '@convex-dev/presence'
 import { ConvexError, v, type Infer } from 'convex/values'
 
-import { components } from './_generated/api'
-import type { Id } from './_generated/dataModel'
-import { mutation, query } from './_generated/server'
-import type { MutationCtx } from './_generated/server'
+import { components } from '../_generated/api'
+import type { Id } from '../_generated/dataModel'
+import type { MutationCtx } from '../_generated/server'
+import { mutation, query } from '../_generated/server'
 import {
   canvasPointValidator,
   canvasStrokeColorValidator,
   canvasStrokeToolValidator
-} from './schema'
+} from './strokes/v'
 
 const HOUR_MS = 60 * 60 * 1000
 const HEARTBEAT_INTERVAL_MS = 5000
@@ -250,15 +250,17 @@ export const listPointers = query({
     const users = await presence.list(ctx, args.roomToken, MAX_USERS)
     return users.flatMap((user) => {
       if (!user.online || !isPointerData(user.data)) return []
-      return [{
-        sessionId: user.userId,
-        nickname: user.data.nickname,
-        x: user.data.x,
-        y: user.data.y,
-        ...(user.data.liveStroke === undefined
-          ? {}
-          : { liveStroke: user.data.liveStroke })
-      }]
+      return [
+        {
+          sessionId: user.userId,
+          nickname: user.data.nickname,
+          x: user.data.x,
+          y: user.data.y,
+          ...(user.data.liveStroke === undefined
+            ? {}
+            : { liveStroke: user.data.liveStroke })
+        }
+      ]
     })
   }
 })
