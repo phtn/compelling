@@ -5,9 +5,9 @@ import { beastOctane } from 'beast-tsrx/rspack'
 
 const root = path.dirname(fileURLToPath(import.meta.url))
 
-export default {
+export default (_, { mode = 'production' } = {}) => ({
   context: root,
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  mode,
   entry: './src/main.ts',
   output: {
     path: path.resolve(root, 'dist'),
@@ -15,7 +15,7 @@ export default {
     publicPath: '/',
     clean: true,
   },
-  devtool: 'source-map',
+  devtool: mode === 'production' ? false : 'source-map',
   resolve: {
     extensions: ['.btsx', '.ts', '.tsx', '.tsrx', '.js', '.json'],
     alias: {
@@ -62,4 +62,4 @@ export default {
     historyApiFallback: true,
     static: { directory: path.resolve(root, 'public') },
   },
-}
+})

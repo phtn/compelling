@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "rspack dev --config rspack.config.mjs",
-    "build": "rspack build --config rspack.config.mjs",
+    "build": "rspack build --mode production --config rspack.config.mjs",
     "preview": "rspack serve --config rspack.config.mjs --mode production",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
